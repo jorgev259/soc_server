@@ -37,7 +37,6 @@ jobs:
       - name: Build server and website
         run: |
           yarn build
-          node prepareCI
 
       - name: Push from main to dist branch.
         run: |
