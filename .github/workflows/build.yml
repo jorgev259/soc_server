@@ -32,7 +32,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          yarn install --production --pure-lockfile    
+          yarn install --pure-lockfile    
 
       - name: Build server and website
         run: |
