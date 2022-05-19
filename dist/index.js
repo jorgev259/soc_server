@@ -30,7 +30,7 @@ var db = _startDB["default"]["default"] || _startDB["default"];
 var port = process.env.PORT || 4000;
 var schemas = (0, _loadFiles.loadFilesSync)(_path["default"].join(__dirname, './graphql/schemas'));
 var corsOptions = {
-  origin: ['http://localhost:3000', 'http://localhost:4000'],
+  origin: ['http://localhost:3000', 'http://localhost:4000', 'https://sittingonclouds.net', 'https://www,sittingonclouds.net'],
   credentials: true
 };
 
