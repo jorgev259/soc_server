@@ -117,7 +117,7 @@ function _startServer() {
             }));
             server.applyMiddleware({
               app: app,
-              path: '/graphql',
+              path: '/',
               cors: corsOptions
             });
             _context3.next = 9;
