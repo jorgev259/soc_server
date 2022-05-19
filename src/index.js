@@ -45,7 +45,7 @@ async function startServer () {
   app.use(graphqlUploadExpress())
   app.use(ironSession({ password: process.env.IRONCLAD, cookieName: 'socuser' }))
 
-  server.applyMiddleware({ app, path: '/', cors: corsOptions })
+  server.applyMiddleware({ app, path: '/graphql', cors: corsOptions })
   await app.listen({ port })
 
   console.log(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`)
