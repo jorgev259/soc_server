@@ -2,6 +2,7 @@
   "name": "soc_server",
   "scripts": {
     "dev": "nodemon --require dotenv/config --exec babel-node -- src/index.js",
+    "start": "node --require dotenv/config dist",
     "build": "babel src -d dist"
   },
   "dependencies": {
