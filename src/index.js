@@ -15,7 +15,10 @@ const db = dbModule.default || dbModule
 const port = process.env.PORT || 4000
 const schemas = loadFilesSync(path.join(__dirname, './graphql/schemas'))
 const corsOptions = {
-  origin: ['http://localhost:3000', 'http://localhost:4000'],
+  origin: [
+    'http://localhost:3000', 'http://localhost:4000',
+    'https://sittingonclouds.net', 'https://www,sittingonclouds.net'
+  ],
   credentials: true
 }
 
