@@ -10,7 +10,7 @@ import sharp from 'sharp'
 
 import { createForgor } from '../../../utils/forgor'
 import { hasRole, isAuthed } from '../../../utils/resolvers'
-import { getPlaiceholder } from 'plaiceholder'
+import { processImage } from '../../../utils'
 
 const resolversComposition = {
   'Mutation.*': hasRole('MANAGE_USER'),
@@ -53,10 +53,7 @@ async function cropPFP (streamItem, username, imgId) {
     .png()
     .toFile(fullPath)
 
-  const result = await getPlaiceholder(fullPath)
-  const { base64 } = result
-
-  return base64
+  return await processImage(fullPath)
 }
 
 const resolvers = {

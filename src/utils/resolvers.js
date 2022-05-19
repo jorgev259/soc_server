@@ -4,8 +4,7 @@ import path from 'path'
 import { withSessionSsr } from '../utils/session'
 import { getPerms } from '../utils/user'
 import db from '../sequelize/startDB'
-import  { getPlaiceholder } from 'plaiceholder'
-import { getImgColor } from '../utils'
+import { getImgColor, processImage } from '../utils'
 
 export const isAuthed = next => (root, args, context, info) => {
   if (!context.user) throw new AuthenticationError()
@@ -42,10 +41,7 @@ async function solvePlaceholder (parent, folder) {
   const pathString = path.join('/var/www/soc_img/img', folder)
   const fullPath = path.join(pathString, `${id}.png`)
 
-  const result = await getPlaiceholder(fullPath)
-  const { base64 } = result
-
-  parent.placeholder = base64
+  parent.placeholder = await processImage(fullPath)
   await parent.save()
 }
 
