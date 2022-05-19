@@ -138,94 +138,105 @@ var resolvers = {
   Mutation: {
     registerUser: function () {
       var _registerUser = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(_, _ref, _ref2) {
-        var username, email, pfp, db;
+        var username, email, pfp, db, password;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 username = _ref.username, email = _ref.email, pfp = _ref.pfp;
                 db = _ref2.db;
-                return _context2.abrupt("return", db.transaction( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-                  var password, user, imgId;
-                  return _regenerator["default"].wrap(function _callee$(_context) {
-                    while (1) {
-                      switch (_context.prev = _context.next) {
-                        case 0:
-                          _context.next = 2;
-                          return Promise.all([db.models.user.findByPk(username).then(function (result) {
-                            if (result) throw new _apolloServerErrors.UserInputError('Username already in use');
-                          }), db.models.user.findOne({
-                            where: {
-                              email: email
+                _context2.next = 4;
+                return Promise.all([db.models.user.findByPk(username).then(function (result) {
+                  if (result) throw new _apolloServerErrors.UserInputError('Username already in use');
+                }), db.models.user.findOne({
+                  where: {
+                    email: email
+                  }
+                }).then(function (result) {
+                  if (result) throw new _apolloServerErrors.UserInputError('Email already in use');
+                })]);
+
+              case 4:
+                password = _generatePassword["default"].generate({
+                  length: 30,
+                  numbers: true,
+                  upercase: true,
+                  strict: true
+                });
+                return _context2.abrupt("return", db.transaction( /*#__PURE__*/function () {
+                  var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(transaction) {
+                    var user, imgId;
+                    return _regenerator["default"].wrap(function _callee$(_context) {
+                      while (1) {
+                        switch (_context.prev = _context.next) {
+                          case 0:
+                            _context.t0 = db.models.user;
+                            _context.t1 = username;
+                            _context.t2 = email;
+                            _context.next = 5;
+                            return _bcrypt["default"].hash(password, 10);
+
+                          case 5:
+                            _context.t3 = _context.sent;
+                            _context.t4 = {
+                              username: _context.t1,
+                              email: _context.t2,
+                              password: _context.t3
+                            };
+                            _context.t5 = {
+                              transaction: transaction
+                            };
+                            _context.next = 10;
+                            return _context.t0.create.call(_context.t0, _context.t4, _context.t5);
+
+                          case 10:
+                            user = _context.sent;
+
+                            if (!pfp) {
+                              _context.next = 19;
+                              break;
                             }
-                          }).then(function (result) {
-                            if (result) throw new _apolloServerErrors.UserInputError('Email already in use');
-                          })]);
 
-                        case 2:
-                          password = _generatePassword["default"].generate({
-                            length: 30,
-                            numbers: true,
-                            upercase: true,
-                            strict: true
-                          });
-                          _context.t0 = db.models.user;
-                          _context.t1 = username;
-                          _context.t2 = email;
-                          _context.next = 8;
-                          return _bcrypt["default"].hash(password, 10);
+                            imgId = Date.now();
+                            _context.next = 15;
+                            return cropPFP(pfp, username, imgId);
 
-                        case 8:
-                          _context.t3 = _context.sent;
-                          _context.t4 = {
-                            username: _context.t1,
-                            email: _context.t2,
-                            password: _context.t3
-                          };
-                          _context.next = 12;
-                          return _context.t0.create.call(_context.t0, _context.t4);
-
-                        case 12:
-                          user = _context.sent;
-
-                          if (!pfp) {
-                            _context.next = 21;
+                          case 15:
+                            user.placeholder = _context.sent;
+                            user.imgId = imgId;
+                            _context.next = 20;
                             break;
-                          }
 
-                          imgId = Date.now();
-                          _context.next = 17;
-                          return cropPFP(pfp, username, imgId);
+                          case 19:
+                            user.placeholder = 'data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACwAQCdASoEAAQAAUAmJZgCdAEO9p5AAPa//NFYLcn+a7b+3z7ynq/qXv+iG0yH/y1D9eBf9pqWugq9G0RnxmxwsjaA2bW8AAA=';
 
-                        case 17:
-                          user.placeholder = _context.sent;
-                          user.imgId = imgId;
-                          _context.next = 22;
-                          break;
+                          case 20:
+                            _context.next = 22;
+                            return user.save({
+                              transaction: transaction
+                            });
 
-                        case 21:
-                          user.placeholder = 'data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACwAQCdASoEAAQAAUAmJZgCdAEO9p5AAPa//NFYLcn+a7b+3z7ynq/qXv+iG0yH/y1D9eBf9pqWugq9G0RnxmxwsjaA2bW8AAA=';
+                          case 22:
+                            _context.next = 24;
+                            return (0, _forgor.createForgor)(user, db, transaction);
 
-                        case 22:
-                          _context.next = 24;
-                          return user.save();
+                          case 24:
+                            return _context.abrupt("return", true);
 
-                        case 24:
-                          _context.next = 26;
-                          return (0, _forgor.createForgor)(user, db);
-
-                        case 26:
-                          return _context.abrupt("return", true);
-
-                        case 27:
-                        case "end":
-                          return _context.stop();
+                          case 25:
+                          case "end":
+                            return _context.stop();
+                        }
                       }
-                    }
-                  }, _callee);
-                }))));
+                    }, _callee);
+                  }));
 
-              case 3:
+                  return function (_x7) {
+                    return _ref3.apply(this, arguments);
+                  };
+                }()));
+
+              case 6:
               case "end":
                 return _context2.stop();
             }
@@ -268,7 +279,7 @@ var resolvers = {
         }, _callee3);
       }));
 
-      function updateUserRoles(_x7, _x8, _x9, _x10) {
+      function updateUserRoles(_x8, _x9, _x10, _x11) {
         return _updateUserRoles.apply(this, arguments);
       }
 
@@ -308,7 +319,7 @@ var resolvers = {
         }, _callee4);
       }));
 
-      function deleteUser(_x11, _x12, _x13, _x14) {
+      function deleteUser(_x12, _x13, _x14, _x15) {
         return _deleteUser.apply(this, arguments);
       }
 
@@ -357,7 +368,7 @@ var resolvers = {
         }, _callee5);
       }));
 
-      function createForgorLink(_x15, _x16, _x17) {
+      function createForgorLink(_x16, _x17, _x18) {
         return _createForgorLink.apply(this, arguments);
       }
 
@@ -365,7 +376,7 @@ var resolvers = {
     }(),
     updatePass: function () {
       var _updatePass = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(_, _ref10, _ref11) {
-        var key, pass, db, row, now, expires;
+        var key, pass, db, row, now, expires, user;
         return _regenerator["default"].wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
@@ -397,41 +408,50 @@ var resolvers = {
                 throw new _apolloServerErrors.ForbiddenError();
 
               case 11:
-                return _context7.abrupt("return", db.transaction( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6() {
-                  var user;
-                  return _regenerator["default"].wrap(function _callee6$(_context6) {
-                    while (1) {
-                      switch (_context6.prev = _context6.next) {
-                        case 0:
-                          _context6.next = 2;
-                          return db.models.user.findByPk(row.username);
+                _context7.next = 13;
+                return db.models.user.findByPk(row.username);
 
-                        case 2:
-                          user = _context6.sent;
-                          _context6.next = 5;
-                          return _bcrypt["default"].hash(pass, 10);
+              case 13:
+                user = _context7.sent;
+                _context7.next = 16;
+                return _bcrypt["default"].hash(pass, 10);
 
-                        case 5:
-                          user.password = _context6.sent;
-                          _context6.next = 8;
-                          return user.save();
+              case 16:
+                user.password = _context7.sent;
+                return _context7.abrupt("return", db.transaction( /*#__PURE__*/function () {
+                  var _ref12 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(transaction) {
+                    return _regenerator["default"].wrap(function _callee6$(_context6) {
+                      while (1) {
+                        switch (_context6.prev = _context6.next) {
+                          case 0:
+                            _context6.next = 2;
+                            return user.save({
+                              transaction: transaction
+                            });
 
-                        case 8:
-                          _context6.next = 10;
-                          return row.destroy();
+                          case 2:
+                            _context6.next = 4;
+                            return row.destroy({
+                              transaction: transaction
+                            });
 
-                        case 10:
-                          return _context6.abrupt("return", true);
+                          case 4:
+                            return _context6.abrupt("return", true);
 
-                        case 11:
-                        case "end":
-                          return _context6.stop();
+                          case 5:
+                          case "end":
+                            return _context6.stop();
+                        }
                       }
-                    }
-                  }, _callee6);
-                }))));
+                    }, _callee6);
+                  }));
 
-              case 12:
+                  return function (_x22) {
+                    return _ref12.apply(this, arguments);
+                  };
+                }()));
+
+              case 18:
               case "end":
                 return _context7.stop();
             }
@@ -439,7 +459,7 @@ var resolvers = {
         }, _callee7);
       }));
 
-      function updatePass(_x18, _x19, _x20) {
+      function updatePass(_x19, _x20, _x21) {
         return _updatePass.apply(this, arguments);
       }
 
@@ -502,7 +522,7 @@ var resolvers = {
         }, _callee8);
       }));
 
-      function updateUser(_x21, _x22, _x23) {
+      function updateUser(_x23, _x24, _x25) {
         return _updateUser.apply(this, arguments);
       }
 
@@ -526,7 +546,7 @@ var resolvers = {
         }, _callee9);
       }));
 
-      function createRole(_x24, _x25, _x26) {
+      function createRole(_x26, _x27, _x28) {
         return _createRole.apply(this, arguments);
       }
 
@@ -579,7 +599,7 @@ var resolvers = {
         }, _callee10);
       }));
 
-      function updateRole(_x27, _x28, _x29) {
+      function updateRole(_x29, _x30, _x31) {
         return _updateRole.apply(this, arguments);
       }
 
@@ -622,7 +642,7 @@ var resolvers = {
         }, _callee11);
       }));
 
-      function deleteRole(_x30, _x31, _x32) {
+      function deleteRole(_x32, _x33, _x34) {
         return _deleteRole.apply(this, arguments);
       }
 

@@ -31,7 +31,7 @@ var isProd = process.env.NODE_ENV === 'production';
 var port = process.env.PORT || 4000;
 var schemas = (0, _loadFiles.loadFilesSync)(_path["default"].join(__dirname, './graphql/schemas'));
 var corsOptions = {
-  origin: ['http://localhost:3000', 'http://localhost:4000', 'https://sittingonclouds.net', 'https://www.sittingonclouds.net', 'https://sittingonclouds.com', 'https://www.sittingonclouds.com', 'https://sittingonclouds.org', 'https://www.sittingonclouds.org', 'https://sittingonclouds.ru', 'https://www.sittingonclouds.ru', 'https://sittingonclouds.to', 'https://www.sittingonclouds.to'],
+  origin: ['http://localhost:3000', 'https://sittingonclouds.net', 'https://www.sittingonclouds.net', 'https://sittingonclouds.com', 'https://www.sittingonclouds.com', 'https://sittingonclouds.org', 'https://www.sittingonclouds.org', 'https://sittingonclouds.ru', 'https://www.sittingonclouds.ru', 'https://sittingonclouds.to', 'https://www.sittingonclouds.to'],
   credentials: true
 };
 

@@ -188,28 +188,36 @@ var resolvers = {
                 throw new _apolloServerErrors.UserInputError('Not Found');
 
               case 7:
-                return _context4.abrupt("return", db.transaction( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
-                  return _regenerator["default"].wrap(function _callee3$(_context3) {
-                    while (1) {
-                      switch (_context3.prev = _context3.next) {
-                        case 0:
-                          _context3.next = 2;
-                          return (0, _utils.createUpdateLog)(db, 'deleteAlbum', ost, user.username);
+                return _context4.abrupt("return", db.transaction( /*#__PURE__*/function () {
+                  var _ref6 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(transaction) {
+                    return _regenerator["default"].wrap(function _callee3$(_context3) {
+                      while (1) {
+                        switch (_context3.prev = _context3.next) {
+                          case 0:
+                            _context3.next = 2;
+                            return (0, _utils.createUpdateLog)(db, 'deleteAlbum', ost, user.username, transaction);
 
-                        case 2:
-                          _context3.next = 4;
-                          return ost.destroy();
+                          case 2:
+                            _context3.next = 4;
+                            return ost.destroy({
+                              transaction: transaction
+                            });
 
-                        case 4:
-                          return _context3.abrupt("return", 1);
+                          case 4:
+                            return _context3.abrupt("return", 1);
 
-                        case 5:
-                        case "end":
-                          return _context3.stop();
+                          case 5:
+                          case "end":
+                            return _context3.stop();
+                        }
                       }
-                    }
-                  }, _callee3);
-                }))));
+                    }, _callee3);
+                  }));
+
+                  return function (_x10) {
+                    return _ref6.apply(this, arguments);
+                  };
+                }()));
 
               case 8:
               case "end":

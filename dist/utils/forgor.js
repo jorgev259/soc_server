@@ -25,12 +25,12 @@ var transporter = _nodemailer["default"].createTransport(mailConfig);
 
 exports.transporter = transporter;
 
-function createForgor(_x, _x2) {
+function createForgor(_x, _x2, _x3) {
   return _createForgor.apply(this, arguments);
 }
 
 function _createForgor() {
-  _createForgor = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(user, db) {
+  _createForgor = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(user, db, transaction) {
     var key, row, html, message;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
@@ -40,7 +40,8 @@ function _createForgor() {
             return db.models.forgor.destroy({
               where: {
                 username: user.username
-              }
+              },
+              transaction: transaction
             });
 
           case 2:
@@ -54,11 +55,15 @@ function _createForgor() {
             return db.models.forgor.create({
               key: key,
               expires: (0, _sequelize.literal)('DATE_ADD(NOW(), INTERVAL 24 HOUR)')
+            }, {
+              transaction: transaction
             });
 
           case 5:
             row = _context.sent;
-            row.setUser(user);
+            row.setUser(user, {
+              transaction: transaction
+            });
             html = template.replaceAll('{{forgor_link}}', "https://sittingonclouds.net/forgor?key=".concat(key));
             message = {
               from: mailConfig.auth.user,
