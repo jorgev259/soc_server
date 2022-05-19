@@ -34,98 +34,122 @@ var resolvers = {
             switch (_context2.prev = _context2.next) {
               case 0:
                 db = _ref.db, user = _ref.user;
-                return _context2.abrupt("return", db.transaction( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-                  var ost, id;
-                  return _regenerator["default"].wrap(function _callee$(_context) {
-                    while (1) {
-                      switch (_context.prev = _context.next) {
-                        case 0:
-                          data.artists = data.artists ? data.artists.map(function (artist) {
-                            return {
-                              name: artist,
-                              slug: (0, _utils.slugify)(artist)
-                            };
-                          }) : [];
-                          _context.next = 3;
-                          return db.models.artist.bulkCreate(data.artists, {
-                            ignoreDuplicates: true
-                          });
+                return _context2.abrupt("return", db.transaction( /*#__PURE__*/function () {
+                  var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(transaction) {
+                    var ost, id;
+                    return _regenerator["default"].wrap(function _callee$(_context) {
+                      while (1) {
+                        switch (_context.prev = _context.next) {
+                          case 0:
+                            data.artists = data.artists ? data.artists.map(function (artist) {
+                              return {
+                                name: artist,
+                                slug: (0, _utils.slugify)(artist)
+                              };
+                            }) : [];
+                            _context.next = 3;
+                            return db.models.artist.bulkCreate(data.artists, {
+                              ignoreDuplicates: true,
+                              transaction: transaction
+                            });
 
-                        case 3:
-                          _context.next = 5;
-                          return db.models.ost.create(data, {
-                            include: [db.models.disc, db.models.store, {
-                              model: db.models.download,
-                              include: [db.models.link]
-                            }]
-                          });
+                          case 3:
+                            _context.next = 5;
+                            return db.models.ost.create(data, {
+                              include: [db.models.disc, db.models.store, {
+                                model: db.models.download,
+                                include: [db.models.link]
+                              }],
+                              transaction: transaction
+                            });
 
-                        case 5:
-                          ost = _context.sent;
-                          _context.next = 8;
-                          return Promise.all([ost.setArtists(data.artists.map(function (_ref3) {
-                            var slug = _ref3.slug;
-                            return slug;
-                          })), ost.setClasses(data.classes || []), ost.setCategories(data.categories || []), ost.setPlatforms(data.platforms || []), ost.setGames(data.games || []), ost.setAnimations(data.animations || []), ost.setRelated(data.related || []), (0, _utils.createLog)(db, 'createAlbum', data, user.username)]);
+                          case 5:
+                            ost = _context.sent;
+                            _context.next = 8;
+                            return Promise.all([ost.setArtists(data.artists.map(function (_ref3) {
+                              var slug = _ref3.slug;
+                              return slug;
+                            }), {
+                              transaction: transaction
+                            }), ost.setClasses(data.classes || [], {
+                              transaction: transaction
+                            }), ost.setCategories(data.categories || [], {
+                              transaction: transaction
+                            }), ost.setPlatforms(data.platforms || [], {
+                              transaction: transaction
+                            }), ost.setGames(data.games || [], {
+                              transaction: transaction
+                            }), ost.setAnimations(data.animations || [], {
+                              transaction: transaction
+                            }), ost.setRelated(data.related || [], {
+                              transaction: transaction
+                            }), (0, _utils.createLog)(db, 'createAlbum', data, user.username, transaction)]);
 
-                        case 8:
-                          id = ost.dataValues.id;
+                          case 8:
+                            id = ost.dataValues.id;
 
-                          if (!data.cover) {
-                            _context.next = 15;
+                            if (!data.cover) {
+                              _context.next = 15;
+                              break;
+                            }
+
+                            _context.next = 12;
+                            return (0, _utils.img)(data.cover, 'album', id);
+
+                          case 12:
+                            _context.t0 = _context.sent;
+                            _context.next = 16;
                             break;
-                          }
 
-                          _context.next = 12;
-                          return (0, _utils.img)(data.cover, 'album', id);
+                          case 15:
+                            _context.t0 = undefined;
 
-                        case 12:
-                          _context.t0 = _context.sent;
-                          _context.next = 16;
-                          break;
+                          case 16:
+                            ost.placeholder = _context.t0;
 
-                        case 15:
-                          _context.t0 = undefined;
+                            if (!data.cover) {
+                              _context.next = 23;
+                              break;
+                            }
 
-                        case 16:
-                          ost.placeholder = _context.t0;
+                            _context.next = 20;
+                            return (0, _utils.getImgColor)("album/".concat(id));
 
-                          if (!data.cover) {
-                            _context.next = 23;
+                          case 20:
+                            _context.t1 = _context.sent;
+                            _context.next = 24;
                             break;
-                          }
 
-                          _context.next = 20;
-                          return (0, _utils.getImgColor)("album/".concat(id));
+                          case 23:
+                            _context.t1 = undefined;
 
-                        case 20:
-                          _context.t1 = _context.sent;
-                          _context.next = 24;
-                          break;
+                          case 24:
+                            ost.headerColor = _context.t1;
+                            _context.next = 27;
+                            return ost.save({
+                              transaction: transaction
+                            });
 
-                        case 23:
-                          _context.t1 = undefined;
+                          case 27:
+                            if (ost.status === 'show') {
+                              (0, _plugins.postReddit)(ost);
+                              (0, _plugins.postDiscord)(ost.id);
+                            }
 
-                        case 24:
-                          ost.headerColor = _context.t1;
-                          _context.next = 27;
-                          return ost.save();
+                            return _context.abrupt("return", ost);
 
-                        case 27:
-                          if (ost.status === 'show') {
-                            (0, _plugins.postReddit)(ost);
-                            (0, _plugins.postDiscord)(ost.id);
-                          }
-
-                          return _context.abrupt("return", ost);
-
-                        case 29:
-                        case "end":
-                          return _context.stop();
+                          case 29:
+                          case "end":
+                            return _context.stop();
+                        }
                       }
-                    }
-                  }, _callee);
-                }))));
+                    }, _callee);
+                  }));
+
+                  return function (_x5) {
+                    return _ref2.apply(this, arguments);
+                  };
+                }()));
 
               case 2:
               case "end":
@@ -177,10 +201,9 @@ var resolvers = {
                           return ost.destroy();
 
                         case 4:
-                          res.unstable_revalidate("/album/".concat(id));
                           return _context3.abrupt("return", 1);
 
-                        case 6:
+                        case 5:
                         case "end":
                           return _context3.stop();
                       }
@@ -196,7 +219,7 @@ var resolvers = {
         }, _callee4);
       }));
 
-      function deleteAlbum(_x5, _x6, _x7, _x8) {
+      function deleteAlbum(_x6, _x7, _x8, _x9) {
         return _deleteAlbum.apply(this, arguments);
       }
 

@@ -21,8 +21,6 @@ var _user = require("../utils/user");
 
 var _startDB = _interopRequireDefault(require("../sequelize/startDB"));
 
-var _plaiceholder = require("plaiceholder");
-
 var _utils = require("../utils");
 
 var isAuthed = function isAuthed(next) {
@@ -166,7 +164,7 @@ function solvePlaceholder(_x6, _x7) {
 
 function _solvePlaceholder() {
   _solvePlaceholder = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(parent, folder) {
-    var id, pathString, fullPath, result, base64;
+    var id, pathString, fullPath;
     return _regenerator["default"].wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
@@ -175,16 +173,14 @@ function _solvePlaceholder() {
             pathString = _path["default"].join('/var/www/soc_img/img', folder);
             fullPath = _path["default"].join(pathString, "".concat(id, ".png"));
             _context4.next = 5;
-            return (0, _plaiceholder.getPlaiceholder)(fullPath);
+            return (0, _utils.processImage)(fullPath);
 
           case 5:
-            result = _context4.sent;
-            base64 = result.base64;
-            parent.placeholder = base64;
-            _context4.next = 10;
+            parent.placeholder = _context4.sent;
+            _context4.next = 8;
             return parent.save();
 
-          case 10:
+          case 8:
           case "end":
             return _context4.stop();
         }

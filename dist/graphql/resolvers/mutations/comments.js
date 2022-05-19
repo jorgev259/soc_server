@@ -15,73 +15,97 @@ var _resolversComposition = require("@graphql-tools/resolvers-composition");
 
 var _resolvers = require("../../../utils/resolvers");
 
+// import axios from 'axios'
+// const token = process.env.IRONCLAD
 var resolversComposition = {
   'Mutation.*': [_resolvers.isAuthed]
 };
 var resolvers = {
   Mutation: {
     updateComment: function () {
-      var _updateComment = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(_, _ref, _ref2) {
-        var text, anon, ostId, db, user, res, username, row;
-        return _regenerator["default"].wrap(function _callee$(_context) {
+      var _updateComment = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(_, _ref, _ref2) {
+        var text, anon, ostId, db, user, res;
+        return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
                 text = _ref.text, anon = _ref.anon, ostId = _ref.ostId;
                 db = _ref2.db, user = _ref2.user, res = _ref2.res;
-                username = user.username;
-                _context.next = 5;
-                return db.models.comment.findOne({
-                  where: {
-                    ostId: ostId,
-                    username: username
-                  }
-                });
+                return _context2.abrupt("return", db.transaction( /*#__PURE__*/function () {
+                  var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(transaction) {
+                    var username, row;
+                    return _regenerator["default"].wrap(function _callee$(_context) {
+                      while (1) {
+                        switch (_context.prev = _context.next) {
+                          case 0:
+                            username = user.username;
+                            _context.next = 3;
+                            return db.models.comment.findOne({
+                              where: {
+                                ostId: ostId,
+                                username: username
+                              }
+                            });
 
-              case 5:
-                row = _context.sent;
+                          case 3:
+                            row = _context.sent;
 
-                if (!row) {
-                  _context.next = 13;
-                  break;
-                }
+                            if (!row) {
+                              _context.next = 11;
+                              break;
+                            }
 
-                _context.next = 9;
-                return row.update({
-                  text: text,
-                  anon: anon
-                });
+                            _context.next = 7;
+                            return row.update({
+                              text: text,
+                              anon: anon
+                            }, {
+                              transaction: transaction
+                            });
 
-              case 9:
-                _context.next = 11;
-                return row.save();
+                          case 7:
+                            _context.next = 9;
+                            return row.save({
+                              transaction: transaction
+                            });
 
-              case 11:
-                _context.next = 15;
-                break;
+                          case 9:
+                            _context.next = 13;
+                            break;
 
-              case 13:
-                _context.next = 15;
-                return db.models.comment.create({
-                  ostId: ostId,
-                  username: username,
-                  text: text,
-                  anon: anon
-                });
+                          case 11:
+                            _context.next = 13;
+                            return db.models.comment.create({
+                              ostId: ostId,
+                              username: username,
+                              text: text,
+                              anon: anon
+                            }, {
+                              transaction: transaction
+                            });
 
-              case 15:
-                _context.next = 17;
-                return res.unstable_revalidate("/album/".concat(ostId));
+                          case 13:
+                            return _context.abrupt("return", true);
 
-              case 17:
-                return _context.abrupt("return", true);
+                          case 14:
+                          case "end":
+                            return _context.stop();
+                        }
+                      }
+                    }, _callee);
+                  }));
 
-              case 18:
+                  return function (_x4) {
+                    return _ref3.apply(this, arguments);
+                  };
+                }()));
+
+              case 3:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee);
+        }, _callee2);
       }));
 
       function updateComment(_x, _x2, _x3) {
@@ -91,66 +115,100 @@ var resolvers = {
       return updateComment;
     }(),
     addFavorite: function () {
-      var _addFavorite = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(_, _ref3, _ref4) {
+      var _addFavorite = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(_, _ref4, _ref5) {
         var ostId, db, user, res;
-        return _regenerator["default"].wrap(function _callee2$(_context2) {
+        return _regenerator["default"].wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
-                ostId = _ref3.ostId;
-                db = _ref4.db, user = _ref4.user, res = _ref4.res;
-                _context2.next = 4;
-                return user.addOst(ostId);
+                ostId = _ref4.ostId;
+                db = _ref5.db, user = _ref5.user, res = _ref5.res;
+                return _context4.abrupt("return", db.transaction( /*#__PURE__*/function () {
+                  var _ref6 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(transaction) {
+                    return _regenerator["default"].wrap(function _callee3$(_context3) {
+                      while (1) {
+                        switch (_context3.prev = _context3.next) {
+                          case 0:
+                            _context3.next = 2;
+                            return user.addOst(ostId, {
+                              transaction: transaction
+                            });
 
-              case 4:
-                _context2.next = 6;
-                return res.unstable_revalidate("/album/".concat(ostId));
+                          case 2:
+                            return _context3.abrupt("return", true);
 
-              case 6:
-                return _context2.abrupt("return", true);
+                          case 3:
+                          case "end":
+                            return _context3.stop();
+                        }
+                      }
+                    }, _callee3);
+                  }));
 
-              case 7:
+                  return function (_x8) {
+                    return _ref6.apply(this, arguments);
+                  };
+                }()));
+
+              case 3:
               case "end":
-                return _context2.stop();
+                return _context4.stop();
             }
           }
-        }, _callee2);
+        }, _callee4);
       }));
 
-      function addFavorite(_x4, _x5, _x6) {
+      function addFavorite(_x5, _x6, _x7) {
         return _addFavorite.apply(this, arguments);
       }
 
       return addFavorite;
     }(),
     removeFavorite: function () {
-      var _removeFavorite = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(_, _ref5, _ref6) {
+      var _removeFavorite = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(_, _ref7, _ref8) {
         var ostId, db, user, res;
-        return _regenerator["default"].wrap(function _callee3$(_context3) {
+        return _regenerator["default"].wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
-                ostId = _ref5.ostId;
-                db = _ref6.db, user = _ref6.user, res = _ref6.res;
-                _context3.next = 4;
-                return user.removeOst(ostId);
+                ostId = _ref7.ostId;
+                db = _ref8.db, user = _ref8.user, res = _ref8.res;
+                return _context6.abrupt("return", db.transaction( /*#__PURE__*/function () {
+                  var _ref9 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(transaction) {
+                    return _regenerator["default"].wrap(function _callee5$(_context5) {
+                      while (1) {
+                        switch (_context5.prev = _context5.next) {
+                          case 0:
+                            _context5.next = 2;
+                            return user.removeOst(ostId, {
+                              transaction: transaction
+                            });
 
-              case 4:
-                _context3.next = 6;
-                return res.unstable_revalidate("/album/".concat(ostId));
+                          case 2:
+                            return _context5.abrupt("return", true);
 
-              case 6:
-                return _context3.abrupt("return", true);
+                          case 3:
+                          case "end":
+                            return _context5.stop();
+                        }
+                      }
+                    }, _callee5);
+                  }));
 
-              case 7:
+                  return function (_x12) {
+                    return _ref9.apply(this, arguments);
+                  };
+                }()));
+
+              case 3:
               case "end":
-                return _context3.stop();
+                return _context6.stop();
             }
           }
-        }, _callee3);
+        }, _callee6);
       }));
 
-      function removeFavorite(_x7, _x8, _x9) {
+      function removeFavorite(_x9, _x10, _x11) {
         return _removeFavorite.apply(this, arguments);
       }
 

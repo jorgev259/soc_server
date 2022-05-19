@@ -9,8 +9,6 @@ exports["default"] = void 0;
 
 var _sequelize = _interopRequireDefault(require("sequelize"));
 
-var _clsHooked = _interopRequireDefault(require("cls-hooked"));
-
 var _relations = _interopRequireDefault(require("../sequelize/relations"));
 
 var _animation = _interopRequireDefault(require("../sequelize/models/animation"));
@@ -50,10 +48,6 @@ var _log = _interopRequireDefault(require("../sequelize/models/log"));
 var _comment = _interopRequireDefault(require("../sequelize/models/comment"));
 
 var db = new _sequelize["default"](process.env.GITHUB_ACTIONS ? 'sqlite::memory:' : JSON.parse(process.env.SEQUELIZE));
-
-_sequelize["default"].useCLS(_clsHooked["default"].createNamespace('trans-namespace')); // eslint-disable-line react-hooks/rules-of-hooks
-
-
 (0, _animation["default"])(db);
 (0, _artist["default"])(db);
 (0, _category["default"])(db);

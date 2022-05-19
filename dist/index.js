@@ -89,8 +89,7 @@ var server = new _apolloServerExpress.ApolloServer({
   typeDefs: (0, _merge.mergeTypeDefs)(schemas),
   resolvers: (0, _merge.mergeResolvers)(_resolvers["default"]),
   context: context,
-  plugins: [process.env.NODE_ENV === 'production' ? (0, _apolloServerCore.ApolloServerPluginLandingPageDisabled)() : (0, _apolloServerCore.ApolloServerPluginLandingPageGraphQLPlayground)()],
-  csrfPrevention: true
+  plugins: [process.env.NODE_ENV === 'production' ? (0, _apolloServerCore.ApolloServerPluginLandingPageDisabled)() : (0, _apolloServerCore.ApolloServerPluginLandingPageGraphQLPlayground)()]
 });
 startServer();
 

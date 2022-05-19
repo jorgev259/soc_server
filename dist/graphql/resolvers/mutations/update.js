@@ -481,73 +481,83 @@ var resolvers = {
             switch (_context20.prev = _context20.next) {
               case 0:
                 db = _ref25.db, user = _ref25.user;
-                return _context20.abrupt("return", db.transaction( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee19() {
-                  var series, slug;
-                  return _regenerator["default"].wrap(function _callee19$(_context19) {
-                    while (1) {
-                      switch (_context19.prev = _context19.next) {
-                        case 0:
-                          _context19.next = 2;
-                          return db.models.series.create(data);
+                return _context20.abrupt("return", db.transaction( /*#__PURE__*/function () {
+                  var _ref26 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee19(transaction) {
+                    var series, slug;
+                    return _regenerator["default"].wrap(function _callee19$(_context19) {
+                      while (1) {
+                        switch (_context19.prev = _context19.next) {
+                          case 0:
+                            _context19.next = 2;
+                            return db.models.series.create(data, {
+                              transaction: transaction
+                            });
 
-                        case 2:
-                          series = _context19.sent;
-                          slug = series.dataValues.slug;
+                          case 2:
+                            series = _context19.sent;
+                            slug = series.dataValues.slug;
 
-                          if (!data.cover) {
-                            _context19.next = 10;
+                            if (!data.cover) {
+                              _context19.next = 10;
+                              break;
+                            }
+
+                            _context19.next = 7;
+                            return (0, _utils.img)(data.cover, 'series', slug);
+
+                          case 7:
+                            _context19.t0 = _context19.sent;
+                            _context19.next = 11;
                             break;
-                          }
 
-                          _context19.next = 7;
-                          return (0, _utils.img)(data.cover, 'series', slug);
+                          case 10:
+                            _context19.t0 = undefined;
 
-                        case 7:
-                          _context19.t0 = _context19.sent;
-                          _context19.next = 11;
-                          break;
+                          case 11:
+                            series.placeholder = _context19.t0;
 
-                        case 10:
-                          _context19.t0 = undefined;
+                            if (!data.cover) {
+                              _context19.next = 18;
+                              break;
+                            }
 
-                        case 11:
-                          series.placeholder = _context19.t0;
+                            _context19.next = 15;
+                            return (0, _utils.getImgColor)("series/".concat(slug));
 
-                          if (!data.cover) {
-                            _context19.next = 18;
+                          case 15:
+                            _context19.t1 = _context19.sent;
+                            _context19.next = 19;
                             break;
-                          }
 
-                          _context19.next = 15;
-                          return (0, _utils.getImgColor)("series/".concat(slug));
+                          case 18:
+                            _context19.t1 = undefined;
 
-                        case 15:
-                          _context19.t1 = _context19.sent;
-                          _context19.next = 19;
-                          break;
+                          case 19:
+                            series.headerColor = _context19.t1;
+                            _context19.next = 22;
+                            return series.save({
+                              transaction: transaction
+                            });
 
-                        case 18:
-                          _context19.t1 = undefined;
+                          case 22:
+                            _context19.next = 24;
+                            return (0, _utils.createLog)(db, 'createSeries', data, user.username, transaction);
 
-                        case 19:
-                          series.headerColor = _context19.t1;
-                          _context19.next = 22;
-                          return series.save();
+                          case 24:
+                            return _context19.abrupt("return", series);
 
-                        case 22:
-                          _context19.next = 24;
-                          return (0, _utils.createLog)(db, 'createSeries', data, user.username);
-
-                        case 24:
-                          return _context19.abrupt("return", series);
-
-                        case 25:
-                        case "end":
-                          return _context19.stop();
+                          case 25:
+                          case "end":
+                            return _context19.stop();
+                        }
                       }
-                    }
-                  }, _callee19);
-                }))));
+                    }, _callee19);
+                  }));
+
+                  return function (_x39) {
+                    return _ref26.apply(this, arguments);
+                  };
+                }()));
 
               case 2:
               case "end":
@@ -628,7 +638,7 @@ var resolvers = {
         }, _callee22);
       }));
 
-      function updateSeries(_x39, _x40, _x41, _x42) {
+      function updateSeries(_x40, _x41, _x42, _x43) {
         return _updateSeries.apply(this, arguments);
       }
 
@@ -677,7 +687,7 @@ var resolvers = {
         }, _callee24);
       }));
 
-      function deleteSeries(_x43, _x44, _x45) {
+      function deleteSeries(_x44, _x45, _x46) {
         return _deleteSeries.apply(this, arguments);
       }
 
@@ -769,7 +779,7 @@ var resolvers = {
         }, _callee26);
       }));
 
-      function createGame(_x46, _x47, _x48, _x49) {
+      function createGame(_x47, _x48, _x49, _x50) {
         return _createGame.apply(this, arguments);
       }
 
@@ -845,7 +855,7 @@ var resolvers = {
         }, _callee28);
       }));
 
-      function updateGame(_x50, _x51, _x52, _x53) {
+      function updateGame(_x51, _x52, _x53, _x54) {
         return _updateGame.apply(this, arguments);
       }
 
@@ -918,7 +928,7 @@ var resolvers = {
         }, _callee30);
       }));
 
-      function deleteGame(_x54, _x55, _x56) {
+      function deleteGame(_x55, _x56, _x57) {
         return _deleteGame.apply(this, arguments);
       }
 
@@ -1010,7 +1020,7 @@ var resolvers = {
         }, _callee32);
       }));
 
-      function createAnimation(_x57, _x58, _x59, _x60) {
+      function createAnimation(_x58, _x59, _x60, _x61) {
         return _createAnimation.apply(this, arguments);
       }
 
@@ -1087,7 +1097,7 @@ var resolvers = {
         }, _callee34);
       }));
 
-      function updateAnimation(_x61, _x62, _x63, _x64) {
+      function updateAnimation(_x62, _x63, _x64, _x65) {
         return _updateAnimation.apply(this, arguments);
       }
 
@@ -1148,7 +1158,7 @@ var resolvers = {
         }, _callee36);
       }));
 
-      function deleteAnimation(_x65, _x66, _x67) {
+      function deleteAnimation(_x66, _x67, _x68) {
         return _deleteAnimation.apply(this, arguments);
       }
 
@@ -1242,12 +1252,12 @@ var resolvers = {
                           if (triggerPost) {
                             (0, _plugins.postReddit)(ost);
                             (0, _plugins.postDiscord)(ost.id);
-                          }
+                          } // res.unstable_revalidate(`/album/${ost.id}`)
 
-                          res.unstable_revalidate("/album/".concat(ost.id));
+
                           return _context37.abrupt("return", ost);
 
-                        case 21:
+                        case 20:
                         case "end":
                           return _context37.stop();
                       }
@@ -1263,7 +1273,7 @@ var resolvers = {
         }, _callee38);
       }));
 
-      function updateAlbum(_x68, _x69, _x70, _x71) {
+      function updateAlbum(_x69, _x70, _x71, _x72) {
         return _updateAlbum.apply(this, arguments);
       }
 

@@ -35,7 +35,7 @@ var _forgor = require("../../../utils/forgor");
 
 var _resolvers = require("../../../utils/resolvers");
 
-var _plaiceholder = require("plaiceholder");
+var _utils = require("../../../utils");
 
 var resolversComposition = {
   'Mutation.*': (0, _resolvers.hasRole)('MANAGE_USER'),
@@ -66,7 +66,7 @@ function cropPFP(_x, _x2, _x3) {
 
 function _cropPFP() {
   _cropPFP = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee12(streamItem, username, imgId) {
-    var _yield$streamItem, createReadStream, pathString, fullPath, image, sharpImage, metadata, width, height, result, base64;
+    var _yield$streamItem, createReadStream, pathString, fullPath, image, sharpImage, metadata, width, height;
 
     return _regenerator["default"].wrap(function _callee12$(_context12) {
       while (1) {
@@ -119,14 +119,12 @@ function _cropPFP() {
 
           case 19:
             _context12.next = 21;
-            return (0, _plaiceholder.getPlaiceholder)(fullPath);
+            return (0, _utils.processImage)(fullPath);
 
           case 21:
-            result = _context12.sent;
-            base64 = result.base64;
-            return _context12.abrupt("return", base64);
+            return _context12.abrupt("return", _context12.sent);
 
-          case 24:
+          case 22:
           case "end":
             return _context12.stop();
         }
