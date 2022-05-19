@@ -27,6 +27,7 @@ var _startDB = _interopRequireDefault(require("./sequelize/startDB"));
 var _resolvers = _interopRequireDefault(require("./graphql/resolvers"));
 
 var db = _startDB["default"]["default"] || _startDB["default"];
+var isProd = process.env.NODE_ENV === 'production';
 var port = process.env.PORT || 4000;
 var schemas = (0, _loadFiles.loadFilesSync)(_path["default"].join(__dirname, './graphql/schemas'));
 var corsOptions = {
@@ -89,7 +90,7 @@ var server = new _apolloServerExpress.ApolloServer({
   typeDefs: (0, _merge.mergeTypeDefs)(schemas),
   resolvers: (0, _merge.mergeResolvers)(_resolvers["default"]),
   context: context,
-  plugins: [process.env.NODE_ENV === 'production' ? (0, _apolloServerCore.ApolloServerPluginLandingPageDisabled)() : (0, _apolloServerCore.ApolloServerPluginLandingPageGraphQLPlayground)()]
+  plugins: [isProd ? (0, _apolloServerCore.ApolloServerPluginLandingPageDisabled)() : (0, _apolloServerCore.ApolloServerPluginLandingPageGraphQLPlayground)()]
 });
 startServer();
 
@@ -104,7 +105,7 @@ function _startServer() {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            if (process.env.NODE_ENV === 'production' || process.env.SYNC) db.sync();
+            if (isProd || process.env.SYNC) db.sync();
             _context3.next = 3;
             return server.start();
 
