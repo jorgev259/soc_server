@@ -1,5 +1,4 @@
 import Sequelize from 'sequelize'
-import cls from 'cls-hooked'
 
 import relations from '../sequelize/relations'
 
@@ -23,7 +22,6 @@ import log from '../sequelize/models/log'
 import comment from '../sequelize/models/comment'
 
 const db = new Sequelize(process.env.GITHUB_ACTIONS ? 'sqlite::memory:' : JSON.parse(process.env.SEQUELIZE))
-Sequelize.useCLS(cls.createNamespace('trans-namespace')) // eslint-disable-line react-hooks/rules-of-hooks
 
 animation(db)
 artist(db)

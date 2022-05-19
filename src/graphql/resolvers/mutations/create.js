@@ -8,33 +8,34 @@ import { hasRole } from '../../../utils/resolvers'
 const resolversComposition = { 'Mutation.*': hasRole('CREATE') }
 const resolvers = {
   Mutation: {
-    createAlbum: async (parent, data, { db, user }, info) => {
-      return db.transaction(async () => {
+    createAlbum: async (parent, data, { db, user }, info) => (
+      db.transaction(async transaction => {
         data.artists = data.artists ? data.artists.map(artist => { return { name: artist, slug: slugify(artist) } }) : []
-        await db.models.artist.bulkCreate(data.artists, { ignoreDuplicates: true })
+        await db.models.artist.bulkCreate(data.artists, { ignoreDuplicates: true, transaction })
 
         const ost = await db.models.ost.create(data, {
           include: [db.models.disc, db.models.store, {
             model: db.models.download, include: [db.models.link]
-          }]
+          }],
+          transaction
         })
 
         await Promise.all([
-          ost.setArtists(data.artists.map(({ slug }) => slug)),
-          ost.setClasses(data.classes || []),
-          ost.setCategories(data.categories || []),
-          ost.setPlatforms(data.platforms || []),
-          ost.setGames(data.games || []),
-          ost.setAnimations(data.animations || []),
-          ost.setRelated(data.related || []),
-          createLog(db, 'createAlbum', data, user.username)
+          ost.setArtists(data.artists.map(({ slug }) => slug), { transaction }),
+          ost.setClasses(data.classes || [], { transaction }),
+          ost.setCategories(data.categories || [], { transaction }),
+          ost.setPlatforms(data.platforms || [], { transaction }),
+          ost.setGames(data.games || [], { transaction }),
+          ost.setAnimations(data.animations || [], { transaction }),
+          ost.setRelated(data.related || [], { transaction }),
+          createLog(db, 'createAlbum', data, user.username, transaction)
         ])
 
         const { id } = ost.dataValues
         ost.placeholder = data.cover ? await img(data.cover, 'album', id) : undefined
         ost.headerColor = data.cover ? await getImgColor(`album/${id}`) : undefined
 
-        await ost.save()
+        await ost.save({ transaction })
 
         if (ost.status === 'show') {
           postReddit(ost)
@@ -43,7 +44,7 @@ const resolvers = {
 
         return ost
       })
-    },
+    ),
 
     deleteAlbum: async (parent, { id }, { db, user, res }, info) => {
       const ost = await db.models.ost.findByPk(id)
@@ -51,7 +52,7 @@ const resolvers = {
       return db.transaction(async () => {
         await createUpdateLog(db, 'deleteAlbum', ost, user.username)
         await ost.destroy()
-        res.unstable_revalidate(`/album/${id}`)
+        // res.unstable_revalidate(`/album/${id}`)
         return 1
       })
     }

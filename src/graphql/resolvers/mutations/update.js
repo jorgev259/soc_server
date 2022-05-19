@@ -89,15 +89,15 @@ const resolvers = {
     ),
 
     createSeries: async (parent, data, { db, user }, info) => (
-      db.transaction(async () => {
-        const series = await db.models.series.create(data)
+      db.transaction(async transaction => {
+        const series = await db.models.series.create(data, { transaction })
         const { slug } = series.dataValues
 
         series.placeholder = data.cover ? await img(data.cover, 'series', slug) : undefined
         series.headerColor = data.cover ? await getImgColor(`series/${slug}`) : undefined
-        await series.save()
+        await series.save({ transaction })
 
-        await createLog(db, 'createSeries', data, user.username)
+        await createLog(db, 'createSeries', data, user.username, transaction)
         return series
       })
     ),
@@ -261,7 +261,7 @@ const resolvers = {
           postDiscord(ost.id)
         }
 
-        res.unstable_revalidate(`/album/${ost.id}`)
+        // res.unstable_revalidate(`/album/${ost.id}`)
         return ost
       })
     }

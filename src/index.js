@@ -32,8 +32,7 @@ const server = new ApolloServer({
     process.env.NODE_ENV === 'production'
       ? ApolloServerPluginLandingPageDisabled()
       : ApolloServerPluginLandingPageGraphQLPlayground()
-  ],
-  csrfPrevention: true
+  ]
 })
 
 startServer()
