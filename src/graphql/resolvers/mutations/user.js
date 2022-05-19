@@ -59,18 +59,19 @@ async function cropPFP (streamItem, username, imgId) {
 const resolvers = {
   Mutation: {
     registerUser: async (_, { username, email, pfp }, { db }) => {
-      return db.transaction(async () => {
-        await Promise.all([
-          db.models.user.findByPk(username).then(result => {
-            if (result) throw new UserInputError('Username already in use')
-          }),
-          db.models.user.findOne({ where: { email } }).then(result => {
-            if (result) throw new UserInputError('Email already in use')
-          })
-        ])
+      await Promise.all([
+        db.models.user.findByPk(username).then(result => {
+          if (result) throw new UserInputError('Username already in use')
+        }),
+        db.models.user.findOne({ where: { email } }).then(result => {
+          if (result) throw new UserInputError('Email already in use')
+        })
+      ])
 
-        const password = generator.generate({ length: 30, numbers: true, upercase: true, strict: true })
-        const user = await db.models.user.create({ username, email, password: await bcrypt.hash(password, 10) })
+      const password = generator.generate({ length: 30, numbers: true, upercase: true, strict: true })
+
+      return db.transaction(async transaction => {
+        const user = await db.models.user.create({ username, email, password: await bcrypt.hash(password, 10) }, { transaction })
         if (pfp) {
           const imgId = Date.now()
           user.placeholder = await cropPFP(pfp, username, imgId)
@@ -79,8 +80,8 @@ const resolvers = {
           user.placeholder = 'data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACwAQCdASoEAAQAAUAmJZgCdAEO9p5AAPa//NFYLcn+a7b+3z7ynq/qXv+iG0yH/y1D9eBf9pqWugq9G0RnxmxwsjaA2bW8AAA='
         }
 
-        await user.save()
-        await createForgor(user, db)
+        await user.save({ transaction })
+        await createForgor(user, db, transaction)
 
         return true
       })
@@ -114,12 +115,12 @@ const resolvers = {
 
       if (now > expires) throw new ForbiddenError()
 
-      return db.transaction(async () => {
-        const user = await db.models.user.findByPk(row.username)
-        user.password = await bcrypt.hash(pass, 10)
+      const user = await db.models.user.findByPk(row.username)
+      user.password = await bcrypt.hash(pass, 10)
 
-        await user.save()
-        await row.destroy()
+      return db.transaction(async transaction => {
+        await user.save({ transaction })
+        await row.destroy({ transaction })
         return true
       })
     },
