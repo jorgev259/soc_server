@@ -11,7 +11,7 @@ import dbModule from './sequelize/startDB'
 import resolvers from './graphql/resolvers'
 
 const db = dbModule.default || dbModule
-
+const isProd = process.env.NODE_ENV === 'production'
 const port = process.env.PORT || 4000
 const schemas = loadFilesSync(path.join(__dirname, './graphql/schemas'))
 const corsOptions = {
@@ -32,7 +32,7 @@ const server = new ApolloServer({
   resolvers: mergeResolvers(resolvers),
   context,
   plugins: [
-    process.env.NODE_ENV === 'production'
+    isProd
       ? ApolloServerPluginLandingPageDisabled()
       : ApolloServerPluginLandingPageGraphQLPlayground()
   ]
@@ -41,7 +41,7 @@ const server = new ApolloServer({
 startServer()
 
 async function startServer () {
-  if (process.env.NODE_ENV === 'production' || process.env.SYNC) db.sync()
+  if (isProd || process.env.SYNC) db.sync()
   await server.start()
 
   const app = express()
