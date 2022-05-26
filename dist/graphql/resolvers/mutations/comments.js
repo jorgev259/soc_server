@@ -15,6 +15,8 @@ var _resolversComposition = require("@graphql-tools/resolvers-composition");
 
 var _resolvers = require("../../../utils/resolvers");
 
+var _revalidate = _interopRequireDefault(require("../../../utils/revalidate"));
+
 // import axios from 'axios'
 // const token = process.env.IRONCLAD
 var resolversComposition = {
@@ -85,9 +87,13 @@ var resolvers = {
                             });
 
                           case 13:
+                            _context.next = 15;
+                            return (0, _revalidate["default"])(["/album/".concat(ostId)]);
+
+                          case 15:
                             return _context.abrupt("return", true);
 
-                          case 14:
+                          case 16:
                           case "end":
                             return _context.stop();
                         }
@@ -135,9 +141,13 @@ var resolvers = {
                             });
 
                           case 2:
+                            _context3.next = 4;
+                            return (0, _revalidate["default"])(["/album/".concat(ostId)]);
+
+                          case 4:
                             return _context3.abrupt("return", true);
 
-                          case 3:
+                          case 5:
                           case "end":
                             return _context3.stop();
                         }
@@ -185,9 +195,13 @@ var resolvers = {
                             });
 
                           case 2:
+                            _context5.next = 4;
+                            return (0, _revalidate["default"])(["/album/".concat(ostId)]);
+
+                          case 4:
                             return _context5.abrupt("return", true);
 
-                          case 3:
+                          case 5:
                           case "end":
                             return _context5.stop();
                         }

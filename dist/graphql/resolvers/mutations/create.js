@@ -21,6 +21,8 @@ var _plugins = require("../../../utils/plugins");
 
 var _resolvers = require("../../../utils/resolvers");
 
+var _revalidate = _interopRequireDefault(require("../../../utils/revalidate"));
+
 var resolversComposition = {
   'Mutation.*': (0, _resolvers.hasRole)('CREATE')
 };
@@ -204,9 +206,13 @@ var resolvers = {
                             });
 
                           case 4:
+                            _context3.next = 6;
+                            return (0, _revalidate["default"])("/album/".concat(id));
+
+                          case 6:
                             return _context3.abrupt("return", 1);
 
-                          case 5:
+                          case 7:
                           case "end":
                             return _context3.stop();
                         }
