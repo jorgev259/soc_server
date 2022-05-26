@@ -4,6 +4,7 @@ import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import { img, createLog, createUpdateLog, getImgColor, slugify } from '../../../utils'
 import { postReddit, postDiscord } from '../../../utils/plugins'
 import { hasRole } from '../../../utils/resolvers'
+import revalidate from '../../../utils/revalidate'
 
 const resolversComposition = { 'Mutation.*': hasRole('CREATE') }
 const resolvers = {
@@ -52,7 +53,7 @@ const resolvers = {
       return db.transaction(async transaction => {
         await createUpdateLog(db, 'deleteAlbum', ost, user.username, transaction)
         await ost.destroy({ transaction })
-        // res.unstable_revalidate(`/album/${id}`)
+        await revalidate(`/album/${id}`)
         return 1
       })
     }
