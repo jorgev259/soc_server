@@ -57,7 +57,7 @@ const resolvers = {
   },
 
   Game: {
-    albums: (parent, args, context, info) => parent.getOsts(),
+    albums: async (game, { order = [] }) => game.getOsts({ order }),
     series: (parent, args, context, info) => parent.getSeries(),
     publishers: (parent, args, context, info) => parent.getPublishers(),
     platforms: (parent, args, context, info) => parent.getPlatforms({ order: ['name'] }),
