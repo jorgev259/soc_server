@@ -190,9 +190,33 @@ var resolvers = {
     }()
   },
   Game: {
-    albums: function albums(parent, args, context, info) {
-      return parent.getOsts();
-    },
+    albums: function () {
+      var _albums = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(game, _ref9) {
+        var _ref9$order, order;
+
+        return _regenerator["default"].wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _ref9$order = _ref9.order, order = _ref9$order === void 0 ? [] : _ref9$order;
+                return _context3.abrupt("return", game.getOsts({
+                  order: order
+                }));
+
+              case 2:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }));
+
+      function albums(_x8, _x9) {
+        return _albums.apply(this, arguments);
+      }
+
+      return albums;
+    }(),
     series: function series(parent, args, context, info) {
       return parent.getSeries();
     },
@@ -204,12 +228,12 @@ var resolvers = {
         order: ['name']
       });
     },
-    placeholder: function placeholder(game, _, _ref9) {
-      var db = _ref9.db;
+    placeholder: function placeholder(game, _, _ref10) {
+      var db = _ref10.db;
       return (0, _resolvers.placeholder)(game, 'game');
     },
-    headerColor: function headerColor(game, _, _ref10) {
-      var db = _ref10.db;
+    headerColor: function headerColor(game, _, _ref11) {
+      var db = _ref11.db;
       return (0, _resolvers.headerColor)(game, 'game');
     }
   },
@@ -217,8 +241,8 @@ var resolvers = {
     albums: function albums(parent) {
       return parent.getOsts();
     },
-    games: function games(platform, args, _ref11) {
-      var db = _ref11.db;
+    games: function games(platform, args, _ref12) {
+      var db = _ref12.db;
       return platform.getGames();
     }
   },
@@ -229,12 +253,12 @@ var resolvers = {
     albums: function albums(parent) {
       return parent.getOsts();
     },
-    placeholder: function placeholder(anim, _, _ref12) {
-      var db = _ref12.db;
+    placeholder: function placeholder(anim, _, _ref13) {
+      var db = _ref13.db;
       return (0, _resolvers.placeholder)(anim, 'anim');
     },
-    headerColor: function headerColor(anim, _, _ref13) {
-      var db = _ref13.db;
+    headerColor: function headerColor(anim, _, _ref14) {
+      var db = _ref14.db;
       return (0, _resolvers.placeholder)(anim, 'anim');
     }
   },
@@ -247,12 +271,12 @@ var resolvers = {
     games: function games(parent, args, context, info) {
       return parent.getGames();
     },
-    placeholder: function placeholder(series, _, _ref14) {
-      var db = _ref14.db;
+    placeholder: function placeholder(series, _, _ref15) {
+      var db = _ref15.db;
       return (0, _resolvers.placeholder)(series, 'series');
     },
-    headerColor: function headerColor(series, _, _ref15) {
-      var db = _ref15.db;
+    headerColor: function headerColor(series, _, _ref16) {
+      var db = _ref16.db;
       return (0, _resolvers.placeholder)(series, 'series');
     }
   },

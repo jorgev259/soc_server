@@ -70,7 +70,7 @@ type Game {
     placeholder: String
     publishers: [Publisher]
     platforms: [Platform]
-    albums: [Album]
+    albums (order: [String]): [Album]
     series: [Series]
     headerColor: String!
 }
