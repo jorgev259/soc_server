@@ -2,6 +2,7 @@ import { composeResolvers } from '@graphql-tools/resolvers-composition'
 // import axios from 'axios'
 
 import { isAuthed } from '../../../utils/resolvers'
+import revalidate from '../../../utils/revalidate'
 
 // const token = process.env.IRONCLAD
 
@@ -21,7 +22,7 @@ const resolvers = {
           await row.save({ transaction })
         } else await db.models.comment.create({ ostId, username, text, anon }, { transaction })
 
-        // await axios.post('http://localhost:3000/api/revalidate', { token, revalidate: ['/'] })
+        await revalidate([`/album/${ostId}`])
 
         return true
       })
@@ -29,14 +30,14 @@ const resolvers = {
     addFavorite: async (_, { ostId }, { db, user, res }) => (
       db.transaction(async transaction => {
         await user.addOst(ostId, { transaction })
-        // await res.unstable_revalidate(`/album/${ostId}`)
+        await revalidate([`/album/${ostId}`])
         return true
       })
     ),
     removeFavorite: async (_, { ostId }, { db, user, res }) => (
       db.transaction(async transaction => {
         await user.removeOst(ostId, { transaction })
-        // await res.unstable_revalidate(`/album/${ostId}`)
+        await revalidate([`/album/${ostId}`])
         return true
       })
     )

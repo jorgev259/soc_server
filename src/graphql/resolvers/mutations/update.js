@@ -4,6 +4,7 @@ import { img, createLog, createUpdateLog, getImgColor, slugify } from '../../../
 import { postReddit, postDiscord } from '../../../utils/plugins'
 
 import { hasRole } from '../../../utils/resolvers'
+import revalidate from '../../../utils/revalidate'
 
 const resolversComposition = { 'Mutation.*': hasRole('UPDATE') }
 const resolvers = {
@@ -276,7 +277,6 @@ const resolvers = {
         throw new Error(err.message)
       }
     }
-
   }
 }
 

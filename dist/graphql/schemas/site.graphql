@@ -1,0 +1,20 @@
+scalar Upload
+scalar JSON
+scalar JSONObject
+
+type Config {
+    name: String!
+    value: String!
+}
+
+type Query {
+    config(name: String): Config
+}
+
+type Mutation {
+    uploadBanner(banner: Upload!): Int
+    config(
+        name: String!
+        value: String!
+    ): Config!
+}
