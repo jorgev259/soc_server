@@ -232,44 +232,49 @@ const resolvers = {
     },
 
     updateAlbum: async (parent, data, { db, user, res }, info) => {
-      const ost = await db.models.ost.findByPk(data.id)
-      const triggerPost = (data.status !== ost.status.repeat(1)) && data.status === 'show'
-      data.artists = data.artists ? data.artists.map(artist => { return { name: artist, slug: slugify(artist) } }) : []
+      try {
+        const ost = await db.models.ost.findByPk(data.id)
+        const triggerPost = (data.status !== ost.status.repeat(1)) && data.status === 'show'
+        data.artists = data.artists ? data.artists.map(artist => { return { name: artist, slug: slugify(artist) } }) : []
 
-      return db.transaction(async transaction => {
-        await db.models.artist.bulkCreate(data.artists, { ignoreDuplicates: true, transaction })
+        return db.transaction(async transaction => {
+          await db.models.artist.bulkCreate(data.artists, { ignoreDuplicates: true, transaction })
 
-        // implement better log lol lmao
+          // implement better log lol lmao
 
-        await Promise.all([
-          ost.update(data, { transaction }),
-          ost.setArtists(data.artists.map(({ slug }) => slug), { transaction }),
-          ost.setClasses(data.classes || [], { transaction }),
-          ost.setCategories(data.categories || [], { transaction }),
-          ost.setPlatforms(data.platforms || [], { transaction }),
-          ost.setGames(data.games || []), { transaction },
-          ost.setRelated(data.related || [], { transaction }),
-          ost.setAnimations(data.animations || [], { transaction }),
-          db.models.disc.destroy({ where: { ostId: ost.dataValues.id }, transaction }).then(() => (data.discs || []).map(disc => ost.createDisc(disc, { transaction }))),
-          db.models.store.destroy({ where: { ostId: ost.dataValues.id }, transaction }).then(() => (data.stores || []).map(store => ost.createStore(store, { transaction }))),
-          db.models.download.destroy({ where: { ostId: ost.dataValues.id }, transaction }).then(() => (data.downloads || []).map(download => ost.createDownload(download, { include: [db.models.link], transaction }))),
-          createUpdateLog(db, 'updateAlbum', ost, user.username, transaction)
-        ])
+          await Promise.all([
+            ost.update(data, { transaction }),
+            ost.setArtists(data.artists.map(({ slug }) => slug), { transaction }),
+            ost.setClasses(data.classes || [], { transaction }),
+            ost.setCategories(data.categories || [], { transaction }),
+            ost.setPlatforms(data.platforms || [], { transaction }),
+            ost.setGames(data.games || []), { transaction },
+            ost.setRelated(data.related || [], { transaction }),
+            ost.setAnimations(data.animations || [], { transaction }),
+            db.models.disc.destroy({ where: { ostId: ost.dataValues.id }, transaction }).then(() => (data.discs || []).map(disc => ost.createDisc(disc, { transaction }))),
+            db.models.store.destroy({ where: { ostId: ost.dataValues.id }, transaction }).then(() => (data.stores || []).map(store => ost.createStore(store, { transaction }))),
+            db.models.download.destroy({ where: { ostId: ost.dataValues.id }, transaction }).then(() => (data.downloads || []).map(download => ost.createDownload(download, { include: [db.models.link], transaction }))),
+            createUpdateLog(db, 'updateAlbum', ost, user.username, transaction)
+          ])
 
-        if (data.cover) {
-          ost.placeholder = await img(data.cover, 'album', ost.id)
-          ost.headerColor = await getImgColor(`album/${ost.id}`)
-          await ost.save({ transaction })
-        }
+          if (data.cover) {
+            ost.placeholder = await img(data.cover, 'album', ost.id)
+            ost.headerColor = await getImgColor(`album/${ost.id}`)
+            await ost.save({ transaction })
+          }
 
-        if (triggerPost) {
-          postReddit(ost)
-          postDiscord(ost.id)
-        }
+          if (triggerPost) {
+            postReddit(ost)
+            postDiscord(ost.id)
+          }
 
-        // res.unstable_revalidate(`/album/${ost.id}`)
-        return ost
-      })
+          // res.unstable_revalidate(`/album/${ost.id}`)
+          return ost
+        })
+      } catch (err) {
+        console.log(err)
+        throw new Error(err.message)
+      }
     }
 
   }
