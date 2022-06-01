@@ -1,0 +1,30 @@
+type Comment {
+  text: String!
+  anon: Boolean!
+  album: Album!
+  username: String
+}
+
+type Album {
+  comments: [Comment]!
+  selfComment: Comment
+  isFavorite: Boolean!
+  favorites: Int!
+}
+
+type User {
+  comments: [Comment]!
+  favorites: [Album]!
+}
+
+type UserMe {
+  comments: [Comment]!
+  favorites: [Album]!
+}
+
+
+type Mutation {
+  updateComment(text: String!, anon: Boolean!, ostId: ID!): Boolean
+  addFavorite(ostId: String!): Boolean
+  removeFavorite(ostId: String!): Boolean
+}

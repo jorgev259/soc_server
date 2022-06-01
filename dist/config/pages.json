@@ -1,0 +1,20 @@
+[
+    {
+        "url": "/admin/1",
+        "name": "Album Admin",
+        "perms": ["UPDATE"]
+    },
+    {
+        "url": "/admin/user",
+        "name": "Manage Users",
+        "perms": ["MANAGE_USER"]
+    },
+    {
+        "url": "/admin/album/add",
+        "perms": ["CREATE", "UPDATE"]
+    },  
+    {
+        "url": "/admin/album/:id",
+        "perms": ["UPDATE"]
+    }
+]
