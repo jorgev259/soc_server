@@ -82,7 +82,7 @@ type Animation {
     releaseDate: String
     placeholder: String
     studios: [Studio]!
-    albums: [Album]!
+    albums(order: [String]): [Album]!
     headerColor: String!
 }
 

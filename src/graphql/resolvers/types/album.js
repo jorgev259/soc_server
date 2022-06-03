@@ -89,7 +89,7 @@ const resolvers = {
 
   Animation: {
     studios: parent => parent.getStudios(),
-    albums: parent => parent.getOsts(),
+    albums: (anim, { order = [] }) => anim.getOsts({ order }),
     placeholder: (anim, _, { db }) => placeholder(anim, 'anim'),
     headerColor: (anim, _, { db }) => placeholder(anim, 'anim')
   },
