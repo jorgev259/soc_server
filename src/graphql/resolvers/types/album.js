@@ -61,13 +61,13 @@ const resolvers = {
       if (fallback) return
 
       const { user } = context
-      if (!user) return
+      if (!user) return false
 
       const roles = await user.getRoles()
       const perms = roles.map(r => r.permissions).flat()
 
       const donator = perms.includes('DIRECT')
-      if (!donator) return
+      if (!donator) return false
 
       return link.directUrl
     }
