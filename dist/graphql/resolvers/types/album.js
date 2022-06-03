@@ -138,7 +138,7 @@ var resolvers = {
   Download: {
     links: function () {
       var _links = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(parent, args, _ref8, info) {
-        var req, db, user, donator, links, roles, perms;
+        var req, db, user, donator, links, filterLinks, fallback, finalLinks, roles, perms;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -150,31 +150,40 @@ var resolvers = {
 
               case 4:
                 links = _context2.sent;
+                filterLinks = links.filter(function (link) {
+                  return !link.url.includes('adshrink.it');
+                });
+                fallback = filterLinks.length === 0;
+                finalLinks = fallback ? links : filterLinks;
 
                 if (!user) {
-                  _context2.next = 11;
+                  _context2.next = 14;
                   break;
                 }
 
-                _context2.next = 8;
+                _context2.next = 11;
                 return user.getRoles();
 
-              case 8:
+              case 11:
                 roles = _context2.sent;
                 perms = roles.map(function (r) {
                   return r.permissions;
                 }).flat();
                 donator = perms.includes('DIRECT');
 
-              case 11:
-                return _context2.abrupt("return", links.map(function (l) {
+              case 14:
+                return _context2.abrupt("return", finalLinks.map(function (l) {
                   var link = _objectSpread({}, l.dataValues);
 
-                  if (!donator) link.directUrl = '/unauthorized';
+                  if (fallback) {
+                    link.url = link.directUrl;
+                    delete link.directUrl;
+                  } else if (!donator) link.directUrl = '/unauthorized';
+
                   return link;
                 }));
 
-              case 12:
+              case 15:
               case "end":
                 return _context2.stop();
             }
