@@ -41,6 +41,10 @@ const resolvers = {
       let donator = false
       const links = await parent.getLinks()
 
+      const filterLinks = links.filter(link => !link.url.includes('adshrink.it'))
+      const fallback = filterLinks.length === 0
+      const finalLinks = fallback ? links : filterLinks
+
       if (user) {
         const roles = await user.getRoles()
         const perms = roles.map(r => r.permissions).flat()
@@ -48,9 +52,14 @@ const resolvers = {
         donator = perms.includes('DIRECT')
       }
 
-      return links.map(l => {
+      return finalLinks.map(l => {
         const link = { ...l.dataValues }
-        if (!donator) link.directUrl = '/unauthorized'
+
+        if (fallback) {
+          link.url = link.directUrl
+          delete link.directUrl
+        } else if (!donator) link.directUrl = '/unauthorized'
+
         return link
       })
     }
