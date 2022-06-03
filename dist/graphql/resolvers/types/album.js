@@ -234,7 +234,7 @@ var resolvers = {
                   break;
                 }
 
-                return _context4.abrupt("return");
+                return _context4.abrupt("return", false);
 
               case 12:
                 _context4.next = 14;
@@ -252,7 +252,7 @@ var resolvers = {
                   break;
                 }
 
-                return _context4.abrupt("return");
+                return _context4.abrupt("return", false);
 
               case 19:
                 return _context4.abrupt("return", link.directUrl);
