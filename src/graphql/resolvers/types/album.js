@@ -37,31 +37,39 @@ const resolvers = {
   },
 
   Download: {
-    links: async (parent, args, { req, db, user }, info) => {
-      let donator = false
-      const links = await parent.getLinks()
-
+    links: async download => {
+      const links = await download.getLinks()
       const filterLinks = links.filter(link => !link.url.includes('adshrink.it'))
-      const fallback = filterLinks.length === 0
-      const finalLinks = fallback ? links : filterLinks
 
-      if (user) {
-        const roles = await user.getRoles()
-        const perms = roles.map(r => r.permissions).flat()
+      return filterLinks.length === 0 ? links : filterLinks
+    }
+  },
 
-        donator = perms.includes('DIRECT')
-      }
+  Link: {
+    url: async link => {
+      const download = await link.getDownload()
+      const links = await download.getLinks()
 
-      return finalLinks.map(l => {
-        const link = { ...l.dataValues }
+      return links.every(link => link.url.includes('adshrink.it')) ? link.directUrl : link.url
+    },
 
-        if (fallback) {
-          link.url = link.directUrl
-          delete link.directUrl
-        } else if (!donator) link.directUrl = '/unauthorized'
+    directUrl: async (link, args, context) => {
+      const download = await link.getDownload()
+      const links = await download.getLinks()
 
-        return link
-      })
+      const fallback = links.every(link => link.url.includes('adshrink.it'))
+      if (fallback) return
+
+      const { user } = context
+      if (!user) return
+
+      const roles = await user.getRoles()
+      const perms = roles.map(r => r.permissions).flat()
+
+      const donator = perms.includes('DIRECT')
+      if (!donator) return
+
+      return link.directUrl
     }
   },
 
