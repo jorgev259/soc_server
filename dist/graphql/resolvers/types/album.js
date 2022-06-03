@@ -9,17 +9,11 @@ exports["default"] = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _GraphQLUpload = _interopRequireDefault(require("graphql-upload/public/GraphQLUpload.js"));
 
 var _resolvers = require("../../../utils/resolvers");
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 var resolvers = {
   Upload: _GraphQLUpload["default"],
@@ -137,53 +131,23 @@ var resolvers = {
   },
   Download: {
     links: function () {
-      var _links = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(parent, args, _ref8, info) {
-        var req, db, user, donator, links, filterLinks, fallback, finalLinks, roles, perms;
+      var _links = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(download) {
+        var links, filterLinks;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                req = _ref8.req, db = _ref8.db, user = _ref8.user;
-                donator = false;
-                _context2.next = 4;
-                return parent.getLinks();
+                _context2.next = 2;
+                return download.getLinks();
 
-              case 4:
+              case 2:
                 links = _context2.sent;
                 filterLinks = links.filter(function (link) {
                   return !link.url.includes('adshrink.it');
                 });
-                fallback = filterLinks.length === 0;
-                finalLinks = fallback ? links : filterLinks;
+                return _context2.abrupt("return", filterLinks.length === 0 ? links : filterLinks);
 
-                if (!user) {
-                  _context2.next = 14;
-                  break;
-                }
-
-                _context2.next = 11;
-                return user.getRoles();
-
-              case 11:
-                roles = _context2.sent;
-                perms = roles.map(function (r) {
-                  return r.permissions;
-                }).flat();
-                donator = perms.includes('DIRECT');
-
-              case 14:
-                return _context2.abrupt("return", finalLinks.map(function (l) {
-                  var link = _objectSpread({}, l.dataValues);
-
-                  if (fallback) {
-                    link.url = link.directUrl;
-                    delete link.directUrl;
-                  } else if (!donator) link.directUrl = '/unauthorized';
-
-                  return link;
-                }));
-
-              case 15:
+              case 5:
               case "end":
                 return _context2.stop();
             }
@@ -191,28 +155,36 @@ var resolvers = {
         }, _callee2);
       }));
 
-      function links(_x4, _x5, _x6, _x7) {
+      function links(_x4) {
         return _links.apply(this, arguments);
       }
 
       return links;
     }()
   },
-  Game: {
-    albums: function () {
-      var _albums = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(game, _ref9) {
-        var _ref9$order, order;
-
+  Link: {
+    url: function () {
+      var _url = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(link) {
+        var download, links;
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _ref9$order = _ref9.order, order = _ref9$order === void 0 ? [] : _ref9$order;
-                return _context3.abrupt("return", game.getOsts({
-                  order: order
-                }));
+                _context3.next = 2;
+                return link.getDownload();
 
               case 2:
+                download = _context3.sent;
+                _context3.next = 5;
+                return download.getLinks();
+
+              case 5:
+                links = _context3.sent;
+                return _context3.abrupt("return", links.every(function (link) {
+                  return link.url.includes('adshrink.it');
+                }) ? link.directUrl : link.url);
+
+              case 7:
               case "end":
                 return _context3.stop();
             }
@@ -220,7 +192,109 @@ var resolvers = {
         }, _callee3);
       }));
 
-      function albums(_x8, _x9) {
+      function url(_x5) {
+        return _url.apply(this, arguments);
+      }
+
+      return url;
+    }(),
+    directUrl: function () {
+      var _directUrl = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(link, args, context) {
+        var download, links, fallback, user, roles, perms, donator;
+        return _regenerator["default"].wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.next = 2;
+                return link.getDownload();
+
+              case 2:
+                download = _context4.sent;
+                _context4.next = 5;
+                return download.getLinks();
+
+              case 5:
+                links = _context4.sent;
+                fallback = links.every(function (link) {
+                  return link.url.includes('adshrink.it');
+                });
+
+                if (!fallback) {
+                  _context4.next = 9;
+                  break;
+                }
+
+                return _context4.abrupt("return");
+
+              case 9:
+                user = context.user;
+
+                if (user) {
+                  _context4.next = 12;
+                  break;
+                }
+
+                return _context4.abrupt("return");
+
+              case 12:
+                _context4.next = 14;
+                return user.getRoles();
+
+              case 14:
+                roles = _context4.sent;
+                perms = roles.map(function (r) {
+                  return r.permissions;
+                }).flat();
+                donator = perms.includes('DIRECT');
+
+                if (donator) {
+                  _context4.next = 19;
+                  break;
+                }
+
+                return _context4.abrupt("return");
+
+              case 19:
+                return _context4.abrupt("return", link.directUrl);
+
+              case 20:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }));
+
+      function directUrl(_x6, _x7, _x8) {
+        return _directUrl.apply(this, arguments);
+      }
+
+      return directUrl;
+    }()
+  },
+  Game: {
+    albums: function () {
+      var _albums = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(game, _ref8) {
+        var _ref8$order, order;
+
+        return _regenerator["default"].wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _ref8$order = _ref8.order, order = _ref8$order === void 0 ? [] : _ref8$order;
+                return _context5.abrupt("return", game.getOsts({
+                  order: order
+                }));
+
+              case 2:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5);
+      }));
+
+      function albums(_x9, _x10) {
         return _albums.apply(this, arguments);
       }
 
@@ -237,12 +311,12 @@ var resolvers = {
         order: ['name']
       });
     },
-    placeholder: function placeholder(game, _, _ref10) {
-      var db = _ref10.db;
+    placeholder: function placeholder(game, _, _ref9) {
+      var db = _ref9.db;
       return (0, _resolvers.placeholder)(game, 'game');
     },
-    headerColor: function headerColor(game, _, _ref11) {
-      var db = _ref11.db;
+    headerColor: function headerColor(game, _, _ref10) {
+      var db = _ref10.db;
       return (0, _resolvers.headerColor)(game, 'game');
     }
   },
@@ -250,8 +324,8 @@ var resolvers = {
     albums: function albums(parent) {
       return parent.getOsts();
     },
-    games: function games(platform, args, _ref12) {
-      var db = _ref12.db;
+    games: function games(platform, args, _ref11) {
+      var db = _ref11.db;
       return platform.getGames();
     }
   },
@@ -262,12 +336,12 @@ var resolvers = {
     albums: function albums(parent) {
       return parent.getOsts();
     },
-    placeholder: function placeholder(anim, _, _ref13) {
-      var db = _ref13.db;
+    placeholder: function placeholder(anim, _, _ref12) {
+      var db = _ref12.db;
       return (0, _resolvers.placeholder)(anim, 'anim');
     },
-    headerColor: function headerColor(anim, _, _ref14) {
-      var db = _ref14.db;
+    headerColor: function headerColor(anim, _, _ref13) {
+      var db = _ref13.db;
       return (0, _resolvers.placeholder)(anim, 'anim');
     }
   },
@@ -280,12 +354,12 @@ var resolvers = {
     games: function games(parent, args, context, info) {
       return parent.getGames();
     },
-    placeholder: function placeholder(series, _, _ref15) {
-      var db = _ref15.db;
+    placeholder: function placeholder(series, _, _ref14) {
+      var db = _ref14.db;
       return (0, _resolvers.placeholder)(series, 'series');
     },
-    headerColor: function headerColor(series, _, _ref16) {
-      var db = _ref16.db;
+    headerColor: function headerColor(series, _, _ref15) {
+      var db = _ref15.db;
       return (0, _resolvers.placeholder)(series, 'series');
     }
   },
