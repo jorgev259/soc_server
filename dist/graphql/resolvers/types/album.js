@@ -333,15 +333,19 @@ var resolvers = {
     studios: function studios(parent) {
       return parent.getStudios();
     },
-    albums: function albums(parent) {
-      return parent.getOsts();
+    albums: function albums(anim, _ref12) {
+      var _ref12$order = _ref12.order,
+          order = _ref12$order === void 0 ? [] : _ref12$order;
+      return anim.getOsts({
+        order: order
+      });
     },
-    placeholder: function placeholder(anim, _, _ref12) {
-      var db = _ref12.db;
+    placeholder: function placeholder(anim, _, _ref13) {
+      var db = _ref13.db;
       return (0, _resolvers.placeholder)(anim, 'anim');
     },
-    headerColor: function headerColor(anim, _, _ref13) {
-      var db = _ref13.db;
+    headerColor: function headerColor(anim, _, _ref14) {
+      var db = _ref14.db;
       return (0, _resolvers.placeholder)(anim, 'anim');
     }
   },
@@ -354,12 +358,12 @@ var resolvers = {
     games: function games(parent, args, context, info) {
       return parent.getGames();
     },
-    placeholder: function placeholder(series, _, _ref14) {
-      var db = _ref14.db;
+    placeholder: function placeholder(series, _, _ref15) {
+      var db = _ref15.db;
       return (0, _resolvers.placeholder)(series, 'series');
     },
-    headerColor: function headerColor(series, _, _ref15) {
-      var db = _ref15.db;
+    headerColor: function headerColor(series, _, _ref16) {
+      var db = _ref16.db;
       return (0, _resolvers.placeholder)(series, 'series');
     }
   },
