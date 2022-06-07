@@ -16,5 +16,10 @@
     {
         "url": "/admin/album/:id",
         "perms": ["UPDATE"]
+    },
+    {
+        "url": "/admin/request",
+        "name": "Manage Requests",
+        "perms": ["REQUESTS"]
     }
 ]

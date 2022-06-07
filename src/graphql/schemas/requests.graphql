@@ -1,0 +1,32 @@
+type Request {
+  id: ID!
+  title: String
+  link: String
+  user: String
+  userID: String
+  state: String!
+  donator: Boolean!
+  reason: String
+  comments: String
+  message: String
+}
+
+type Query {
+  requests(
+    state: [String!], 
+    donator: [Boolean]!
+  ): [Request]!
+}
+
+type Mutation {
+  editRequest(
+    id: ID!
+    title: String
+    link: String
+    state: String
+    comments: String
+    reason: String
+  ): Request!
+
+  rejectRequest(id: ID!, reason: String): Boolean!
+}
