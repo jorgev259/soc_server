@@ -15,15 +15,11 @@ if (redditConfig) {
   runReddit()
 }
 
-let discordClient
-if (discordToken) {
-  discordClient = new Client({ intents: [Intents.FLAGS.GUILD_MESSAGES] })
-  discordClient.login(discordToken)
-}
+export const discordClient = new Client({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] })
+if (discordToken) discordClient.login(discordToken).then(() => console.log(`Logged in as ${discordClient.user.tag}!`))
 
-module.exports = {
-  postReddit: async (instance) => {
-    /* const classList = await instance.getClasses()
+export async function postReddit (instance) {
+  /* const classList = await instance.getClasses()
     const classItem = classList[0]
 
     const flair = classItem && flairs.find(f => f.text === classItem.name)
@@ -38,17 +34,15 @@ module.exports = {
         flair_text: flair ? flair.text : ''
       }).catch(console.log)
     } */
-  },
+}
 
-  postDiscord: async id => {
-    if (discordClient) {
-      const guild = await discordClient.guilds.fetch('496366337036255242')
-      await guild.channels.fetch()
+export async function postDiscord (id) {
+  if (discordToken) {
+    const guild = await discordClient.guilds.fetch('496366337036255242')
+    await guild.channels.fetch()
 
-      guild.channels.cache
-        .find(c => c.name === 'last-added-soundtracks')
-        .send(`https://www.sittingonclouds.net/album/${id}`)
-    }
+    guild.channels.cache
+      .find(c => c.name === 'last-added-soundtracks')
+      .send(`https://www.sittingonclouds.net/album/${id}`)
   }
-
 }
