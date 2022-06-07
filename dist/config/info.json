@@ -3,6 +3,7 @@
         "CREATE",
         "UPDATE",
         "MANAGE_USER",
+        "REQUESTS",
         "SKIP_ADS",
         "DIRECT"
     ],

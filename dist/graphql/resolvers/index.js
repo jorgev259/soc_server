@@ -17,6 +17,8 @@ var _comments = _interopRequireWildcard(require("./mutations/comments"));
 
 var _create = _interopRequireWildcard(require("./mutations/create"));
 
+var _requests = _interopRequireWildcard(require("./mutations/requests"));
+
 var _site = _interopRequireWildcard(require("./mutations/site"));
 
 var _update = _interopRequireWildcard(require("./mutations/update"));
@@ -24,6 +26,8 @@ var _update = _interopRequireWildcard(require("./mutations/update"));
 var _user = _interopRequireWildcard(require("./mutations/user"));
 
 var _album = _interopRequireWildcard(require("./queries/album"));
+
+var _requests2 = _interopRequireWildcard(require("./queries/requests"));
 
 var _search = _interopRequireWildcard(require("./queries/search"));
 
@@ -41,16 +45,20 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 
 var _dirImport = {};
 
-for (var _key4 in _user) {
-  _dirImport[_key4 === 'default' ? "user" : _key4] = _user[_key4];
+for (var _key5 in _user) {
+  _dirImport[_key5 === 'default' ? "user" : _key5] = _user[_key5];
 }
 
-for (var _key3 in _update) {
-  _dirImport[_key3 === 'default' ? "update" : _key3] = _update[_key3];
+for (var _key4 in _update) {
+  _dirImport[_key4 === 'default' ? "update" : _key4] = _update[_key4];
 }
 
-for (var _key2 in _site) {
-  _dirImport[_key2 === 'default' ? "site" : _key2] = _site[_key2];
+for (var _key3 in _site) {
+  _dirImport[_key3 === 'default' ? "site" : _key3] = _site[_key3];
+}
+
+for (var _key2 in _requests) {
+  _dirImport[_key2 === 'default' ? "requests" : _key2] = _requests[_key2];
 }
 
 for (var _key in _create) {
@@ -64,31 +72,35 @@ for (var key in _comments) {
 var mutations = _dirImport;
 var _dirImport2 = {};
 
-for (var _key8 in _user2) {
-  _dirImport2[_key8 === 'default' ? "user" : _key8] = _user2[_key8];
+for (var _key10 in _user2) {
+  _dirImport2[_key10 === 'default' ? "user" : _key10] = _user2[_key10];
 }
 
-for (var _key7 in _site2) {
-  _dirImport2[_key7 === 'default' ? "site" : _key7] = _site2[_key7];
+for (var _key9 in _site2) {
+  _dirImport2[_key9 === 'default' ? "site" : _key9] = _site2[_key9];
 }
 
-for (var _key6 in _search) {
-  _dirImport2[_key6 === 'default' ? "search" : _key6] = _search[_key6];
+for (var _key8 in _search) {
+  _dirImport2[_key8 === 'default' ? "search" : _key8] = _search[_key8];
 }
 
-for (var _key5 in _album) {
-  _dirImport2[_key5 === 'default' ? "album" : _key5] = _album[_key5];
+for (var _key7 in _requests2) {
+  _dirImport2[_key7 === 'default' ? "requests" : _key7] = _requests2[_key7];
+}
+
+for (var _key6 in _album) {
+  _dirImport2[_key6 === 'default' ? "album" : _key6] = _album[_key6];
 }
 
 var queries = _dirImport2;
 var _dirImport3 = {};
 
-for (var _key10 in _user3) {
-  _dirImport3[_key10 === 'default' ? "user" : _key10] = _user3[_key10];
+for (var _key12 in _user3) {
+  _dirImport3[_key12 === 'default' ? "user" : _key12] = _user3[_key12];
 }
 
-for (var _key9 in _album2) {
-  _dirImport3[_key9 === 'default' ? "album" : _key9] = _album2[_key9];
+for (var _key11 in _album2) {
+  _dirImport3[_key11 === 'default' ? "album" : _key11] = _album2[_key11];
 }
 
 var types = _dirImport3;

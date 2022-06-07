@@ -2,6 +2,13 @@
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.discordClient = void 0;
+exports.postDiscord = postDiscord;
+exports.postReddit = postReddit;
+
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
@@ -18,16 +25,16 @@ function runReddit() {
 }
 
 function _runReddit() {
-  _runReddit = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
-    return _regenerator["default"].wrap(function _callee3$(_context3) {
+  _runReddit = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
+    return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context.prev = _context.next) {
           case 0:
           case "end":
-            return _context3.stop();
+            return _context.stop();
         }
       }
-    }, _callee3);
+    }, _callee);
   }));
   return _runReddit.apply(this, arguments);
 }
@@ -36,72 +43,68 @@ if (redditConfig) {
   runReddit();
 }
 
-var discordClient;
+var discordClient = new _discord.Client({
+  intents: [_discord.Intents.FLAGS.GUILD_MESSAGES, _discord.Intents.FLAGS.GUILD_MEMBERS]
+});
+exports.discordClient = discordClient;
+if (discordToken) discordClient.login(discordToken).then(function () {
+  return console.log("Logged in as ".concat(discordClient.user.tag, "!"));
+});
 
-if (discordToken) {
-  discordClient = new _discord.Client({
-    intents: [_discord.Intents.FLAGS.GUILD_MESSAGES]
-  });
-  discordClient.login(discordToken);
+function postReddit(_x) {
+  return _postReddit.apply(this, arguments);
 }
 
-module.exports = {
-  postReddit: function () {
-    var _postReddit = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(instance) {
-      return _regenerator["default"].wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-            case "end":
-              return _context.stop();
-          }
+function _postReddit() {
+  _postReddit = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(instance) {
+    return _regenerator["default"].wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+          case "end":
+            return _context2.stop();
         }
-      }, _callee);
-    }));
+      }
+    }, _callee2);
+  }));
+  return _postReddit.apply(this, arguments);
+}
 
-    function postReddit(_x) {
-      return _postReddit.apply(this, arguments);
-    }
+function postDiscord(_x2) {
+  return _postDiscord.apply(this, arguments);
+}
 
-    return postReddit;
-  }(),
-  postDiscord: function () {
-    var _postDiscord = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(id) {
-      var guild;
-      return _regenerator["default"].wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              if (!discordClient) {
-                _context2.next = 7;
-                break;
-              }
+function _postDiscord() {
+  _postDiscord = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(id) {
+    var guild;
+    return _regenerator["default"].wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            if (!discordToken) {
+              _context3.next = 7;
+              break;
+            }
 
-              _context2.next = 3;
-              return discordClient.guilds.fetch('496366337036255242');
+            _context3.next = 3;
+            return discordClient.guilds.fetch('496366337036255242');
 
-            case 3:
-              guild = _context2.sent;
-              _context2.next = 6;
-              return guild.channels.fetch();
+          case 3:
+            guild = _context3.sent;
+            _context3.next = 6;
+            return guild.channels.fetch();
 
-            case 6:
-              guild.channels.cache.find(function (c) {
-                return c.name === 'last-added-soundtracks';
-              }).send("https://www.sittingonclouds.net/album/".concat(id));
+          case 6:
+            guild.channels.cache.find(function (c) {
+              return c.name === 'last-added-soundtracks';
+            }).send("https://www.sittingonclouds.net/album/".concat(id));
 
-            case 7:
-            case "end":
-              return _context2.stop();
-          }
+          case 7:
+          case "end":
+            return _context3.stop();
         }
-      }, _callee2);
-    }));
-
-    function postDiscord(_x2) {
-      return _postDiscord.apply(this, arguments);
-    }
-
-    return postDiscord;
-  }()
-};
+      }
+    }, _callee3);
+  }));
+  return _postDiscord.apply(this, arguments);
+}
