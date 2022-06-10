@@ -24,15 +24,15 @@ const resolvers = {
     seriesOne: (parent, { slug }, { db }, info) => db.models.series.findByPk(slug),
     albumCount: async (parent, params, { db }) => db.models.ost.count(),
     recentSeries: (parent, { limit }, { db }) => db.models.series.findAll({
-      limit: limit,
+      limit,
       order: [['createdAt', 'DESC']]
     }),
     recentPublishers: (parent, { limit }, { db }) => db.models.publisher.findAll({
-      limit: limit,
+      limit,
       order: [['createdAt', 'DESC']]
     }),
     recentPlatforms: (parent, { limit, type }, { db }) => db.models.platform.findAll({
-      limit: limit,
+      limit,
       order: [['createdAt', 'DESC']],
       where: { type: { [Op.like]: `%${type}%` } }
     }),
