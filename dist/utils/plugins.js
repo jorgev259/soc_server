@@ -44,7 +44,7 @@ if (redditConfig) {
 }
 
 var discordClient = new _discord.Client({
-  intents: [_discord.Intents.FLAGS.GUILD_MESSAGES, _discord.Intents.FLAGS.GUILD_MEMBERS]
+  intents: [_discord.Intents.FLAGS.GUILDS, _discord.Intents.FLAGS.GUILD_MESSAGES, _discord.Intents.FLAGS.GUILD_MEMBERS]
 });
 exports.discordClient = discordClient;
 if (discordToken) discordClient.login(discordToken).then(function () {
