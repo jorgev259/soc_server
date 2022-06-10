@@ -1,7 +1,9 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import { UserInputError } from 'apollo-server-errors'
+import { holdRequest, completeRequest, rejectRequest } from '@lotus-tree/requestcat'
 
 import { hasRole } from '../../../utils/resolvers'
+import { discordClient } from '../../../utils/plugins'
 
 const resolversComposition = { 'Mutation.*': hasRole('REQUESTS') }
 const resolvers = {
@@ -10,8 +12,23 @@ const resolvers = {
       const request = await db.models.request.findByPk(data.id)
       if (!request) throw new UserInputError('Request not found')
 
-      await request.set(data)
-      await request.save()
+      await db.transaction(async transaction => {
+        await request.set(data, { transaction })
+
+        if (request.changed('state')) {
+          switch (request.state) {
+          case 'complete':
+            await completeRequest(discordClient, db, process.env.GUILD, request)
+            break
+
+          case 'hold':
+            await holdRequest(discordClient, db, process.env.GUILD, request, data.reason)
+            break
+          }
+        }
+
+        await request.save({ transaction })
+      })
 
       return request
     },
@@ -20,7 +37,7 @@ const resolvers = {
       const request = await db.models.request.findByPk(data.id)
       if (!request) throw new UserInputError('Request not found')
 
-      await request.destroy()
+      await rejectRequest(discordClient, db, process.env.GUILD, request, data.reason)
       return true
     }
   }
