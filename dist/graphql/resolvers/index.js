@@ -37,6 +37,8 @@ var _user2 = _interopRequireWildcard(require("./queries/user"));
 
 var _album2 = _interopRequireWildcard(require("./types/album"));
 
+var _search2 = _interopRequireWildcard(require("./types/search"));
+
 var _user3 = _interopRequireWildcard(require("./types/user"));
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
@@ -95,8 +97,12 @@ for (var _key6 in _album) {
 var queries = _dirImport2;
 var _dirImport3 = {};
 
-for (var _key12 in _user3) {
-  _dirImport3[_key12 === 'default' ? "user" : _key12] = _user3[_key12];
+for (var _key13 in _user3) {
+  _dirImport3[_key13 === 'default' ? "user" : _key13] = _user3[_key13];
+}
+
+for (var _key12 in _search2) {
+  _dirImport3[_key12 === 'default' ? "search" : _key12] = _search2[_key12];
 }
 
 for (var _key11 in _album2) {

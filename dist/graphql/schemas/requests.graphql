@@ -11,11 +11,20 @@ type Request {
   message: String
 }
 
+type VgmResult {
+  vgmdbUrl: String
+  name: String
+  releaseDate: String
+  categories: [String]
+  classifications: [String]
+}
+
 type Query {
   requests(
     state: [String!], 
     donator: [Boolean]!
   ): [Request]!
+  vgmdb(search: String!): VgmResult!
 }
 
 type Mutation {

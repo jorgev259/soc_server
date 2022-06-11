@@ -17,6 +17,8 @@ var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/de
 
 var _sequelize = require("sequelize");
 
+var _vgmdb = _interopRequireDefault(require("../../../utils/vgmdb"));
+
 var resolvers = {
   Query: {
     searchAlbum: function searchAlbum(parent, _ref, _ref2) {
@@ -228,7 +230,7 @@ var resolvers = {
       return db.models.platform.findAll({
         where: {
           name: (0, _defineProperty2["default"])({}, _sequelize.Op.like, "%".concat(name, "%")),
-          type: (0, _defineProperty2["default"])({}, _sequelize.Op.like, "%".concat(type, "%"))
+          type: (0, _defineProperty2["default"])({}, _sequelize.Op.and, type.map((0, _defineProperty2["default"])({}, _sequelize.Op.like, "%".concat(type, "%"))))
         }
       });
     },
@@ -240,6 +242,10 @@ var resolvers = {
           type: (0, _defineProperty2["default"])({}, _sequelize.Op.or, classes)
         }
       });
+    },
+    vgmdb: function vgmdb(_, _ref23) {
+      var search = _ref23.search;
+      return (0, _vgmdb["default"])(search);
     }
   }
 };

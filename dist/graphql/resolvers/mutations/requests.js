@@ -15,7 +15,7 @@ var _resolversComposition = require("@graphql-tools/resolvers-composition");
 
 var _apolloServerErrors = require("apollo-server-errors");
 
-var _requestcat = require("@lotus-tree/requestcat");
+var _util = require("@lotus-tree/requestcat/lib/util");
 
 var _resolvers = require("../../../utils/resolvers");
 
@@ -72,14 +72,14 @@ var resolvers = {
 
                           case 6:
                             _context.next = 8;
-                            return (0, _requestcat.completeRequest)(_plugins.discordClient, db, process.env.GUILD, request);
+                            return (0, _util.completeRequest)(_plugins.discordClient, db, process.env.GUILD, request);
 
                           case 8:
                             return _context.abrupt("break", 12);
 
                           case 9:
                             _context.next = 11;
-                            return (0, _requestcat.holdRequest)(_plugins.discordClient, db, process.env.GUILD, request, data.reason);
+                            return (0, _util.holdRequest)(_plugins.discordClient, db, process.env.GUILD, request, data.reason);
 
                           case 11:
                             return _context.abrupt("break", 12);
@@ -143,7 +143,7 @@ var resolvers = {
 
               case 6:
                 _context3.next = 8;
-                return (0, _requestcat.rejectRequest)(_plugins.discordClient, db, process.env.GUILD, request, data.reason);
+                return (0, _util.rejectRequest)(_plugins.discordClient, db, process.env.GUILD, request, data.reason);
 
               case 8:
                 return _context3.abrupt("return", true);
