@@ -65,7 +65,10 @@ const resolvers = {
         },
         type: { [Op.like]: `%${type}%` }
       }
-    })
+    }),
+    searchPlatformsByClasses: (parent, { classes }, { db }) => classes.length === 0
+      ? []
+      : db.models.platform.findAll({ where: { type: { [Op.or]: classes } } }),
   }
 }
 
