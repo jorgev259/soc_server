@@ -231,6 +231,15 @@ var resolvers = {
           type: (0, _defineProperty2["default"])({}, _sequelize.Op.like, "%".concat(type, "%"))
         }
       });
+    },
+    searchPlatformsByClasses: function searchPlatformsByClasses(parent, _ref21, _ref22) {
+      var classes = _ref21.classes;
+      var db = _ref22.db;
+      return classes.length === 0 ? [] : db.models.platform.findAll({
+        where: {
+          type: (0, _defineProperty2["default"])({}, _sequelize.Op.or, classes)
+        }
+      });
     }
   }
 };
