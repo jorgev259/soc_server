@@ -1726,15 +1726,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lotus-tree/requestcat@npm:^3.3.3":
-  version: 3.3.3
-  resolution: "@lotus-tree/requestcat@npm:3.3.3"
+"@lotus-tree/requestcat@npm:^3.3.8":
+  version: 3.3.8
+  resolution: "@lotus-tree/requestcat@npm:3.3.8"
   dependencies:
     axios: ^0.24.0
     get-urls: ^10.0.1
     google-spreadsheet: ^3.2.0
     moment: ^2.29.1
-  checksum: d42826803277ac61816940650feb5c7b2df90b32d9d7f46d059d1e3024d931644a5ee4e21ad7862f8737b2d270bf2aa048d877c8e0672ef2a3f0e806f30c1e72
+  checksum: 9952aa03a429152edfde276e9c8022454f2f33473919812d7886e7da327c9d35a393e5af60e72c05f681c1733ddd0a3b4c7b7ba85c169b1f77dfba30725c67d3
   languageName: node
   linkType: hard
 
@@ -6991,7 +6991,7 @@ eslint-config-standard@latest:
     "@graphql-tools/load-files": ^6.5.3
     "@graphql-tools/merge": ^8.2.11
     "@graphql-tools/resolvers-composition": ^6.4.1
-    "@lotus-tree/requestcat": ^3.3.3
+    "@lotus-tree/requestcat": ^3.3.8
     apollo-server: ^3.7.0
     apollo-server-core: ^3.7.0
     apollo-server-errors: ^3.3.1

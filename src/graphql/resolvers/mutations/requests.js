@@ -1,6 +1,6 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import { UserInputError } from 'apollo-server-errors'
-import { holdRequest, completeRequest, rejectRequest } from '@lotus-tree/requestcat'
+import { holdRequest, completeRequest, rejectRequest } from '@lotus-tree/requestcat/lib/util'
 
 import { hasRole } from '../../../utils/resolvers'
 import { discordClient } from '../../../utils/plugins'
