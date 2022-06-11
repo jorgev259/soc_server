@@ -95,7 +95,7 @@ type Studio {
 type Platform {
     id: ID!
     name: String
-type: String!
+    type: String!
     albums: [Album]
     games: [Game]!
 }
