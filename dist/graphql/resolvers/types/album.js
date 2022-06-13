@@ -173,22 +173,15 @@ var resolvers = {
     },
     avgRating: function () {
       var _avgRating = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(album, _, _ref7) {
-        var db, ratings;
+        var db;
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
                 db = _ref7.db;
-                _context3.next = 3;
-                return album.getRatings({
-                  attributes: [[db.fn('COALESCE', db.fn('avg', db.col('score')), 0), 'score'], [db.fn('COUNT', '*'), 'users']]
-                });
+                return _context3.abrupt("return", (0, _resolvers.solveRating)(album));
 
-              case 3:
-                ratings = _context3.sent;
-                return _context3.abrupt("return", ratings[0].dataValues);
-
-              case 5:
+              case 2:
               case "end":
                 return _context3.stop();
             }

@@ -6,8 +6,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.placeholder = exports.isAuthed = exports.headerColor = exports.hasRolePage = exports.hasRole = void 0;
+exports.solveRating = solveRating;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
@@ -265,4 +268,38 @@ function _solveHeaderColor() {
     }, _callee5);
   }));
   return _solveHeaderColor.apply(this, arguments);
+}
+
+function solveRating(_x12) {
+  return _solveRating.apply(this, arguments);
+}
+
+function _solveRating() {
+  _solveRating = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(album) {
+    var _yield$album$getRatin, _yield$album$getRatin2, rating;
+
+    return _regenerator["default"].wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            _context6.next = 2;
+            return album.getRatings({
+              attributes: [_startDB["default"].literal("\"".concat(album.id, "\" as id")), [_startDB["default"].fn('COALESCE', _startDB["default"].fn('avg', _startDB["default"].col('score')), 0), 'score'], [_startDB["default"].fn('COUNT', '*'), 'users']],
+              raw: true
+            });
+
+          case 2:
+            _yield$album$getRatin = _context6.sent;
+            _yield$album$getRatin2 = (0, _slicedToArray2["default"])(_yield$album$getRatin, 1);
+            rating = _yield$album$getRatin2[0];
+            return _context6.abrupt("return", rating);
+
+          case 6:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, _callee6);
+  }));
+  return _solveRating.apply(this, arguments);
 }
