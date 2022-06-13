@@ -1,6 +1,6 @@
 import GraphQLUpload from 'graphql-upload/public/GraphQLUpload.js'
 
-import { headerColor, placeholder } from '../../../utils/resolvers'
+import { headerColor, placeholder, solveRating } from '../../../utils/resolvers'
 
 const resolvers = {
   Upload: GraphQLUpload,
@@ -21,16 +21,7 @@ const resolvers = {
     favorites: (album, _, { db }) => album.countUsers(),
     placeholder: (album, _, { db }) => placeholder(album, 'album'),
     headerColor: (album, _, { db }) => headerColor(album, 'album'),
-    avgRating: async (album, _, { db }) => {
-      const ratings = await album.getRatings({
-        attributes: [
-          [db.fn('COALESCE', db.fn('avg', db.col('score')), 0), 'score'],
-          [db.fn('COUNT', '*'), 'users']
-        ]
-      })
-
-      return ratings[0].dataValues
-    }
+    avgRating: async (album, _, { db }) => solveRating(album)
   },
 
   Comment: {

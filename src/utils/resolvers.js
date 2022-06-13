@@ -54,3 +54,16 @@ async function solveHeaderColor (parent, folder) {
 
   return color
 }
+
+export async function solveRating (album) {
+  const [rating] = await album.getRatings({
+    attributes: [
+      db.literal(`"${album.id}" as id`),
+      [db.fn('COALESCE', db.fn('avg', db.col('score')), 0), 'score'],
+      [db.fn('COUNT', '*'), 'users']
+    ],
+    raw: true
+  })
+
+  return rating
+}
