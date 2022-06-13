@@ -213,6 +213,96 @@ var resolvers = {
       }
 
       return removeFavorite;
+    }(),
+    rateAlbum: function () {
+      var _rateAlbum = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(_, _ref10, _ref11) {
+        var ostId, score, db, user, res;
+        return _regenerator["default"].wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                ostId = _ref10.ostId, score = _ref10.score;
+                db = _ref11.db, user = _ref11.user, res = _ref11.res;
+                return _context8.abrupt("return", db.transaction( /*#__PURE__*/function () {
+                  var _ref12 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(transaction) {
+                    var username, row;
+                    return _regenerator["default"].wrap(function _callee7$(_context7) {
+                      while (1) {
+                        switch (_context7.prev = _context7.next) {
+                          case 0:
+                            username = user.username;
+                            _context7.next = 3;
+                            return db.models.rating.findOne({
+                              where: {
+                                ostId: ostId,
+                                username: username
+                              }
+                            });
+
+                          case 3:
+                            row = _context7.sent;
+
+                            if (!row) {
+                              _context7.next = 11;
+                              break;
+                            }
+
+                            _context7.next = 7;
+                            return row.update({
+                              score: score
+                            }, {
+                              transaction: transaction
+                            });
+
+                          case 7:
+                            _context7.next = 9;
+                            return row.save({
+                              transaction: transaction
+                            });
+
+                          case 9:
+                            _context7.next = 13;
+                            break;
+
+                          case 11:
+                            _context7.next = 13;
+                            return db.models.rating.create({
+                              ostId: ostId,
+                              username: username,
+                              score: score
+                            }, {
+                              transaction: transaction
+                            });
+
+                          case 13:
+                            return _context7.abrupt("return", true);
+
+                          case 14:
+                          case "end":
+                            return _context7.stop();
+                        }
+                      }
+                    }, _callee7);
+                  }));
+
+                  return function (_x16) {
+                    return _ref12.apply(this, arguments);
+                  };
+                }()));
+
+              case 3:
+              case "end":
+                return _context8.stop();
+            }
+          }
+        }, _callee8);
+      }));
+
+      function rateAlbum(_x13, _x14, _x15) {
+        return _rateAlbum.apply(this, arguments);
+      }
+
+      return rateAlbum;
     }()
   }
 };

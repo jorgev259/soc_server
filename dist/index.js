@@ -105,6 +105,7 @@ function _startServer() {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
+            // db.sync()
             if (isProd || process.env.SYNC) db.sync();
             _context3.next = 3;
             return server.start();

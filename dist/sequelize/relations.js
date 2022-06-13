@@ -25,7 +25,8 @@ function relations(sequelize) {
       role = _sequelize$models.role,
       forgor = _sequelize$models.forgor,
       log = _sequelize$models.log,
-      comment = _sequelize$models.comment;
+      comment = _sequelize$models.comment,
+      rating = _sequelize$models.rating;
   user.belongsToMany(role, {
     through: 'User_Role'
   });
@@ -117,6 +118,14 @@ function relations(sequelize) {
     foreignKey: 'username'
   });
   comment.belongsTo(user, {
+    foreignKey: 'username'
+  });
+  ost.hasMany(rating);
+  rating.belongsTo(ost);
+  user.hasMany(rating, {
+    foreignKey: 'username'
+  });
+  rating.belongsTo(user, {
     foreignKey: 'username'
   });
   user.belongsToMany(ost, {
