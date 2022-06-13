@@ -10,6 +10,8 @@ type Album {
   selfComment: Comment
   isFavorite: Boolean!
   favorites: Int!
+  avgRating: AvgRating!
+  selfScore: Int
 }
 
 type User {
@@ -22,9 +24,14 @@ type UserMe {
   favorites: [Album]!
 }
 
+type AvgRating {
+    score: Float!
+    users: Int!
+}
 
 type Mutation {
   updateComment(text: String!, anon: Boolean!, ostId: ID!): Boolean
   addFavorite(ostId: String!): Boolean
   removeFavorite(ostId: String!): Boolean
+  rateAlbum(ostId: ID!, score: Int!): Boolean
 }
