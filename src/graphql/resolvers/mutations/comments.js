@@ -39,6 +39,19 @@ const resolvers = {
         // await res.unstable_revalidate(`/album/${ostId}`)
         return true
       })
+    ),
+    rateAlbum: async (_, { ostId, score }, { db, user, res }) => (
+      db.transaction(async transaction => {
+        const { username } = user
+        const row = await db.models.rating.findOne({ where: { ostId, username } })
+
+        if (row) {
+          await row.update({ score }, { transaction })
+          await row.save({ transaction })
+        } else await db.models.rating.create({ ostId, username, score }, { transaction })
+
+        return true
+      })
     )
   }
 }

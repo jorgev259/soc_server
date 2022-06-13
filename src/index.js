@@ -45,6 +45,7 @@ const server = new ApolloServer({
 startServer()
 
 async function startServer () {
+  // db.sync()
   if (isProd || process.env.SYNC) db.sync()
   await server.start()
 

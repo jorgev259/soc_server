@@ -17,9 +17,20 @@ const resolvers = {
     comments: parent => parent.getComments(),
     isFavorite: async (album, _, { db, user }) => user ? album.hasUser(user.username) : false,
     selfComment: (album, _, { db, user }) => user ? db.models.comment.findOne({ where: { ostId: album.id, username: user.username } }) : null,
+    selfScore: async (album, _, { db, user }) => user ? (await db.models.rating.findOne({ where: { ostId: album.id, username: user.username } }))?.score : null,
     favorites: (album, _, { db }) => album.countUsers(),
     placeholder: (album, _, { db }) => placeholder(album, 'album'),
-    headerColor: (album, _, { db }) => headerColor(album, 'album')
+    headerColor: (album, _, { db }) => headerColor(album, 'album'),
+    avgRating: async (album, _, { db }) => {
+      const ratings = await album.getRatings({
+        attributes: [
+          [db.fn('COALESCE', db.fn('avg', db.col('score')), 0), 'score'],
+          [db.fn('COUNT', '*'), 'users']
+        ]
+      })
+
+      return ratings[0].dataValues
+    }
   },
 
   Comment: {
