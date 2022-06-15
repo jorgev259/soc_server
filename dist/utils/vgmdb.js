@@ -13,6 +13,8 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _axios = require("axios");
 
+var _cheerio = _interopRequireDefault(require("cheerio"));
+
 var isValidUrl = function isValidUrl(s) {
   try {
     var testUrl = new URL(s);
@@ -28,7 +30,8 @@ function getVGMDB(_x) {
 
 function _getVGMDB() {
   _getVGMDB = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(search) {
-    var url, response;
+    var url, _yield$get, data, vgmdbUrl, _yield$get2, htmlBody, $, discs;
+
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -45,19 +48,55 @@ function _getVGMDB() {
             });
 
           case 4:
-            response = _context.sent;
-            return _context.abrupt("return", response.data);
-
-          case 8:
-            _context.prev = 8;
-            _context.t0 = _context["catch"](1);
+            _yield$get = _context.sent;
+            data = _yield$get.data;
+            vgmdbUrl = data.vgmdb_url;
+            data.tracklist = [];
+            _context.next = 10;
+            return (0, _axios.get)(vgmdbUrl, {
+              headers: {
+                'Content-Type': 'text/html'
+              }
+            });
 
           case 10:
+            _yield$get2 = _context.sent;
+            htmlBody = _yield$get2.data;
+            $ = _cheerio["default"].load(htmlBody);
+            discs = $('#tracklist table');
+            discs.each(function (i, d) {
+              var list = '';
+              var tbody = d.childNodes.find(function (n) {
+                return n.type === 'tag';
+              });
+              var trows = tbody.childNodes.filter(function (n) {
+                return n.type === 'tag' && n.name === 'tr';
+              });
+              trows.forEach(function (tRow, i2) {
+                if (i2 > 0) list = "".concat(list, "\n");
+                var tds = tRow.childNodes.filter(function (n) {
+                  return n.type === 'tag' && n.name === 'td';
+                });
+                var td = tds[1].childNodes[0].data.trim();
+                list = "".concat(list).concat(td);
+              });
+              data.tracklist.push({
+                number: i,
+                body: list
+              });
+            });
+            return _context.abrupt("return", data);
+
+          case 18:
+            _context.prev = 18;
+            _context.t0 = _context["catch"](1);
+
+          case 20:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[1, 8]]);
+    }, _callee, null, [[1, 18]]);
   }));
   return _getVGMDB.apply(this, arguments);
 }
