@@ -17,6 +17,7 @@ type VgmResult {
   releaseDate: String
   categories: [String]
   classifications: [String]
+  tracklist: [Disc]!
 }
 
 type Query {
