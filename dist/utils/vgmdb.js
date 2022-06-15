@@ -30,7 +30,7 @@ function getVGMDB(_x) {
 
 function _getVGMDB() {
   _getVGMDB = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(search) {
-    var url, _yield$get, data, vgmdbUrl, _yield$get2, htmlBody, $, discs;
+    var url, _$$, _$$$childNodes$find, _yield$get, data, vgmdbUrl, _yield$get2, htmlBody, $, discs;
 
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
@@ -85,18 +85,21 @@ function _getVGMDB() {
                 body: list
               });
             });
+            data.subTitle = (_$$ = $('div > span.albumtitle[style="display:inline"]')[0]) === null || _$$ === void 0 ? void 0 : (_$$$childNodes$find = _$$.childNodes.find(function (n) {
+              return n.type === 'text';
+            })) === null || _$$$childNodes$find === void 0 ? void 0 : _$$$childNodes$find.data;
             return _context.abrupt("return", data);
 
-          case 18:
-            _context.prev = 18;
+          case 19:
+            _context.prev = 19;
             _context.t0 = _context["catch"](1);
 
-          case 20:
+          case 21:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[1, 18]]);
+    }, _callee, null, [[1, 19]]);
   }));
   return _getVGMDB.apply(this, arguments);
 }
