@@ -14,6 +14,7 @@ type Request {
 type VgmResult {
   vgmdbUrl: String
   name: String
+  subTitle: String
   releaseDate: String
   categories: [String]
   classifications: [String]

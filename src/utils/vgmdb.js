@@ -40,6 +40,8 @@ export default async function getVGMDB (search) {
       data.tracklist.push({ number: i, body: list })
     })
 
+    data.subTitle = $('div > span.albumtitle[style="display:inline"]')[0]?.childNodes.find(n => n.type === 'text')?.data
+
     return data
   } catch {}
 }
