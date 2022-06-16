@@ -54,5 +54,35 @@ export default async function getVGMDB (search) {
 
   data.subTitle = $('div > span.albumtitle[style="display:inline"]')[0]?.childNodes.find(n => n.type === 'text')?.data
 
+  const creditsNodes = $('#collapse_credits tr.maincred')
+  data.artists = []
+  creditsNodes.each((i, c) => {
+    const [labelNode, nameNode] = c.children.filter(n => n.type === 'tag')
+    const creditLabel = labelNode
+      .children[0].children[0].children
+      .find(s => s.attribs.class === 'artistname' && s.attribs.style?.includes('display:inline'))?.children[0].data
+
+    if (!['Vocals', 'Composer', 'Arranger'].includes(creditLabel)) return true
+
+    const artistNodes = nameNode.children
+      .filter(a => a.type === 'tag' || a.data.trim() !== ',')
+      .map(findArtist)
+      .filter(a => a.length > 0)
+
+    data.artists.push(...artistNodes.filter(a => !data.artists.includes(a)))
+  })
+
   return data
+}
+
+function findArtist (node) {
+  if (node.type === 'text') return node.data.replace(', ', '').trim()
+
+  const result = node.children.find(ch =>
+    ch.type === 'text'
+      ? ch
+      : ch.attribs.style === 'display:inline' && ch.attribs.class === 'artistname')
+
+  if (!result) return ''
+  return result.type === 'text' ? result.data : result.children[0].data
 }

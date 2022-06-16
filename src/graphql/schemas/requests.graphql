@@ -16,6 +16,7 @@ type VgmResult {
   name: String
   subTitle: String
   releaseDate: String
+  artists: [String]!
   categories: [String]
   classifications: [String]
   tracklist: [Disc]!
