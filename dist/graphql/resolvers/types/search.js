@@ -4,6 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
+
+var _info = require("../../../config/info.json");
+
 var resolvers = {
   VgmResult: {
     vgmdbUrl: function vgmdbUrl(parent) {
@@ -19,6 +22,8 @@ var resolvers = {
 
       return (_parent$category = parent.category) === null || _parent$category === void 0 ? void 0 : _parent$category.split(',').map(function (i) {
         return i.trim();
+      }).filter(function (c) {
+        return _info.classes.includes(c);
       });
     },
     classifications: function classifications(parent) {
@@ -26,6 +31,8 @@ var resolvers = {
 
       return (_parent$classificatio = parent.classification) === null || _parent$classificatio === void 0 ? void 0 : _parent$classificatio.split(',').map(function (i) {
         return i.trim();
+      }).filter(function (c) {
+        return _info.categories.includes(c);
       });
     }
   }
