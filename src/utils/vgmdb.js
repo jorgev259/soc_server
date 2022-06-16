@@ -36,6 +36,8 @@ export default async function getVGMDB (search) {
 
   const discs = $('#tracklist table')
   discs.each((i, d) => {
+    if (d.parent.attribs.style?.includes('display: none')) return true
+
     let list = ''
     const tbody = d.childNodes.find(n => n.type === 'tag')
     const trows = tbody.childNodes.filter(n => n.type === 'tag' && n.name === 'tr')
