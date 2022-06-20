@@ -64,7 +64,7 @@ const resolvers = {
         name: {
           [Op.like]: `%${name}%`
         },
-        type: { [Op.and]: type.map({ [Op.like]: `%${type}%` }) }
+        type: { [Op.and]: type.map(t => ({ [Op.like]: `%${t}%` })) }
       }
     }),
     searchPlatformsByClasses: (parent, { classes }, { db }) => classes.length === 0
