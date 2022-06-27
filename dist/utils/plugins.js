@@ -87,7 +87,7 @@ function _postDiscord() {
             }
 
             _context3.next = 3;
-            return discordClient.guilds.fetch('496366337036255242');
+            return discordClient.guilds.fetch(process.env.GUILD);
 
           case 3:
             guild = _context3.sent;

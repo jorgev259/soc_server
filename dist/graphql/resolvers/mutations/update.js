@@ -17,6 +17,8 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _resolversComposition = require("@graphql-tools/resolvers-composition");
 
+var _util = require("@lotus-tree/requestcat/lib/util");
+
 var _utils = require("../../../utils");
 
 var _plugins = require("../../../utils/plugins");
@@ -1305,19 +1307,19 @@ var resolvers = {
       return deleteAnimation;
     }(),
     updateAlbum: function () {
-      var _updateAlbum = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee38(parent, data, _ref49, info) {
+      var _updateAlbum = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee39(parent, data, _ref49, info) {
         var db, user, res, ost, triggerPost;
-        return _regenerator["default"].wrap(function _callee38$(_context38) {
+        return _regenerator["default"].wrap(function _callee39$(_context39) {
           while (1) {
-            switch (_context38.prev = _context38.next) {
+            switch (_context39.prev = _context39.next) {
               case 0:
                 db = _ref49.db, user = _ref49.user, res = _ref49.res;
-                _context38.prev = 1;
-                _context38.next = 4;
+                _context39.prev = 1;
+                _context39.next = 4;
                 return db.models.ost.findByPk(data.id);
 
               case 4:
-                ost = _context38.sent;
+                ost = _context39.sent;
                 triggerPost = data.status !== ost.status.repeat(1) && data.status === 'show';
                 data.artists = data.artists ? data.artists.map(function (artist) {
                   return {
@@ -1325,20 +1327,20 @@ var resolvers = {
                     slug: (0, _utils.slugify)(artist)
                   };
                 }) : [];
-                return _context38.abrupt("return", db.transaction( /*#__PURE__*/function () {
-                  var _ref50 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee37(transaction) {
-                    return _regenerator["default"].wrap(function _callee37$(_context37) {
+                return _context39.abrupt("return", db.transaction( /*#__PURE__*/function () {
+                  var _ref50 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee38(transaction) {
+                    return _regenerator["default"].wrap(function _callee38$(_context38) {
                       while (1) {
-                        switch (_context37.prev = _context37.next) {
+                        switch (_context38.prev = _context38.next) {
                           case 0:
-                            _context37.next = 2;
+                            _context38.next = 2;
                             return db.models.artist.bulkCreate(data.artists, {
                               ignoreDuplicates: true,
                               transaction: transaction
                             });
 
                           case 2:
-                            _context37.next = 4;
+                            _context38.next = 4;
                             return Promise.all([ost.update(data, {
                               transaction: transaction
                             }), ost.setArtists(data.artists.map(function (_ref51) {
@@ -1396,21 +1398,21 @@ var resolvers = {
 
                           case 4:
                             if (!data.cover) {
-                              _context37.next = 13;
+                              _context38.next = 13;
                               break;
                             }
 
-                            _context37.next = 7;
+                            _context38.next = 7;
                             return (0, _utils.img)(data.cover, 'album', ost.id);
 
                           case 7:
-                            ost.placeholder = _context37.sent;
-                            _context37.next = 10;
+                            ost.placeholder = _context38.sent;
+                            _context38.next = 10;
                             return (0, _utils.getImgColor)("album/".concat(ost.id));
 
                           case 10:
-                            ost.headerColor = _context37.sent;
-                            _context37.next = 13;
+                            ost.headerColor = _context38.sent;
+                            _context38.next = 13;
                             return ost.save({
                               transaction: transaction
                             });
@@ -1418,18 +1420,67 @@ var resolvers = {
                           case 13:
                             if (triggerPost) {
                               (0, _plugins.postReddit)(ost);
-                              (0, _plugins.postDiscord)(ost.id);
+
+                              if (data.request) {
+                                db.models.request.findByPk(data.request).then( /*#__PURE__*/function () {
+                                  var _ref52 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee37(request) {
+                                    var guild, userText;
+                                    return _regenerator["default"].wrap(function _callee37$(_context37) {
+                                      while (1) {
+                                        switch (_context37.prev = _context37.next) {
+                                          case 0:
+                                            if (!(request.state === 'complete')) {
+                                              _context37.next = 2;
+                                              break;
+                                            }
+
+                                            return _context37.abrupt("return");
+
+                                          case 2:
+                                            _context37.next = 4;
+                                            return (0, _util.completeRequest)(_plugins.discordClient, db, process.env.GUILD, request);
+
+                                          case 4:
+                                            _context37.next = 6;
+                                            return _plugins.discordClient.guilds.fetch(process.env.GUILD);
+
+                                          case 6:
+                                            guild = _context37.sent;
+                                            _context37.next = 9;
+                                            return guild.channels.fetch();
+
+                                          case 9:
+                                            userText = request.userID || request.user ? " ".concat(request.userID ? "<@".concat(request.userID, ">") : "@".concat(request.user), " :arrow_down:") : '';
+                                            guild.channels.cache.find(function (c) {
+                                              return c.name === 'last-added-soundtracks';
+                                            }).send("https://www.sittingonclouds.net/album/".concat(ost.id).concat(userText));
+
+                                          case 11:
+                                          case "end":
+                                            return _context37.stop();
+                                        }
+                                      }
+                                    }, _callee37);
+                                  }));
+
+                                  return function (_x91) {
+                                    return _ref52.apply(this, arguments);
+                                  };
+                                }());
+                              } else {
+                                (0, _plugins.postDiscord)(ost.id);
+                              }
                             } // res.unstable_revalidate(`/album/${ost.id}`)
 
 
-                            return _context37.abrupt("return", ost);
+                            return _context38.abrupt("return", ost);
 
                           case 15:
                           case "end":
-                            return _context37.stop();
+                            return _context38.stop();
                         }
                       }
-                    }, _callee37);
+                    }, _callee38);
                   }));
 
                   return function (_x90) {
@@ -1438,17 +1489,17 @@ var resolvers = {
                 }()));
 
               case 10:
-                _context38.prev = 10;
-                _context38.t0 = _context38["catch"](1);
-                console.log(_context38.t0);
-                throw new Error(_context38.t0.message);
+                _context39.prev = 10;
+                _context39.t0 = _context39["catch"](1);
+                console.log(_context39.t0);
+                throw new Error(_context39.t0.message);
 
               case 14:
               case "end":
-                return _context38.stop();
+                return _context39.stop();
             }
           }
-        }, _callee38, null, [[1, 10]]);
+        }, _callee39, null, [[1, 10]]);
       }));
 
       function updateAlbum(_x86, _x87, _x88, _x89) {
