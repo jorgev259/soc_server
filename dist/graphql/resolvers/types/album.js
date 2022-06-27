@@ -21,11 +21,11 @@ var resolvers = {
     artists: function artists(parent, args, context, info) {
       return parent.getArtists();
     },
-    classes: function classes(parent, args, context, info) {
-      return parent.getClasses();
-    },
     categories: function categories(parent, args, context, info) {
       return parent.getCategories();
+    },
+    classifications: function classifications(parent, args, context, info) {
+      return parent.getClassifications();
     },
     platforms: function platforms(parent, args, context, info) {
       return parent.getPlatforms({
@@ -208,17 +208,12 @@ var resolvers = {
   Category: {
     albums: function albums(parent) {
       return parent.getOsts();
-    }
-  },
-  Class: {
-    albums: function albums(parent) {
-      return parent.getOsts();
     },
     count: function count(parent, args, _ref9) {
       var db = _ref9.db;
       return db.models.ost.count({
         include: [{
-          model: db.models["class"],
+          model: db.models.category,
           where: {
             name: parent.name
           }

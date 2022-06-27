@@ -34,17 +34,17 @@ var resolvers = {
       var db = _ref5.db;
       return db.models.publisher.findByPk(id);
     },
-    classes: function classes(parent, args, _ref6, info) {
+    categories: function categories(parent, args, _ref6, info) {
       var db = _ref6.db;
-      return db.models["class"].findAll();
-    },
-    series: function series(parent, args, _ref7, info) {
-      var db = _ref7.db;
-      return db.models.series.findAll();
-    },
-    categories: function categories(parent, args, _ref8, info) {
-      var db = _ref8.db;
       return db.models.category.findAll();
+    },
+    classifications: function classifications(parent, args, _ref7, info) {
+      var db = _ref7.db;
+      return db.models.classification.findAll();
+    },
+    series: function series(parent, args, _ref8, info) {
+      var db = _ref8.db;
+      return db.models.series.findAll();
     },
     games: function games(parent, args, _ref9, info) {
       var db = _ref9.db;

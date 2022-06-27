@@ -19,7 +19,7 @@ var _artist = _interopRequireWildcard(require("./models/artist"));
 
 var _category = _interopRequireWildcard(require("./models/category"));
 
-var _class = _interopRequireWildcard(require("./models/class"));
+var _classiffication = _interopRequireWildcard(require("./models/classiffication"));
 
 var _comment = _interopRequireWildcard(require("./models/comment"));
 
@@ -117,8 +117,8 @@ for (var _key4 in _comment) {
   _dirImport[_key4 === 'default' ? "comment" : _key4] = _comment[_key4];
 }
 
-for (var _key3 in _class) {
-  _dirImport[_key3 === 'default' ? "class" : _key3] = _class[_key3];
+for (var _key3 in _classiffication) {
+  _dirImport[_key3 === 'default' ? "classiffication" : _key3] = _classiffication[_key3];
 }
 
 for (var _key2 in _category) {

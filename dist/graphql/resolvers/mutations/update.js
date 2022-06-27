@@ -1348,9 +1348,9 @@ var resolvers = {
                               return slug;
                             }), {
                               transaction: transaction
-                            }), ost.setClasses(data.classes || [], {
-                              transaction: transaction
                             }), ost.setCategories(data.categories || [], {
+                              transaction: transaction
+                            }), ost.setClassifications(data.classifications || [], {
                               transaction: transaction
                             }), ost.setPlatforms(data.platforms || [], {
                               transaction: transaction

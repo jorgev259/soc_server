@@ -8,7 +8,7 @@ exports["default"] = relations;
 function relations(sequelize) {
   var _sequelize$models = sequelize.models,
       ost = _sequelize$models.ost,
-      classes = _sequelize$models["class"],
+      classification = _sequelize$models.classification,
       disc = _sequelize$models.disc,
       download = _sequelize$models.download,
       link = _sequelize$models.link,
@@ -36,8 +36,8 @@ function relations(sequelize) {
   forgor.belongsTo(user, {
     foreignKey: 'username'
   });
-  classes.belongsToMany(ost, {
-    through: 'Ost_Class'
+  classification.belongsToMany(ost, {
+    through: 'Ost_Classification'
   });
   disc.belongsTo(ost);
   download.hasMany(link);
@@ -61,9 +61,9 @@ function relations(sequelize) {
     onDelete: 'CASCADE',
     through: 'Ost_Artist'
   });
-  ost.belongsToMany(classes, {
+  ost.belongsToMany(classification, {
     onDelete: 'CASCADE',
-    through: 'Ost_Class'
+    through: 'Ost_Classification'
   });
   ost.belongsToMany(category, {
     onDelete: 'CASCADE',

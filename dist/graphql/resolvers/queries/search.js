@@ -26,7 +26,7 @@ var resolvers = {
 
       var _ref$title = _ref.title,
           title = _ref$title === void 0 ? '' : _ref$title,
-          classes = _ref.classes,
+          categories = _ref.categories,
           limit = _ref.limit,
           _ref$page = _ref.page,
           page = _ref$page === void 0 ? 0 : _ref$page,
@@ -52,10 +52,10 @@ var resolvers = {
             subTitle: (0, _defineProperty2["default"])({}, _sequelize.Op.like, "%".concat(t, "%"))
           };
         }))]), (0, _defineProperty2["default"])(_where, "status", (0, _defineProperty2["default"])({}, _sequelize.Op["in"], status)), _where),
-        include: classes ? [{
-          model: db.models["class"],
+        include: categories ? [{
+          model: db.models.category,
           where: {
-            name: (0, _defineProperty2["default"])({}, _sequelize.Op["in"], classes)
+            name: (0, _defineProperty2["default"])({}, _sequelize.Op["in"], categories)
           }
         }] : [],
         order: [(0, _sequelize.literal)('`ost`.`status` = \'coming\' DESC')].concat((0, _toConsumableArray2["default"])(order.map(function (o) {
@@ -65,13 +65,13 @@ var resolvers = {
     },
     searchAlbumByArtist: function () {
       var _searchAlbumByArtist = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(parent, _ref5, _ref6) {
-        var name, classes, limit, _ref5$page, page, _ref5$order, order, _ref5$mode, mode, _ref5$status, status, db, include;
+        var name, categories, limit, _ref5$page, page, _ref5$order, order, _ref5$mode, mode, _ref5$status, status, db, include;
 
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                name = _ref5.name, classes = _ref5.classes, limit = _ref5.limit, _ref5$page = _ref5.page, page = _ref5$page === void 0 ? 0 : _ref5$page, _ref5$order = _ref5.order, order = _ref5$order === void 0 ? ['createdAt'] : _ref5$order, _ref5$mode = _ref5.mode, mode = _ref5$mode === void 0 ? 'DESC' : _ref5$mode, _ref5$status = _ref5.status, status = _ref5$status === void 0 ? ['show'] : _ref5$status;
+                name = _ref5.name, categories = _ref5.categories, limit = _ref5.limit, _ref5$page = _ref5.page, page = _ref5$page === void 0 ? 0 : _ref5$page, _ref5$order = _ref5.order, order = _ref5$order === void 0 ? ['createdAt'] : _ref5$order, _ref5$mode = _ref5.mode, mode = _ref5$mode === void 0 ? 'DESC' : _ref5$mode, _ref5$status = _ref5.status, status = _ref5$status === void 0 ? ['show'] : _ref5$status;
                 db = _ref6.db;
                 include = [{
                   model: db.models.artist,
@@ -79,10 +79,10 @@ var resolvers = {
                     name: (0, _defineProperty2["default"])({}, _sequelize.Op.like, "%".concat(name, "%"))
                   }
                 }];
-                if (classes) include.push({
+                if (categories) include.push({
                   model: db.models["class"],
                   where: {
-                    name: (0, _defineProperty2["default"])({}, _sequelize.Op["in"], classes)
+                    name: (0, _defineProperty2["default"])({}, _sequelize.Op["in"], categories)
                   }
                 });
                 return _context.abrupt("return", searchPage({
@@ -236,12 +236,12 @@ var resolvers = {
         }
       });
     },
-    searchPlatformsByClasses: function searchPlatformsByClasses(parent, _ref22, _ref23) {
-      var classes = _ref22.classes;
+    searchPlatformsByCategories: function searchPlatformsByCategories(parent, _ref22, _ref23) {
+      var categories = _ref22.categories;
       var db = _ref23.db;
-      return classes.length === 0 ? [] : db.models.platform.findAll({
+      return categories.length === 0 ? [] : db.models.platform.findAll({
         where: {
-          type: (0, _defineProperty2["default"])({}, _sequelize.Op.or, classes)
+          type: (0, _defineProperty2["default"])({}, _sequelize.Op.or, categories)
         }
       });
     },

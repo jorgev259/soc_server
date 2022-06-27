@@ -9,8 +9,8 @@ type Album {
     stores: [Store]!
     discs: [Disc]!
     artists: [Artist]!
-    classes: [Class]!
     categories: [Category]!
+    classifications: [Classification]!
     platforms: [Platform]!
     games: [Game]!
     animations: [Animation]!
@@ -57,10 +57,14 @@ type Artist {
     albums: [Album]
 }
 
-type Class {
+type Category {
     name: String!
     albums: [Album]!
-    count: Float!
+    count: Int!
+}
+
+type Classification {
+    name: String!
 }
 
 type Game {
@@ -114,17 +118,12 @@ type Series {
     headerColor: String!
 }
 
-type Category {
-    name: String!
-    albums: [Album]!
-}
-
 type Query {
     albums: [Album!]!
     downloads(id: ID!): [Download]!
     albumCount: Float!
     categories: [Category]!
-    classes: [Class]!
+    classifications: [Classification]!
     album(id: ID): Album
     artists: [Artist!]!     
     platforms: [Platform!]!
@@ -142,8 +141,8 @@ type Query {
 
     highlight: Album!
 
-    searchAlbum(title: String, classes:[String], limit: Int, page: Int, order: [String], mode: String, status: [String!]): SearchAlbumResult
-    searchAlbumByArtist(name: String!, classes:[String], limit: Int, page: Int, order: [String], mode: String, status: [String!]): SearchAlbumResult
+    searchAlbum(title: String, categories:[String], limit: Int, page: Int, order: [String], mode: String, status: [String!]): SearchAlbumResult
+    searchAlbumByArtist(name: String!, categories:[String], limit: Int, page: Int, order: [String], mode: String, status: [String!]): SearchAlbumResult
     searchAnimation(title: String, limit: Int, page: Int, order:String, mode: String): SearchAnimResult
     searchStudio(name: String, limit: Int, page: Int, order:String, mode: String): SearchStudioResult
     searchGame(name: String, limit: Int, page: Int, order:String, mode: String): SearchGameResult
@@ -154,7 +153,7 @@ type Query {
     searchPublishersByName(name: String): [Publisher] 
     recentPublishers(limit: Int!): [Publisher]
     searchPlatformsByName(name: String, type: [String]!): [Platform] 
-    searchPlatformsByClasses(classes: [String]!): [Platform]!
+    searchPlatformsByCategories(categories: [String]!): [Platform]!
     recentPlatforms(limit: Int!, type: [String]!): [Platform]
 
     getRandomAlbum(limit: Int): [Album!]!
@@ -196,8 +195,8 @@ type Mutation {
         stores: [StoreInput],
         downloads: [DownloadInput],
         artists: [String],
-        classes: [String],
         categories: [String],
+        classifications: [String],
         platforms: [ID],
         games: [String],
         animations: [ID],
@@ -218,8 +217,8 @@ type Mutation {
         stores: [StoreInput],
         downloads: [DownloadInput],
         artists: [String],
-        classes: [String],
         categories: [String],
+        classifications: [String],
         platforms: [ID],
         games: [String],
         animations: [ID],
