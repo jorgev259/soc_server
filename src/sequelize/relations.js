@@ -1,6 +1,6 @@
 export default function relations (sequelize) {
   const {
-    ost, class: classes, disc, download, link,
+    ost, classification, disc, download, link,
     publisher, game, series,
     platform, artist, category, store,
     animation, studio,
@@ -11,7 +11,7 @@ export default function relations (sequelize) {
   log.belongsTo(user, { foreignKey: 'username' })
   forgor.belongsTo(user, { foreignKey: 'username' })
 
-  classes.belongsToMany(ost, { through: 'Ost_Class' })
+  classification.belongsToMany(ost, { through: 'Ost_Classification' })
 
   disc.belongsTo(ost)
 
@@ -26,7 +26,7 @@ export default function relations (sequelize) {
   platform.belongsToMany(game, { through: 'Game_Platform' })
 
   ost.belongsToMany(artist, { onDelete: 'CASCADE', through: 'Ost_Artist' })
-  ost.belongsToMany(classes, { onDelete: 'CASCADE', through: 'Ost_Class' })
+  ost.belongsToMany(classification, { onDelete: 'CASCADE', through: 'Ost_Classification' })
   ost.belongsToMany(category, { onDelete: 'CASCADE', through: 'Ost_Category' })
   ost.belongsToMany(platform, { onDelete: 'CASCADE', through: 'Ost_Platform' })
   ost.belongsToMany(game, { onDelete: 'CASCADE', through: 'Ost_Game' })

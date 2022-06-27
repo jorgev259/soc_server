@@ -6,8 +6,8 @@ const resolvers = {
   Upload: GraphQLUpload,
   Album: {
     artists: (parent, args, context, info) => parent.getArtists(),
-    classes: (parent, args, context, info) => parent.getClasses(),
     categories: (parent, args, context, info) => parent.getCategories(),
+    classifications: (parent, args, context, info) => parent.getClassifications(),
     platforms: (parent, args, context, info) => parent.getPlatforms({ order: ['name'] }),
     games: (parent, args, context, info) => parent.getGames(),
     discs: (parent, args, context, info) => parent.getDiscs({ order: [['number', 'ASC']] }),
@@ -30,12 +30,8 @@ const resolvers = {
   },
 
   Category: {
-    albums: parent => parent.getOsts()
-  },
-
-  Class: {
     albums: parent => parent.getOsts(),
-    count: (parent, args, { db }) => db.models.ost.count({ include: [{ model: db.models.class, where: { name: parent.name } }] })
+    count: (parent, args, { db }) => db.models.ost.count({ include: [{ model: db.models.category, where: { name: parent.name } }] })
   },
 
   Download: {

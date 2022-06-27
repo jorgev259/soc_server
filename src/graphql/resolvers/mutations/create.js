@@ -23,8 +23,8 @@ const resolvers = {
 
         await Promise.all([
           ost.setArtists(data.artists.filter(({ slug }) => slug.length > 0).map(({ slug }) => slug), { transaction }),
-          ost.setClasses(data.classes || [], { transaction }),
           ost.setCategories(data.categories || [], { transaction }),
+          ost.setClassifications(data.classifications || [], { transaction }),
           ost.setPlatforms(data.platforms || [], { transaction }),
           ost.setGames(data.games || [], { transaction }),
           ost.setAnimations(data.animations || [], { transaction }),

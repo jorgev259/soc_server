@@ -3,7 +3,7 @@ import getVGMDB from '../../../utils/vgmdb'
 
 const resolvers = {
   Query: {
-    searchAlbum: (parent, { title = '', classes, limit, page = 0, order = ['createdAt'], mode = 'DESC', status = ['show'] }, { db }) => {
+    searchAlbum: (parent, { title = '', categories, limit, page = 0, order = ['createdAt'], mode = 'DESC', status = ['show'] }, { db }) => {
       const titleWords = title.split(' ')
 
       return searchPage({ limit, page, model: 'ost' }, {
@@ -14,14 +14,14 @@ const resolvers = {
           ],
           status: { [Op.in]: status }
         },
-        include: classes ? [{ model: db.models.class, where: { name: { [Op.in]: classes } } }] : [],
+        include: categories ? [{ model: db.models.category, where: { name: { [Op.in]: categories } } }] : [],
         order: [literal('`ost`.`status` = \'coming\' DESC'), ...order.map(o => [o, mode])]
       }, db)
     },
-    searchAlbumByArtist: async (parent, { name, classes, limit, page = 0, order = ['createdAt'], mode = 'DESC', status = ['show'] }, { db }) => {
+    searchAlbumByArtist: async (parent, { name, categories, limit, page = 0, order = ['createdAt'], mode = 'DESC', status = ['show'] }, { db }) => {
       const include = [{ model: db.models.artist, where: { name: { [Op.like]: `%${name}%` } } }]
 
-      if (classes) include.push({ model: db.models.class, where: { name: { [Op.in]: classes } } })
+      if (categories) include.push({ model: db.models.class, where: { name: { [Op.in]: categories } } })
 
       return searchPage({ limit, page, model: 'ost' }, {
         where: { status: { [Op.in]: status } },
@@ -67,9 +67,9 @@ const resolvers = {
         type: { [Op.and]: type.map(t => ({ [Op.like]: `%${t}%` })) }
       }
     }),
-    searchPlatformsByClasses: (parent, { classes }, { db }) => classes.length === 0
+    searchPlatformsByCategories: (parent, { categories }, { db }) => categories.length === 0
       ? []
-      : db.models.platform.findAll({ where: { type: { [Op.or]: classes } } }),
+      : db.models.platform.findAll({ where: { type: { [Op.or]: categories } } }),
     vgmdb: (_, { search }) => getVGMDB(search)
   }
 }

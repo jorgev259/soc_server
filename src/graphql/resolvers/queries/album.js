@@ -6,9 +6,9 @@ const resolvers = {
     platforms: (parent, args, { db }, info) => db.models.platform.findAll(),
     publishers: (parent, args, { db }, info) => db.models.publisher.findAll(),
     publisher: (parent, { id }, { db }, info) => db.models.publisher.findByPk(id),
-    classes: (parent, args, { db }, info) => db.models.class.findAll(),
-    series: (parent, args, { db }, info) => db.models.series.findAll(),
     categories: (parent, args, { db }, info) => db.models.category.findAll(),
+    classifications: (parent, args, { db }, info) => db.models.classification.findAll(),
+    series: (parent, args, { db }, info) => db.models.series.findAll(),
     games: (parent, args, { db }, info) => db.models.game.findAll(),
     game: (parent, { slug }, { db }, info) => db.models.game.findByPk(slug),
 
