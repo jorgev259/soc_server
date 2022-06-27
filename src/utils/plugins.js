@@ -19,7 +19,7 @@ export const discordClient = new Client({ intents: [Intents.FLAGS.GUILDS, Intent
 if (discordToken) discordClient.login(discordToken).then(() => console.log(`Logged in as ${discordClient.user.tag}!`))
 
 export async function postReddit (instance) {
-  /* const classList = await instance.getClasses()
+  /* const classList = await instance.getCategories()
     const classItem = classList[0]
 
     const flair = classItem && flairs.find(f => f.text === classItem.name)

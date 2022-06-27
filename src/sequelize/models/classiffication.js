@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 const model = sequelize => {
-  const Class = sequelize.define('class', {
+  const Classification = sequelize.define('classification', {
     name: {
       type: DataTypes.STRING,
       primaryKey: true
@@ -8,10 +8,9 @@ const model = sequelize => {
   },
   {
     freezeTableName: true
-  }
-  )
+  })
 
-  return Class
+  return Classification
 }
 
 export default model
