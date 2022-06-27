@@ -1,7 +1,8 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
+import { completeRequest } from '@lotus-tree/requestcat/lib/util'
 
 import { img, createLog, createUpdateLog, getImgColor, slugify } from '../../../utils'
-import { postReddit, postDiscord } from '../../../utils/plugins'
+import { postReddit, postDiscord, discordClient } from '../../../utils/plugins'
 
 import { hasRole } from '../../../utils/resolvers'
 
@@ -265,7 +266,26 @@ const resolvers = {
 
           if (triggerPost) {
             postReddit(ost)
-            postDiscord(ost.id)
+            if (data.request) {
+              db.models.request.findByPk(data.request)
+                .then(async request => {
+                  if (request.state === 'complete') return
+
+                  await completeRequest(discordClient, db, process.env.GUILD, request)
+                  const guild = await discordClient.guilds.fetch(process.env.GUILD)
+                  await guild.channels.fetch()
+
+                  const userText = request.userID || request.user
+                    ? ` ${request.userID ? `<@${request.userID}>` : `@${request.user}`} :arrow_down:`
+                    : ''
+
+                  guild.channels.cache
+                    .find(c => c.name === 'last-added-soundtracks')
+                    .send(`https://www.sittingonclouds.net/album/${ost.id}${userText}`)
+                })
+            } else {
+              postDiscord(ost.id)
+            }
           }
 
           // res.unstable_revalidate(`/album/${ost.id}`)

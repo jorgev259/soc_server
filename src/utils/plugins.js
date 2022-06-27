@@ -38,7 +38,7 @@ export async function postReddit (instance) {
 
 export async function postDiscord (id) {
   if (discordToken) {
-    const guild = await discordClient.guilds.fetch('496366337036255242')
+    const guild = await discordClient.guilds.fetch(process.env.GUILD)
     await guild.channels.fetch()
 
     guild.channels.cache

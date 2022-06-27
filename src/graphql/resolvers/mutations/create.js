@@ -2,8 +2,9 @@ import { UserInputError } from 'apollo-server-errors'
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 
 import { img, createLog, createUpdateLog, getImgColor, slugify } from '../../../utils'
-import { postReddit, postDiscord } from '../../../utils/plugins'
+import { postReddit, postDiscord, discordClient } from '../../../utils/plugins'
 import { hasRole } from '../../../utils/resolvers'
+import { completeRequest } from '@lotus-tree/requestcat/lib/util'
 
 const resolversComposition = { 'Mutation.*': hasRole('CREATE') }
 const resolvers = {
@@ -21,7 +22,7 @@ const resolvers = {
         })
 
         await Promise.all([
-          ost.setArtists(data.artists.map(({ slug }) => slug), { transaction }),
+          ost.setArtists(data.artists.filter(({ slug }) => slug.length > 0).map(({ slug }) => slug), { transaction }),
           ost.setClasses(data.classes || [], { transaction }),
           ost.setCategories(data.categories || [], { transaction }),
           ost.setPlatforms(data.platforms || [], { transaction }),
@@ -38,8 +39,28 @@ const resolvers = {
         await ost.save({ transaction })
 
         if (ost.status === 'show') {
+          if (data.request) {
+            db.models.request.findByPk(data.request)
+              .then(async request => {
+                if (request.state === 'complete') return
+
+                await completeRequest(discordClient, db, process.env.GUILD, request)
+                const guild = await discordClient.guilds.fetch(process.env.GUILD)
+                await guild.channels.fetch()
+
+                const userText = request.userID || request.user
+                  ? ` ${request.userID ? `<@${request.userID}>` : `@${request.user}`} :arrow_down:`
+                  : ''
+
+                guild.channels.cache
+                  .find(c => c.name === 'last-added-soundtracks')
+                  .send(`https://www.sittingonclouds.net/album/${id}${userText}`)
+              })
+          } else {
+            postDiscord(ost.id)
+          }
+
           postReddit(ost)
-          postDiscord(ost.id)
         }
 
         return ost

@@ -27,6 +27,13 @@ type Query {
     state: [String!], 
     donator: [Boolean]!
   ): [Request]!
+  request(link: String!): Request
+  searchRequests(
+    state: [String!]
+    donator: [Boolean!]
+    limit: Int
+    filter: String
+  ): [Request]!
   vgmdb(search: String!): VgmResult!
 }
 
