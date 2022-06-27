@@ -1,7 +1,7 @@
 [
     {
         "url": "/admin/1",
-        "name": "Album Admin",
+        "name": "Manage Albums",
         "perms": ["UPDATE"]
     },
     {
