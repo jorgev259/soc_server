@@ -204,6 +204,7 @@ type Mutation {
         discs: [DiscInput],
         related: [ID],
         status: String!
+        request: ID
     ): Album!
     updateAlbum(
         id: ID!
@@ -225,6 +226,7 @@ type Mutation {
         discs: [DiscInput],
         related: [ID],
         status: String!
+        request: ID
     ): Album!
     deleteAlbum(id: ID!): Int
 }
