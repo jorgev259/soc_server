@@ -59,12 +59,12 @@ const resolvers = {
         }
       }
     }),
-    searchPlatformsByName: (parent, { name, type }, { db }) => db.models.platform.findAll({
+    searchPlatformsByName: (parent, { name, categories }, { db }) => db.models.platform.findAll({
       where: {
         name: {
           [Op.like]: `%${name}%`
         },
-        type: { [Op.and]: type.map(t => ({ [Op.like]: `%${t}%` })) }
+        type: { [Op.or]: categories }
       }
     }),
     searchPlatformsByCategories: (parent, { categories }, { db }) => categories.length === 0

@@ -152,7 +152,7 @@ type Query {
     recentSeries(limit: Int!): [Series]
     searchPublishersByName(name: String): [Publisher] 
     recentPublishers(limit: Int!): [Publisher]
-    searchPlatformsByName(name: String, type: [String]!): [Platform] 
+    searchPlatformsByName(name: String, categories: [String]!): [Platform] 
     searchPlatformsByCategories(categories: [String]!): [Platform]!
     recentPlatforms(limit: Int!, type: [String]!): [Platform]
 
