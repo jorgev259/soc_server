@@ -225,28 +225,26 @@ var resolvers = {
     },
     searchPlatformsByName: function searchPlatformsByName(parent, _ref19, _ref20) {
       var name = _ref19.name,
-          type = _ref19.type;
+          categories = _ref19.categories;
       var db = _ref20.db;
       return db.models.platform.findAll({
         where: {
           name: (0, _defineProperty2["default"])({}, _sequelize.Op.like, "%".concat(name, "%")),
-          type: (0, _defineProperty2["default"])({}, _sequelize.Op.and, type.map(function (t) {
-            return (0, _defineProperty2["default"])({}, _sequelize.Op.like, "%".concat(t, "%"));
-          }))
+          type: (0, _defineProperty2["default"])({}, _sequelize.Op.or, categories)
         }
       });
     },
-    searchPlatformsByCategories: function searchPlatformsByCategories(parent, _ref22, _ref23) {
-      var categories = _ref22.categories;
-      var db = _ref23.db;
+    searchPlatformsByCategories: function searchPlatformsByCategories(parent, _ref21, _ref22) {
+      var categories = _ref21.categories;
+      var db = _ref22.db;
       return categories.length === 0 ? [] : db.models.platform.findAll({
         where: {
           type: (0, _defineProperty2["default"])({}, _sequelize.Op.or, categories)
         }
       });
     },
-    vgmdb: function vgmdb(_, _ref24) {
-      var search = _ref24.search;
+    vgmdb: function vgmdb(_, _ref23) {
+      var search = _ref23.search;
       return (0, _vgmdb["default"])(search);
     }
   }
