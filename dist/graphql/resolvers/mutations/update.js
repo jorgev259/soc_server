@@ -19,6 +19,8 @@ var _resolversComposition = require("@graphql-tools/resolvers-composition");
 
 var _util = require("@lotus-tree/requestcat/lib/util");
 
+var _axios = _interopRequireDefault(require("axios"));
+
 var _utils = require("../../../utils");
 
 var _plugins = require("../../../utils/plugins");
@@ -29,6 +31,7 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
+var token = process.env.IRONCLAD;
 var resolversComposition = {
   'Mutation.*': (0, _resolvers.hasRole)('UPDATE')
 };
@@ -1327,7 +1330,8 @@ var resolvers = {
                     slug: (0, _utils.slugify)(artist)
                   };
                 }) : [];
-                return _context39.abrupt("return", db.transaction( /*#__PURE__*/function () {
+                _context39.next = 9;
+                return db.transaction( /*#__PURE__*/function () {
                   var _ref50 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee38(transaction) {
                     return _regenerator["default"].wrap(function _callee38$(_context38) {
                       while (1) {
@@ -1470,12 +1474,9 @@ var resolvers = {
                               } else {
                                 (0, _plugins.postDiscord)(ost.id);
                               }
-                            } // res.unstable_revalidate(`/album/${ost.id}`)
+                            }
 
-
-                            return _context38.abrupt("return", ost);
-
-                          case 15:
+                          case 14:
                           case "end":
                             return _context38.stop();
                         }
@@ -1486,20 +1487,30 @@ var resolvers = {
                   return function (_x90) {
                     return _ref50.apply(this, arguments);
                   };
-                }()));
+                }());
 
-              case 10:
-                _context39.prev = 10;
+              case 9:
+                _context39.next = 11;
+                return _axios["default"].post('http://127.0.0.1:3000/api/revalidate', {
+                  token: token,
+                  revalidate: ["/album/".concat(ost.id)]
+                });
+
+              case 11:
+                return _context39.abrupt("return", ost);
+
+              case 14:
+                _context39.prev = 14;
                 _context39.t0 = _context39["catch"](1);
                 console.log(_context39.t0);
                 throw new Error(_context39.t0.message);
 
-              case 14:
+              case 18:
               case "end":
                 return _context39.stop();
             }
           }
-        }, _callee39, null, [[1, 10]]);
+        }, _callee39, null, [[1, 14]]);
       }));
 
       function updateAlbum(_x86, _x87, _x88, _x89) {
