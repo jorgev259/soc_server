@@ -1,11 +1,13 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import { completeRequest } from '@lotus-tree/requestcat/lib/util'
+import axios from 'axios'
 
 import { img, createLog, createUpdateLog, getImgColor, slugify } from '../../../utils'
 import { postReddit, postDiscord, discordClient } from '../../../utils/plugins'
 
 import { hasRole } from '../../../utils/resolvers'
 
+const token = process.env.IRONCLAD
 const resolversComposition = { 'Mutation.*': hasRole('UPDATE') }
 const resolvers = {
   Mutation: {
@@ -238,7 +240,7 @@ const resolvers = {
         const triggerPost = (data.status !== ost.status.repeat(1)) && data.status === 'show'
         data.artists = data.artists ? data.artists.map(artist => { return { name: artist, slug: slugify(artist) } }) : []
 
-        return db.transaction(async transaction => {
+        await db.transaction(async transaction => {
           await db.models.artist.bulkCreate(data.artists, { ignoreDuplicates: true, transaction })
 
           // implement better log lol lmao
@@ -287,10 +289,10 @@ const resolvers = {
               postDiscord(ost.id)
             }
           }
-
-          // res.unstable_revalidate(`/album/${ost.id}`)
-          return ost
         })
+
+        await axios.post('http://127.0.0.1:3000/api/revalidate', { token, revalidate: [`/album/${ost.id}`] })
+        return ost
       } catch (err) {
         console.log(err)
         throw new Error(err.message)
