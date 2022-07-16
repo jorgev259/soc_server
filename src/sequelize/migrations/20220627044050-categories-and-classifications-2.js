@@ -2,12 +2,12 @@
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.renameColumn('ost_category', 'className', 'categoryName')
-    await queryInterface.renameColumn('ost_classification', 'categoryName', 'classificationName')
+    await queryInterface.renameColumn('Ost_Category', 'className', 'categoryName')
+    await queryInterface.renameColumn('Ost_Classification', 'categoryName', 'classificationName')
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.renameColumn('ost_category', 'categoryName', 'className')
-    await queryInterface.renameColumn('ost_classification', 'classificationName', 'categoryName')
+    await queryInterface.renameColumn('Ost_Category', 'categoryName', 'className')
+    await queryInterface.renameColumn('Ost_Classification', 'classificationName', 'categoryName')
   }
 }
