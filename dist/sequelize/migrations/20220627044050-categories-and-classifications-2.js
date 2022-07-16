@@ -14,11 +14,11 @@ module.exports = {
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return queryInterface.renameColumn('ost_category', 'className', 'categoryName');
+              return queryInterface.renameColumn('Ost_Category', 'className', 'categoryName');
 
             case 2:
               _context.next = 4;
-              return queryInterface.renameColumn('ost_classification', 'categoryName', 'classificationName');
+              return queryInterface.renameColumn('Ost_Classification', 'categoryName', 'classificationName');
 
             case 4:
             case "end":
@@ -35,11 +35,11 @@ module.exports = {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return queryInterface.renameColumn('ost_category', 'categoryName', 'className');
+              return queryInterface.renameColumn('Ost_Category', 'categoryName', 'className');
 
             case 2:
               _context2.next = 4;
-              return queryInterface.renameColumn('ost_classification', 'classificationName', 'categoryName');
+              return queryInterface.renameColumn('Ost_Classification', 'classificationName', 'categoryName');
 
             case 4:
             case "end":

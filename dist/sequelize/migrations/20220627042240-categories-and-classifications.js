@@ -18,7 +18,7 @@ module.exports = {
 
             case 2:
               _context.next = 4;
-              return queryInterface.renameTable('ost_category', 'ost_classification');
+              return queryInterface.renameTable('Ost_Category', 'Ost_Classification');
 
             case 4:
               _context.next = 6;
@@ -26,7 +26,7 @@ module.exports = {
 
             case 6:
               _context.next = 8;
-              return queryInterface.renameTable('ost_class', 'ost_category');
+              return queryInterface.renameTable('Ost_Class', 'Ost_Category');
 
             case 8:
             case "end":
@@ -47,7 +47,7 @@ module.exports = {
 
             case 2:
               _context2.next = 4;
-              return queryInterface.renameTable('ost_category', 'ost_class');
+              return queryInterface.renameTable('Ost_Category', 'Ost_Class');
 
             case 4:
               _context2.next = 6;
@@ -55,7 +55,7 @@ module.exports = {
 
             case 6:
               _context2.next = 8;
-              return queryInterface.renameTable('ost_classification', 'ost_category');
+              return queryInterface.renameTable('Ost_Classification', 'Ost_Category');
 
             case 8:
             case "end":
