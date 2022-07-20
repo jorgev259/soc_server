@@ -59,8 +59,10 @@ export default async function getVGMDB (search) {
   creditsNodes.each((i, c) => {
     const [labelNode, nameNode] = c.children.filter(n => n.type === 'tag')
     const creditLabel = labelNode
-      .children[0].children[0].children
-      .find(s => s.attribs.class === 'artistname' && s.attribs.style?.includes('display:inline'))?.children[0].data
+      ?.children.find(c => c.children)
+      ?.children.find(c => c.children)
+      ?.children.find(s => s.attribs.class === 'artistname' && s.attribs.style?.includes('display:inline'))
+      ?.children[0].data
 
     if (!['Vocals', 'Composer', 'Arranger'].includes(creditLabel)) return true
 
