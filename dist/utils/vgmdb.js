@@ -142,7 +142,7 @@ function _getVGMDB() {
             creditsNodes = $('#collapse_credits tr.maincred');
             data.artists = [];
             creditsNodes.each(function (i, c) {
-              var _labelNode$children$, _data$artists;
+              var _labelNode$children$f, _labelNode$children$f2, _labelNode$children$f3, _data$artists;
 
               var _c$children$filter = c.children.filter(function (n) {
                 return n.type === 'tag';
@@ -151,11 +151,15 @@ function _getVGMDB() {
                   labelNode = _c$children$filter2[0],
                   nameNode = _c$children$filter2[1];
 
-              var creditLabel = (_labelNode$children$ = labelNode.children[0].children[0].children.find(function (s) {
+              var creditLabel = labelNode === null || labelNode === void 0 ? void 0 : (_labelNode$children$f = labelNode.children.find(function (c) {
+                return c.children;
+              })) === null || _labelNode$children$f === void 0 ? void 0 : (_labelNode$children$f2 = _labelNode$children$f.children.find(function (c) {
+                return c.children;
+              })) === null || _labelNode$children$f2 === void 0 ? void 0 : (_labelNode$children$f3 = _labelNode$children$f2.children.find(function (s) {
                 var _s$attribs$style;
 
                 return s.attribs["class"] === 'artistname' && ((_s$attribs$style = s.attribs.style) === null || _s$attribs$style === void 0 ? void 0 : _s$attribs$style.includes('display:inline'));
-              })) === null || _labelNode$children$ === void 0 ? void 0 : _labelNode$children$.children[0].data;
+              })) === null || _labelNode$children$f3 === void 0 ? void 0 : _labelNode$children$f3.children[0].data;
               if (!['Vocals', 'Composer', 'Arranger'].includes(creditLabel)) return true;
               var artistNodes = nameNode.children.filter(function (a) {
                 return a.type === 'tag' || a.data.trim() !== ',';
