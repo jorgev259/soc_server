@@ -1,13 +1,11 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import { completeRequest } from '@lotus-tree/requestcat/lib/util'
-import axios from 'axios'
 
 import { img, createLog, createUpdateLog, getImgColor, slugify } from '../../../utils'
 import { postReddit, postDiscord, discordClient } from '../../../utils/plugins'
 
 import { hasRole } from '../../../utils/resolvers'
 
-const token = process.env.IRONCLAD
 const resolversComposition = { 'Mutation.*': hasRole('UPDATE') }
 const resolvers = {
   Mutation: {
@@ -291,7 +289,6 @@ const resolvers = {
           }
         })
 
-        await axios.post('http://127.0.0.1:3000/api/revalidate', { token, revalidate: [`/album/${ost.id}`] })
         return ost
       } catch (err) {
         console.log(err)

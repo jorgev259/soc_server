@@ -73,7 +73,6 @@ const resolvers = {
       return db.transaction(async transaction => {
         await createUpdateLog(db, 'deleteAlbum', ost, user.username, transaction)
         await ost.destroy({ transaction })
-        // res.unstable_revalidate(`/album/${id}`)
         return 1
       })
     }
