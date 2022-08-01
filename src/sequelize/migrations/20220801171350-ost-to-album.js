@@ -8,7 +8,7 @@ const tables = [
   'Ost_Platform',
   'Ost_Type',
   'Ost_Artist',
-  'osthistories',
+  'ostHistories',
   'related_ost'
 ]
 
