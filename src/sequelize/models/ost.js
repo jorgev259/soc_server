@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize'
 import { PLACEHOLDER } from '../../utils'
 
 const model = sequelize =>
-  sequelize.define('ost', {
+  sequelize.define('album', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -17,9 +17,6 @@ const model = sequelize =>
     status: { type: DataTypes.STRING, defaultValue: 'show' },
     placeholder: { type: DataTypes.TEXT, defaultValue: PLACEHOLDER },
     headerColor: { type: DataTypes.STRING, defaultValue: '#ffffff' }
-  },
-  {
-    freezeTableName: true
   })
 
 export default model

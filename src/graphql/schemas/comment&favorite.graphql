@@ -30,8 +30,8 @@ type AvgRating {
 }
 
 type Mutation {
-  updateComment(text: String!, anon: Boolean!, ostId: ID!): Boolean
-  addFavorite(ostId: String!): Boolean
-  removeFavorite(ostId: String!): Boolean
-  rateAlbum(ostId: ID!, score: Int!): Boolean
+  updateComment(text: String!, anon: Boolean!, albumId: ID!): Boolean
+  addFavorite(albumId: String!): Boolean
+  removeFavorite(albumId: String!): Boolean
+  rateAlbum(albumId: ID!, score: Int!): Boolean
 }

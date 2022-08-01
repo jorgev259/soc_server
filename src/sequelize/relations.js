@@ -1,6 +1,6 @@
 export default function relations (sequelize) {
   const {
-    ost, classification, disc, download, link,
+    album, classification, disc, download, link,
     publisher, game, series,
     platform, artist, category, store,
     animation, studio,
@@ -11,32 +11,32 @@ export default function relations (sequelize) {
   log.belongsTo(user, { foreignKey: 'username' })
   forgor.belongsTo(user, { foreignKey: 'username' })
 
-  classification.belongsToMany(ost, { through: 'Ost_Classification' })
+  classification.belongsToMany(album, { through: 'Album_Classification' })
 
-  disc.belongsTo(ost)
+  disc.belongsTo(album)
 
   download.hasMany(link)
   link.belongsTo(download)
 
   game.belongsToMany(publisher, { through: 'Publisher_Game' })
-  game.belongsToMany(ost, { through: 'Ost_Game' })
+  game.belongsToMany(album, { through: 'Album_Game' })
   game.belongsToMany(series, { through: 'Series_Game' })
 
   game.belongsToMany(platform, { through: 'Game_Platform' })
   platform.belongsToMany(game, { through: 'Game_Platform' })
 
-  ost.belongsToMany(artist, { onDelete: 'CASCADE', through: 'Ost_Artist' })
-  ost.belongsToMany(classification, { onDelete: 'CASCADE', through: 'Ost_Classification' })
-  ost.belongsToMany(category, { onDelete: 'CASCADE', through: 'Ost_Category' })
-  ost.belongsToMany(platform, { onDelete: 'CASCADE', through: 'Ost_Platform' })
-  ost.belongsToMany(game, { onDelete: 'CASCADE', through: 'Ost_Game' })
-  ost.belongsToMany(animation, { through: 'Ost_Animation' })
-  ost.hasMany(disc, { onDelete: 'CASCADE' })
-  ost.hasMany(download, { onDelete: 'CASCADE' })
-  ost.hasMany(store, { onDelete: 'CASCADE' })
-  ost.belongsToMany(ost, { onDelete: 'CASCADE', through: 'related_ost', as: 'related' })
+  album.belongsToMany(artist, { onDelete: 'CASCADE', through: 'Album_Artist' })
+  album.belongsToMany(classification, { onDelete: 'CASCADE', through: 'Album_Classification' })
+  album.belongsToMany(category, { onDelete: 'CASCADE', through: 'Album_Category' })
+  album.belongsToMany(platform, { onDelete: 'CASCADE', through: 'Album_Platform' })
+  album.belongsToMany(game, { onDelete: 'CASCADE', through: 'Album_Game' })
+  album.belongsToMany(animation, { through: 'Album_Animation' })
+  album.hasMany(disc, { onDelete: 'CASCADE' })
+  album.hasMany(download, { onDelete: 'CASCADE' })
+  album.hasMany(store, { onDelete: 'CASCADE' })
+  album.belongsToMany(album, { onDelete: 'CASCADE', through: 'related_album', as: 'related' })
 
-  platform.belongsToMany(ost, { through: 'Ost_Platform' })
+  platform.belongsToMany(album, { through: 'Album_Platform' })
 
   publisher.belongsToMany(game, { through: 'Publisher_Game' })
 
@@ -45,18 +45,18 @@ export default function relations (sequelize) {
   animation.belongsToMany(studio, { through: 'Studio_Animation' })
   studio.belongsToMany(animation, { through: 'Studio_Animation' })
 
-  animation.belongsToMany(ost, { through: 'Ost_Animation' })
+  animation.belongsToMany(album, { through: 'Album_Animation' })
 
-  ost.hasMany(comment)
-  comment.belongsTo(ost)
+  album.hasMany(comment)
+  comment.belongsTo(album)
   user.hasMany(comment, { foreignKey: 'username' })
   comment.belongsTo(user, { foreignKey: 'username' })
 
-  ost.hasMany(rating)
-  rating.belongsTo(ost)
+  album.hasMany(rating)
+  rating.belongsTo(album)
   user.hasMany(rating, { foreignKey: 'username' })
   rating.belongsTo(user, { foreignKey: 'username' })
 
-  user.belongsToMany(ost, { through: 'favorites', foreignKey: 'username' })
-  ost.belongsToMany(user, { through: 'favorites' })
+  user.belongsToMany(album, { through: 'favorites', foreignKey: 'username' })
+  album.belongsToMany(user, { through: 'favorites' })
 }

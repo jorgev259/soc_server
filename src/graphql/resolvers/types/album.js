@@ -16,8 +16,8 @@ const resolvers = {
     animations: (parent) => parent.getAnimations(),
     comments: parent => parent.getComments(),
     isFavorite: async (album, _, { db, user }) => user ? album.hasUser(user.username) : false,
-    selfComment: (album, _, { db, user }) => user ? db.models.comment.findOne({ where: { ostId: album.id, username: user.username } }) : null,
-    selfScore: async (album, _, { db, user }) => user ? (await db.models.rating.findOne({ where: { ostId: album.id, username: user.username } }))?.score : null,
+    selfComment: (album, _, { db, user }) => user ? db.models.comment.findOne({ where: { albumId: album.id, username: user.username } }) : null,
+    selfScore: async (album, _, { db, user }) => user ? (await db.models.rating.findOne({ where: { albumId: album.id, username: user.username } }))?.score : null,
     favorites: (album, _, { db }) => album.countUsers(),
     placeholder: (album, _, { db }) => placeholder(album, 'album'),
     headerColor: (album, _, { db }) => headerColor(album, 'album'),
@@ -26,12 +26,12 @@ const resolvers = {
 
   Comment: {
     username: parent => parent.anon ? null : parent.username,
-    album: (comment, _, { db }) => comment.getOst()
+    album: (comment, _, { db }) => comment.getAlbum()
   },
 
   Category: {
-    albums: parent => parent.getOsts(),
-    count: (parent, args, { db }) => db.models.ost.count({ include: [{ model: db.models.category, where: { name: parent.name } }] })
+    albums: parent => parent.getAlbums(),
+    count: (parent, args, { db }) => db.models.album.count({ include: [{ model: db.models.category, where: { name: parent.name } }] })
   },
 
   Download: {
@@ -72,7 +72,7 @@ const resolvers = {
   },
 
   Game: {
-    albums: async (game, { order = [] }) => game.getOsts({ order }),
+    albums: async (game, { order = [] }) => game.getAlbums({ order }),
     series: (parent, args, context, info) => parent.getSeries(),
     publishers: (parent, args, context, info) => parent.getPublishers(),
     platforms: (parent, args, context, info) => parent.getPlatforms({ order: ['name'] }),
@@ -81,13 +81,13 @@ const resolvers = {
   },
 
   Platform: {
-    albums: parent => parent.getOsts(),
+    albums: parent => parent.getAlbums(),
     games: (platform, args, { db }) => platform.getGames()
   },
 
   Animation: {
     studios: parent => parent.getStudios(),
-    albums: (anim, { order = [] }) => anim.getOsts({ order }),
+    albums: (anim, { order = [] }) => anim.getAlbums({ order }),
     placeholder: (anim, _, { db }) => placeholder(anim, 'anim'),
     headerColor: (anim, _, { db }) => placeholder(anim, 'anim')
   },
@@ -107,7 +107,7 @@ const resolvers = {
   },
 
   Disc: {
-    album: (parent) => parent.getOst()
+    album: (parent) => parent.getAlbum()
   }
 }
 

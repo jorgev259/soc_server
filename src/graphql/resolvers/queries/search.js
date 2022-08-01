@@ -6,7 +6,7 @@ const resolvers = {
     searchAlbum: (parent, { title = '', categories, limit, page = 0, order = ['createdAt'], mode = 'DESC', status = ['show'] }, { db }) => {
       const titleWords = title.split(' ')
 
-      return searchPage({ limit, page, model: 'ost' }, {
+      return searchPage({ limit, page, model: 'album' }, {
         where: {
           [Op.or]: [
             { [Op.and]: titleWords.map(t => ({ title: { [Op.like]: `%${t}%` } })) },
@@ -15,7 +15,7 @@ const resolvers = {
           status: { [Op.in]: status }
         },
         include: categories ? [{ model: db.models.category, where: { name: { [Op.in]: categories } } }] : [],
-        order: [literal('`ost`.`status` = \'coming\' DESC'), ...order.map(o => [o, mode])]
+        order: [literal('`album`.`status` = \'coming\' DESC'), ...order.map(o => [o, mode])]
       }, db)
     },
     searchAlbumByArtist: async (parent, { name, categories, limit, page = 0, order = ['createdAt'], mode = 'DESC', status = ['show'] }, { db }) => {
@@ -23,7 +23,7 @@ const resolvers = {
 
       if (categories) include.push({ model: db.models.class, where: { name: { [Op.in]: categories } } })
 
-      return searchPage({ limit, page, model: 'ost' }, {
+      return searchPage({ limit, page, model: 'album' }, {
         where: { status: { [Op.in]: status } },
         include,
         order: order.map(o => [o, mode])

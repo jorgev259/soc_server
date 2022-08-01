@@ -13,7 +13,7 @@ const userResolvable = {
     return pages.filter(({ perms, name }) => name && perms.some(r => permissions.includes(r)))
   },
   comments: (user, _, { db }) => user.getComments(),
-  favorites: user => user.getOsts(),
+  favorites: user => user.getAlbums(),
   imgUrl: async user => `https://cdn.sittingonclouds.net/user/${
     user.imgId ? `${user.username}_${user.imgId}` : 'default'
   }.png`

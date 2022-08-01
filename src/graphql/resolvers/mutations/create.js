@@ -14,7 +14,7 @@ const resolvers = {
         data.artists = data.artists ? data.artists.map(artist => { return { name: artist, slug: slugify(artist) } }) : []
         await db.models.artist.bulkCreate(data.artists, { ignoreDuplicates: true, transaction })
 
-        const ost = await db.models.ost.create(data, {
+        const album = await db.models.album.create(data, {
           include: [db.models.disc, db.models.store, {
             model: db.models.download, include: [db.models.link]
           }],
@@ -22,23 +22,23 @@ const resolvers = {
         })
 
         await Promise.all([
-          ost.setArtists(data.artists.filter(({ slug }) => slug.length > 0).map(({ slug }) => slug), { transaction }),
-          ost.setCategories(data.categories || [], { transaction }),
-          ost.setClassifications(data.classifications || [], { transaction }),
-          ost.setPlatforms(data.platforms || [], { transaction }),
-          ost.setGames(data.games || [], { transaction }),
-          ost.setAnimations(data.animations || [], { transaction }),
-          ost.setRelated(data.related || [], { transaction }),
+          album.setArtists(data.artists.filter(({ slug }) => slug.length > 0).map(({ slug }) => slug), { transaction }),
+          album.setCategories(data.categories || [], { transaction }),
+          album.setClassifications(data.classifications || [], { transaction }),
+          album.setPlatforms(data.platforms || [], { transaction }),
+          album.setGames(data.games || [], { transaction }),
+          album.setAnimations(data.animations || [], { transaction }),
+          album.setRelated(data.related || [], { transaction }),
           createLog(db, 'createAlbum', data, user.username, transaction)
         ])
 
-        const { id } = ost.dataValues
-        ost.placeholder = data.cover ? await img(data.cover, 'album', id) : undefined
-        ost.headerColor = data.cover ? await getImgColor(`album/${id}`) : undefined
+        const { id } = album.dataValues
+        album.placeholder = data.cover ? await img(data.cover, 'album', id) : undefined
+        album.headerColor = data.cover ? await getImgColor(`album/${id}`) : undefined
 
-        await ost.save({ transaction })
+        await album.save({ transaction })
 
-        if (ost.status === 'show') {
+        if (album.status === 'show') {
           if (data.request) {
             db.models.request.findByPk(data.request)
               .then(async request => {
@@ -57,22 +57,22 @@ const resolvers = {
                   .send(`https://www.sittingonclouds.net/album/${id}${userText}`)
               })
           } else {
-            postDiscord(ost.id)
+            postDiscord(album.id)
           }
 
-          postReddit(ost)
+          postReddit(album)
         }
 
-        return ost
+        return album
       })
     ),
 
     deleteAlbum: async (parent, { id }, { db, user, res }, info) => {
-      const ost = await db.models.ost.findByPk(id)
-      if (!ost) throw new UserInputError('Not Found')
+      const album = await db.models.album.findByPk(id)
+      if (!album) throw new UserInputError('Not Found')
       return db.transaction(async transaction => {
-        await createUpdateLog(db, 'deleteAlbum', ost, user.username, transaction)
-        await ost.destroy({ transaction })
+        await createUpdateLog(db, 'deleteAlbum', album, user.username, transaction)
+        await album.destroy({ transaction })
         return 1
       })
     }

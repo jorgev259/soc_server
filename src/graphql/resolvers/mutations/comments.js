@@ -11,40 +11,40 @@ const resolversComposition = {
 
 const resolvers = {
   Mutation: {
-    updateComment: async (_, { text, anon, ostId }, { db, user, res }) => (
+    updateComment: async (_, { text, anon, albumId }, { db, user, res }) => (
       db.transaction(async transaction => {
         const { username } = user
-        const row = await db.models.comment.findOne({ where: { ostId, username } })
+        const row = await db.models.comment.findOne({ where: { albumId, username } })
 
         if (row) {
           await row.update({ text, anon }, { transaction })
           await row.save({ transaction })
-        } else await db.models.comment.create({ ostId, username, text, anon }, { transaction })
+        } else await db.models.comment.create({ albumId, username, text, anon }, { transaction })
 
         return true
       })
     ),
-    addFavorite: async (_, { ostId }, { db, user, res }) => (
+    addFavorite: async (_, { albumId }, { db, user, res }) => (
       db.transaction(async transaction => {
-        await user.addOst(ostId, { transaction })
+        await user.addAlbum(albumId, { transaction })
         return true
       })
     ),
-    removeFavorite: async (_, { ostId }, { db, user, res }) => (
+    removeFavorite: async (_, { albumId }, { db, user, res }) => (
       db.transaction(async transaction => {
-        await user.removeOst(ostId, { transaction })
+        await user.removeAlbum(albumId, { transaction })
         return true
       })
     ),
-    rateAlbum: async (_, { ostId, score }, { db, user, res }) => (
+    rateAlbum: async (_, { albumId, score }, { db, user, res }) => (
       db.transaction(async transaction => {
         const { username } = user
-        const row = await db.models.rating.findOne({ where: { ostId, username } })
+        const row = await db.models.rating.findOne({ where: { albumId, username } })
 
         if (row) {
           await row.update({ score }, { transaction })
           await row.save({ transaction })
-        } else await db.models.rating.create({ ostId, username, score }, { transaction })
+        } else await db.models.rating.create({ albumId, username, score }, { transaction })
 
         return true
       })

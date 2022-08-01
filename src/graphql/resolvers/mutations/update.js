@@ -234,8 +234,8 @@ const resolvers = {
 
     updateAlbum: async (parent, data, { db, user, res }, info) => {
       try {
-        const ost = await db.models.ost.findByPk(data.id)
-        const triggerPost = (data.status !== ost.status.repeat(1)) && data.status === 'show'
+        const album = await db.models.album.findByPk(data.id)
+        const triggerPost = (data.status !== album.status.repeat(1)) && data.status === 'show'
         data.artists = data.artists ? data.artists.map(artist => { return { name: artist, slug: slugify(artist) } }) : []
 
         await db.transaction(async transaction => {
@@ -244,28 +244,28 @@ const resolvers = {
           // implement better log lol lmao
 
           await Promise.all([
-            ost.update(data, { transaction }),
-            ost.setArtists(data.artists.map(({ slug }) => slug), { transaction }),
-            ost.setCategories(data.categories || [], { transaction }),
-            ost.setClassifications(data.classifications || [], { transaction }),
-            ost.setPlatforms(data.platforms || [], { transaction }),
-            ost.setGames(data.games || []), { transaction },
-            ost.setRelated(data.related || [], { transaction }),
-            ost.setAnimations(data.animations || [], { transaction }),
-            db.models.disc.destroy({ where: { ostId: ost.dataValues.id }, transaction }).then(() => (data.discs || []).map(disc => ost.createDisc(disc, { transaction }))),
-            db.models.store.destroy({ where: { ostId: ost.dataValues.id }, transaction }).then(() => (data.stores || []).map(store => ost.createStore(store, { transaction }))),
-            db.models.download.destroy({ where: { ostId: ost.dataValues.id }, transaction }).then(() => (data.downloads || []).map(download => ost.createDownload(download, { include: [db.models.link], transaction }))),
-            createUpdateLog(db, 'updateAlbum', ost, user.username, transaction)
+            album.update(data, { transaction }),
+            album.setArtists(data.artists.map(({ slug }) => slug), { transaction }),
+            album.setCategories(data.categories || [], { transaction }),
+            album.setClassifications(data.classifications || [], { transaction }),
+            album.setPlatforms(data.platforms || [], { transaction }),
+            album.setGames(data.games || []), { transaction },
+            album.setRelated(data.related || [], { transaction }),
+            album.setAnimations(data.animations || [], { transaction }),
+            db.models.disc.destroy({ where: { albumId: album.dataValues.id }, transaction }).then(() => (data.discs || []).map(disc => album.createDisc(disc, { transaction }))),
+            db.models.store.destroy({ where: { albumId: album.dataValues.id }, transaction }).then(() => (data.stores || []).map(store => album.createStore(store, { transaction }))),
+            db.models.download.destroy({ where: { albumId: album.dataValues.id }, transaction }).then(() => (data.downloads || []).map(download => album.createDownload(download, { include: [db.models.link], transaction }))),
+            createUpdateLog(db, 'updateAlbum', album, user.username, transaction)
           ])
 
           if (data.cover) {
-            ost.placeholder = await img(data.cover, 'album', ost.id)
-            ost.headerColor = await getImgColor(`album/${ost.id}`)
-            await ost.save({ transaction })
+            album.placeholder = await img(data.cover, 'album', album.id)
+            album.headerColor = await getImgColor(`album/${album.id}`)
+            await album.save({ transaction })
           }
 
           if (triggerPost) {
-            postReddit(ost)
+            postReddit(album)
             if (data.request) {
               db.models.request.findByPk(data.request)
                 .then(async request => {
@@ -281,15 +281,15 @@ const resolvers = {
 
                   guild.channels.cache
                     .find(c => c.name === 'last-added-soundtracks')
-                    .send(`https://www.sittingonclouds.net/album/${ost.id}${userText}`)
+                    .send(`https://www.sittingonclouds.net/album/${album.id}${userText}`)
                 })
             } else {
-              postDiscord(ost.id)
+              postDiscord(album.id)
             }
           }
         })
 
-        return ost
+        return album
       } catch (err) {
         console.log(err)
         throw new Error(err.message)

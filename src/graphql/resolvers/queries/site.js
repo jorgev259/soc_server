@@ -13,7 +13,7 @@ const resolvers = {
 
     highlight: async (parent, args, { db }) => {
       const { value } = await db.models.config.findByPk('highlight')
-      return db.models.ost.findByPk(value)
+      return db.models.album.findByPk(value)
     },
 
     banners: async (parent, args) => {

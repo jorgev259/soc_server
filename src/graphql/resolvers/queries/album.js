@@ -12,9 +12,9 @@ const resolvers = {
     games: (parent, args, { db }, info) => db.models.game.findAll(),
     game: (parent, { slug }, { db }, info) => db.models.game.findByPk(slug),
 
-    album: (parent, { id, title }, { db }, info) => db.models.ost.findByPk(id),
-    downloads: (parent, { id }, { db }) => db.models.download.findAll({ where: { ostId: id } }),
-    albums: (parent, args, { db }, info) => db.models.ost.findAll({ order: [['title', 'ASC']] }),
+    album: (parent, { id, title }, { db }, info) => db.models.album.findByPk(id),
+    downloads: (parent, { id }, { db }) => db.models.download.findAll({ where: { albumId: id } }),
+    albums: (parent, args, { db }, info) => db.models.album.findAll({ order: [['title', 'ASC']] }),
 
     platform: async (parent, { id }, { db }) => db.models.platform.findByPk(id),
     animation: (parent, { id }, { db }) => db.models.animation.findByPk(id),
@@ -22,7 +22,7 @@ const resolvers = {
     studio: (parent, { slug }, { db }) => db.models.studio.findByPk(slug),
     studios: (parent, { slug }, { db }) => db.models.studio.findAll(),
     seriesOne: (parent, { slug }, { db }, info) => db.models.series.findByPk(slug),
-    albumCount: async (parent, params, { db }) => db.models.ost.count(),
+    albumCount: async (parent, params, { db }) => db.models.album.count(),
     recentSeries: (parent, { limit }, { db }) => db.models.series.findAll({
       limit,
       order: [['createdAt', 'DESC']]
@@ -38,7 +38,7 @@ const resolvers = {
     }),
 
     getRandomAlbum: async (parent, { limit = 1 }, { db }) => {
-      const result = await db.models.ost.findAll({ order: db.random(), limit })
+      const result = await db.models.album.findAll({ order: db.random(), limit })
       return result
     }
   }
