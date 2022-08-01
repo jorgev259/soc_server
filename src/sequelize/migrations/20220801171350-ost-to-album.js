@@ -18,7 +18,7 @@ const columns = [
   'discs',
   'downloads',
   'favorites',
-  'linkcategories',
+  'linkCategories',
   'ratings',
   'stores',
 
