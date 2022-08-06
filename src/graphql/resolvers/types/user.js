@@ -10,7 +10,7 @@ const userResolvable = {
     const roles = await parent.getRoles()
     const permissions = roles.map(r => r.permissions).flat()
 
-    return pages.filter(({ perms, name }) => name && perms.some(r => permissions.includes(r)))
+    return pages.filter(({ perms, name }) => name && (perms.length === 0 || perms.some(r => permissions.includes(r))))
   },
   comments: (user, _, { db }) => user.getComments(),
   favorites: user => user.getAlbums(),

@@ -22,6 +22,11 @@ type VgmResult {
   tracklist: [Disc]!
 }
 
+type RequestResult {
+  count: Int!
+  rows: [Request]!
+}
+
 type Query {
   requests(
     state: [String!], 
@@ -32,8 +37,9 @@ type Query {
     state: [String!]
     donator: [Boolean!]
     limit: Int
+    page: Int
     filter: String
-  ): [Request]!
+  ): RequestResult!
   vgmdb(search: String!): VgmResult!
 }
 

@@ -7,16 +7,23 @@ const resolvers = {
       donator = [true, false]
     }, { db }) => db.models.request.findAll({ where: { state, donator } }),
     request: (_, { link }, { db }) => db.models.request.findOne({ where: { link } }),
+
     searchRequests: async (_, {
       state = ['complete', 'hold', 'pending'],
       donator = [true, false],
-      limit = 10, filter
+      limit = 10,
+      page = 0,
+      filter
     }, { db }) => {
-      if (filter) {
-        const searchId = await db.models.request.findAll({
-          donator,
+      const options = { limit, offset: limit * page }
+      const optionsWhere = { state, donator }
+
+      async function exactSearch () {
+        if (!filter) return
+
+        const results = await db.models.request.findAndCountAll({
           where: {
-            state,
+            ...optionsWhere,
             [Op.or]: [
               { id: filter },
               { link: filter },
@@ -24,18 +31,23 @@ const resolvers = {
               { userID: filter }
             ]
           },
-          limit
+          ...options
         })
-        if (searchId.length > 0) return searchId
+
+        if (results.rows.length > 0) return results
       }
 
-      return db.models.request.findAll({
-        where: [
-          { state, donator },
-          where(fn('LOWER', col('title')), { [Op.like]: `%${filter || ''}%` })
-        ],
-        limit
-      })
+      function looseSearch () {
+        return db.models.request.findAndCountAll({
+          where: [
+            optionsWhere,
+            where(fn('LOWER', col('title')), { [Op.like]: `%${filter || ''}%` })
+          ],
+          ...options
+        })
+      }
+
+      return await exactSearch() || looseSearch()
     }
   }
 }

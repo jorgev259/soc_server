@@ -1,5 +1,10 @@
 [
     {
+        "url": "/request",
+        "name": "Requests",
+        "perms": []
+    },
+    {
         "url": "/admin/1",
         "name": "Manage Albums",
         "perms": ["UPDATE"]
