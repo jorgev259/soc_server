@@ -21,6 +21,10 @@ const resolvers = {
       const images = filePaths.map(f => f.split('/').pop())
 
       return images
+    },
+
+    recentComments: async (parent, { limit = 5 }, { db }) => {
+      return db.models.comment.findAll({ limit, order: [['updatedAt', 'DESC']] })
     }
   }
 }

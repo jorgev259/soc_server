@@ -29,6 +29,10 @@ type AvgRating {
     users: Int!
 }
 
+type Query {
+  recentComments(limit: Int): [Comment]!
+}
+
 type Mutation {
   updateComment(text: String!, anon: Boolean!, albumId: ID!): Boolean
   addFavorite(albumId: String!): Boolean
