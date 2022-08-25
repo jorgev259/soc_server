@@ -23,7 +23,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-          cache: 'yarn'
+          cache: 'npm'
 
       - name: Prepare repository
         run: |
@@ -32,11 +32,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          yarn install --pure-lockfile    
+          npm install --pure-lockfile    
 
       - name: Build server and website
         run: |
-          yarn build
+          npm run build
 
       - name: Push from main to dist branch.
         run: |
