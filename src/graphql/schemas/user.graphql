@@ -34,7 +34,7 @@
         me: UserMe
         roles: [Role]!
         permissions: [String]!
-        users(username: String): [User]!
+        users(search: String): [User]!
         user(username: String!): User
 
         login(username: String!, password: String!): Int!

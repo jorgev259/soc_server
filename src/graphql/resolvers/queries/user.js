@@ -34,9 +34,17 @@ const resolvers = {
     permissions: () => permissions,
     roles: (parent, args, { db }) => db.models.role.findAll(),
     users: (parent, args, { db }) => {
-      const username = args.username.trim()
-      if (username.length < 3) return []
-      return db.models.user.findAll({ where: { username: { [Op.like]: `%${username}%` } } })
+      const search = args.search.trim()
+      if (search.length < 3) return []
+
+      return db.models.user.findAll({
+        where: {
+          [Op.or]: [
+            { username: { [Op.like]: `%${search}%` } },
+            { email: search }
+          ]
+        }
+      })
     },
     user: (parent, { username }, { db }) => db.models.user.findByPk(username)
   }
