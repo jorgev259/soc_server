@@ -21,7 +21,6 @@
 
     type Page {
         url: String!
-        name: String!
         perms: [String!]!
     }
 

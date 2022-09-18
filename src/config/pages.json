@@ -1,17 +1,14 @@
 [
     {
         "url": "/request",
-        "name": "Requests",
         "perms": []
     },
     {
         "url": "/admin/1",
-        "name": "Manage Albums",
         "perms": ["UPDATE"]
     },
     {
         "url": "/admin/user",
-        "name": "Manage Users",
         "perms": ["MANAGE_USER"]
     },
     {
@@ -24,7 +21,6 @@
     },
     {
         "url": "/admin/request",
-        "name": "Manage Requests",
         "perms": ["REQUESTS"]
     }
 ]
