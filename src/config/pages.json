@@ -4,10 +4,6 @@
         "perms": []
     },
     {
-        "url": "/submit",
-        "perms": []
-    },
-    {
         "url": "/admin/1",
         "perms": ["UPDATE"]
     },
