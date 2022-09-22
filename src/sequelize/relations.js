@@ -4,12 +4,18 @@ export default function relations (sequelize) {
     publisher, game, series,
     platform, artist, category, store,
     animation, studio,
-    user, role, forgor, log, comment, rating
+    user, role, forgor, log, comment, rating,
+    submission, request
   } = sequelize.models
 
   user.belongsToMany(role, { through: 'User_Role' })
   log.belongsTo(user, { foreignKey: 'username' })
   forgor.belongsTo(user, { foreignKey: 'username' })
+
+  submission.belongsTo(user)
+  submission.belongsTo(request)
+  user.hasMany(submission)
+  request.hasMany(submission)
 
   classification.belongsToMany(album, { through: 'Album_Classification' })
 
