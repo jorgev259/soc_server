@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer'
 import generator from 'generate-password'
 import { literal } from 'sequelize'
 
-export const mailConfig = JSON.parse(process.env.MAIL)
+export const mailConfig = JSON.parse(process.env.MAILSERVER)
 export const transporter = nodemailer.createTransport(mailConfig)
 
 export async function createForgor (user, db, transaction) {
