@@ -2,10 +2,10 @@ import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import { UserInputError } from 'apollo-server-errors'
 import { holdRequest, completeRequest, rejectRequest } from '@lotus-tree/requestcat/lib/util'
 
-import { hasRole } from '../../../utils/resolvers'
+import { hasRole, isAuthed } from '../../../utils/resolvers'
 import { discordClient } from '../../../utils/plugins'
+import { mergeResolvers } from '@graphql-tools/merge'
 
-const resolversComposition = { 'Mutation.*': hasRole('REQUESTS') }
 const resolvers = {
   Mutation: {
     editRequest: async (parent, data, { db, user }, info) => {
@@ -43,4 +43,31 @@ const resolvers = {
   }
 }
 
-export default composeResolvers(resolvers, resolversComposition)
+const submitActions = {
+  Mutation: {
+    submitAlbum: async (parent, data, { db, user }, info) => {
+      const { request: requestId, title, vgmdb, links } = data
+      let request
+
+      if (requestId) {
+        request = await db.models.request.findByPk(requestId)
+
+        if (!request) throw new UserInputError('Request not found')
+        if (request.state === 'complete') throw new UserInputError('Request already complete')
+      }
+
+      return db.models.submission.create({
+        title,
+        vgmdb,
+        links,
+        requestId,
+        userUsername: user.username
+      })
+    }
+  }
+}
+
+const requestResolvers = composeResolvers(resolvers, { 'Mutation.*': hasRole('REQUESTS') })
+const submitResolvers = composeResolvers(submitActions, { 'Mutation.*': [isAuthed] })
+
+export default mergeResolvers([requestResolvers, submitResolvers])

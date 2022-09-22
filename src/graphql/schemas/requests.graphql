@@ -11,6 +11,16 @@ type Request {
   message: String
 }
 
+type Submission {
+  id: ID!
+  title: String!
+  vgmdb: String
+  request: Request
+  links: String!
+  score: Int!
+  state: String!
+}
+
 type VgmResult {
   vgmdbUrl: String
   name: String
@@ -52,6 +62,13 @@ type Mutation {
     comments: String
     reason: String
   ): Request!
+
+  submitAlbum(
+    title: String!
+    vgmdb: String
+    request: ID
+    links: String!
+  ): Submission!
 
   rejectRequest(id: ID!, reason: String): Boolean!
 }
