@@ -22,7 +22,22 @@ const userResolvable = {
 const funcs = {
   User: userResolvable,
   UserMe: userResolvable,
-  Role: { permissions: parent => typeof parent.permissions === 'string' || parent.permissions instanceof String ? JSON.parse(parent.permissions) : parent.permissions }
+  Role: { permissions: parent => typeof parent.permissions === 'string' || parent.permissions instanceof String ? JSON.parse(parent.permissions) : parent.permissions },
+  Submission: {
+    submitter: submission => submission.getUser(),
+    links: async (submission, _, context) => {
+      const { user } = context
+      if (!user) return null
+
+      const roles = await user.getRoles()
+      const perms = roles.map(r => r.permissions).flat()
+
+      if (!perms.includes('REQUESTS')) return null
+
+      return submission.links
+    },
+    request: submission => submission.getRequest()
+  }
 }
 
 export default funcs

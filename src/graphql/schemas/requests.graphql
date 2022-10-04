@@ -16,9 +16,10 @@ type Submission {
   title: String!
   vgmdb: String
   request: Request
-  links: String!
+  links: String
   score: Int!
   state: String!
+  submitter: User!
 }
 
 type VgmResult {
@@ -51,6 +52,8 @@ type Query {
     filter: String
   ): RequestResult!
   vgmdb(search: String!): VgmResult!
+
+  submissions(filter: String, state: [String]): [Submission]!
 }
 
 type Mutation {

@@ -48,6 +48,25 @@ const resolvers = {
       }
 
       return await exactSearch() || looseSearch()
+    },
+
+    submissions: (_, args, context) => {
+      const { filter = '', state = ['pending'] } = args
+      const { db } = context
+
+      return db.models.submission.findAll({
+        where: {
+          [Op.and]: [
+            {state: {[Op.in]: state}},
+            {[Op.or]: [
+              { id: filter },
+              { vgmdb: filter },
+              { userUsername: filter },
+              where(fn('LOWER', col('title')), { [Op.like]: `%${filter.toLowerCase()}%` })
+            ]}
+          ]
+      }
+      })
     }
   }
 }

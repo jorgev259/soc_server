@@ -26,5 +26,9 @@
     {
         "url": "/admin/request",
         "perms": ["REQUESTS"]
+    },
+    {
+        "url": "/admin/submission",
+        "perms": ["REQUESTS"]
     }
 ]
