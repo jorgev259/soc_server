@@ -14,6 +14,7 @@ const resolvers = {
     related: (parent, args, context, info) => parent.getRelated(),
     stores: (parent) => parent.getStores(),
     animations: (parent) => parent.getAnimations(),
+    downloads: parent => parent.getDownloads(),
     comments: parent => parent.getComments(),
     isFavorite: async (album, _, { db, user }) => user ? album.hasUser(user.username) : false,
     selfComment: (album, _, { db, user }) => user ? db.models.comment.findOne({ where: { albumId: album.id, username: user.username } }) : null,
@@ -59,13 +60,13 @@ const resolvers = {
       if (fallback) return
 
       const { user } = context
-      if (!user) return false
+      if (!user) return null
 
       const roles = await user.getRoles()
       const perms = roles.map(r => r.permissions).flat()
 
       const donator = perms.includes('DIRECT')
-      if (!donator) return false
+      if (!donator) return null
 
       return link.directUrl
     }

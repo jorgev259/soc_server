@@ -1,3 +1,4 @@
 .git/
 node_modules/
 sequelize-config.json
+.env
