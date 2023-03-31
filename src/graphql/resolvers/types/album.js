@@ -39,8 +39,9 @@ const resolvers = {
     links: async download => {
       const links = await download.getLinks()
       const filterLinks = links.filter(link => !link.url.includes('adshrink.it'))
+      const outLinks = filterLinks.length === 0 ? links : filterLinks
 
-      return filterLinks.length === 0 ? links : filterLinks
+      return outLinks.filter(link => link.provider !== 'TERABOX')
     }
   },
 
