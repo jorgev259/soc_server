@@ -54,7 +54,7 @@ async function startServer () {
   app.use(ironSession({ password: process.env.IRONCLAD, cookieName: 'socuser' }))
 
   server.applyMiddleware({ app, path: '/', cors: corsOptions })
-  await app.listen({ port })
+  await app.listen({ port, host: '0.0.0.0' })
 
   console.log(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`)
 }
