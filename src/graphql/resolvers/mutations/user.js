@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { UserInputError, ForbiddenError } from 'apollo-server-errors'
-import generator from 'generate-password'
+// import generator from 'generate-password'
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import { DateTime } from 'luxon'
 import { Op } from 'sequelize'
@@ -8,7 +8,7 @@ import path from 'path'
 import fs from 'fs-extra'
 import sharp from 'sharp'
 
-import { createForgor } from '../../../utils/forgor'
+// import { createForgor } from '../../../utils/forgor'
 import { hasRole, isAuthed } from '../../../utils/resolvers'
 import { processImage } from '../../../utils'
 
@@ -58,7 +58,7 @@ async function cropPFP (streamItem, username, imgId) {
 
 const resolvers = {
   Mutation: {
-    registerUser: async (_, { username, email, pfp }, { db }) => {
+    registerUser: async (_, { username, email, pfp, password }, { db }) => {
       await Promise.all([
         db.models.user.findByPk(username).then(result => {
           if (result) throw new UserInputError('Username already in use')
@@ -68,7 +68,7 @@ const resolvers = {
         })
       ])
 
-      const password = generator.generate({ length: 30, numbers: true, upercase: true, strict: true })
+      // const password = generator.generate({ length: 30, numbers: true, upercase: true, strict: true })
 
       return db.transaction(async transaction => {
         const user = await db.models.user.create({ username, email, password: await bcrypt.hash(password, 10) }, { transaction })
@@ -81,7 +81,7 @@ const resolvers = {
         }
 
         await user.save({ transaction })
-        await createForgor(user, db, transaction)
+        // await createForgor(user, db, transaction)
 
         return true
       })
@@ -103,7 +103,7 @@ const resolvers = {
       const user = await db.models.user.findOne({ where: { [Op.or]: [{ username: key }, { email: key }] } })
       if (!user) throw new UserInputError('Not Found')
 
-      await createForgor(user, db)
+      // await createForgor(user, db)
       return true
     },
     updatePass: async (_, { key, pass }, { db }) => {
