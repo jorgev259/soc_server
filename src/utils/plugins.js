@@ -44,16 +44,16 @@ export async function postWebhook (album, userText = '') {
   const url = `https://www.sittingonclouds.net/album/${album.id}`
   const content = `<${url}${userText}>`
   const payload = {
-    content
-    /* embeds: [{
+    content,
+    embeds: [{
       title: album.title,
       type: 'rich',
       description: album.subTitle || album.artists.map(a => a.name).join(' - '),
       url,
       color: album.headerColor,
-      thumbnail: { url: fullImage(album.id, 50) },
-      author: { name: 'Sitting On Clouds' },
-    }] */
+      // thumbnail: { url: fullImage(album.id, 50) },
+      author: { name: 'Sitting On Clouds' }
+    }]
   }
 
   post(process.env.WEBHOOK_URL, payload)
