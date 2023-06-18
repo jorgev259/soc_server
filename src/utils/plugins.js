@@ -49,7 +49,7 @@ export async function postWebhook (album, userText = '') {
       title: album.title,
       description: album.subTitle || album.artists.map(a => a.name).join(' - '),
       url,
-      color: parseInt(album.headerColor, 16),
+      color: parseInt(album.headerColor.replace('#', ''), 16),
       thumbnail: { url: fullImage(album.id, 50) },
       author: { name: 'Sitting On Clouds' }
     }]
