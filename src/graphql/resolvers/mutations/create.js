@@ -2,7 +2,7 @@ import { UserInputError } from 'apollo-server-errors'
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 
 import { img, createLog, createUpdateLog, getImgColor, slugify } from '../../../utils'
-import { postReddit, discordClient, postWebhook } from '../../../utils/plugins'
+import { discordClient, postWebhook } from '../../../utils/plugins'
 import { hasRole } from '../../../utils/resolvers'
 import { completeRequest } from '@lotus-tree/requestcat/lib/util'
 
@@ -57,8 +57,6 @@ const resolvers = {
           } else {
             postWebhook(album)
           }
-
-          postReddit(album)
         }
 
         return album

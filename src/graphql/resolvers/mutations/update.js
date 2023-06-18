@@ -2,7 +2,7 @@ import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import { completeRequest } from '@lotus-tree/requestcat/lib/util'
 
 import { img, createLog, createUpdateLog, getImgColor, slugify } from '../../../utils'
-import { postReddit, postWebhook, discordClient } from '../../../utils/plugins'
+import { postWebhook, discordClient } from '../../../utils/plugins'
 
 import { hasRole } from '../../../utils/resolvers'
 
@@ -265,7 +265,6 @@ const resolvers = {
           }
 
           if (triggerPost) {
-            postReddit(album)
             if (data.request) {
               db.models.request.findByPk(data.request)
                 .then(async request => {
