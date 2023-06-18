@@ -56,6 +56,7 @@ export async function postWebhook (album, userText) {
   }
 
   post(process.env.WEBHOOK_URL, payload)
+    .catch(err => console.log(err))
 }
 
 /* export async function postDiscord (id) {
