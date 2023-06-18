@@ -47,10 +47,9 @@ export async function postWebhook (album, userText = '') {
     content,
     embeds: [{
       title: album.title,
-      type: 'rich',
       description: album.subTitle || album.artists.map(a => a.name).join(' - '),
       url,
-      color: album.headerColor,
+      color: parseInt(album.headerColor, 16),
       // thumbnail: { url: fullImage(album.id, 50) },
       author: { name: 'Sitting On Clouds' }
     }]
