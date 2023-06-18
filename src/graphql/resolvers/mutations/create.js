@@ -2,7 +2,7 @@ import { UserInputError } from 'apollo-server-errors'
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 
 import { img, createLog, createUpdateLog, getImgColor, slugify } from '../../../utils'
-import { postReddit, postDiscord, discordClient } from '../../../utils/plugins'
+import { postReddit, discordClient, postWebhook } from '../../../utils/plugins'
 import { hasRole } from '../../../utils/resolvers'
 import { completeRequest } from '@lotus-tree/requestcat/lib/util'
 
@@ -52,12 +52,10 @@ const resolvers = {
                   ? ` ${request.userID ? `<@${request.userID}>` : `@${request.user}`} :arrow_down:`
                   : ''
 
-                guild.channels.cache
-                  .find(c => c.name === 'last-added-soundtracks')
-                  .send(`https://www.sittingonclouds.net/album/${id}${userText}`)
+                postWebhook(album, userText)
               })
           } else {
-            postDiscord(album.id)
+            postWebhook(album)
           }
 
           postReddit(album)

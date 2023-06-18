@@ -2,7 +2,7 @@ import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import { completeRequest } from '@lotus-tree/requestcat/lib/util'
 
 import { img, createLog, createUpdateLog, getImgColor, slugify } from '../../../utils'
-import { postReddit, postDiscord, discordClient } from '../../../utils/plugins'
+import { postReddit, postWebhook, discordClient } from '../../../utils/plugins'
 
 import { hasRole } from '../../../utils/resolvers'
 
@@ -279,12 +279,10 @@ const resolvers = {
                     ? ` ${request.userID ? `<@${request.userID}>` : `@${request.user}`} :arrow_down:`
                     : ''
 
-                  guild.channels.cache
-                    .find(c => c.name === 'last-added-soundtracks')
-                    .send(`https://www.sittingonclouds.net/album/${album.id}${userText}`)
+                  postWebhook(album, userText)
                 })
             } else {
-              postDiscord(album.id)
+              postWebhook(album)
             }
           }
         })
