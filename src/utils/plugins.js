@@ -8,18 +8,8 @@ if (discordToken) discordClient.login(discordToken).then(() => console.log(`Logg
 
 export async function postWebhook (album, userText = '') {
   const url = `https://www.sittingonclouds.net/album/${album.id}`
-  const content = `<${url}>${userText}`
-  const payload = {
-    content,
-    embeds: [{
-      title: album.title,
-      description: album.subTitle || album.artists.map(a => a.name).join(' - '),
-      url,
-      color: parseInt(album.headerColor.replace('#', ''), 16),
-      thumbnail: { url: `https://cdn.sittingonclouds.net/album/${album.id}.png` },
-      author: { name: 'Sitting On Clouds' }
-    }]
-  }
+  const content = `${url}${userText}`
+  const payload = { content }
 
   post(process.env.WEBHOOK_URL, payload)
     .catch(err => console.log(err))
