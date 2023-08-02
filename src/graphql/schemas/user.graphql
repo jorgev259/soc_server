@@ -41,7 +41,7 @@
     }
 
     type Mutation {
-        registerUser(email: String!, username: String!, password: String!, pfp: Upload): Boolean!
+        registerUser(email: String!, username: String!, pfp: Upload): Boolean!
         updateUserRoles(username: String!, roles: [String]!): Boolean!
         deleteUser(username: String!): Int
 
