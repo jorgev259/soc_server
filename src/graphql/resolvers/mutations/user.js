@@ -103,7 +103,7 @@ const resolvers = {
       const user = await db.models.user.findOne({ where: { [Op.or]: [{ username: key }, { email: key }] } })
       if (!user) throw new UserInputError('Not Found')
 
-      // await createForgor(user, db)
+      await createForgor(user, db)
       return true
     },
     updatePass: async (_, { key, pass }, { db }) => {
