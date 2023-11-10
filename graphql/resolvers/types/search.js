@@ -1,4 +1,4 @@
-import config from '@/utils/config/info.json'
+import config from '@/next/constants/info.json'
 
 const { categories, classifications } = config
 
