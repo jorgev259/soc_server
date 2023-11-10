@@ -3,8 +3,8 @@ import bcrypt from 'bcrypt'
 import { Op } from 'sequelize'
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 
-import info from '@/utils/config/info.json'
-import { hasRole } from '@/server/utils/resolvers'
+import info from '@/next/constants/info.json'
+import { hasRole } from '@/next/server/utils/resolvers'
 
 const { permissions } = info
 
