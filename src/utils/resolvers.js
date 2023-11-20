@@ -1,7 +1,6 @@
 import { AuthenticationError, ForbiddenError } from 'apollo-server-errors'
 import path from 'path'
 
-import { withSessionSsr } from '../utils/session'
 import { getPerms } from '../utils/user'
 import db from '../sequelize/startDB'
 import { getImgColor, processImage } from '../utils'
@@ -20,15 +19,15 @@ const hasPerm = perm => next => async (root, args, context, info) => {
 }
 
 export const hasRole = role => [isAuthed, hasPerm(role)]
-export const hasRolePage = allowedRoles => withSessionSsr(async (context) => {
-  const { req } = context
-  const { username } = req.session
+export const hasRolePage = allowedRoles => async (context) => {
+  const { session } = context
+  const { username } = session
   const user = username ? await db.models.user.findByPk(username) : null
   const perms = await getPerms(user)
 
   if (!perms.some(p => allowedRoles.includes(p))) return { redirect: { destination: '/404', permanent: false } }
   return { props: {} }
-})
+}
 
 export const placeholder = (parent, folder) => {
   if (!parent.placeholder) solvePlaceholder(parent, folder)

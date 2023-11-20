@@ -5,7 +5,7 @@ import { graphqlUploadExpress } from 'graphql-upload'
 import { ApolloServerPluginLandingPageDisabled, ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core'
 import { loadFilesSync } from '@graphql-tools/load-files'
 import path from 'path'
-import { ironSession } from 'iron-session/express'
+import { getIronSession } from 'iron-session'
 
 import dbModule from './sequelize/startDB'
 import resolvers from './graphql/resolvers'
@@ -25,10 +25,16 @@ const corsOptions = {
   ],
   credentials: true
 }
+const sessionOptions = {
+  password: process.env.IRONCLAD,
+  cookieName: 'socuser'
+}
 
 async function context ({ req, res }) {
-  const { username } = req.session || {}
-  return { db, req, res, username, user: username && await db.models.user.findByPk(username) }
+  const session = await getIronSession(req, res, sessionOptions)
+  const { username } = session
+
+  return { db, req, res, session, username, user: username && await db.models.user.findByPk(username) }
 }
 
 const server = new ApolloServer({
@@ -51,7 +57,6 @@ async function startServer () {
 
   const app = express()
   app.use(graphqlUploadExpress())
-  app.use(ironSession({ password: process.env.IRONCLAD, cookieName: 'socuser' }))
 
   server.applyMiddleware({ app, path: '/', cors: corsOptions })
   await app.listen({ port, host: '0.0.0.0' })

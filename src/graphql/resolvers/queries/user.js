@@ -11,21 +11,21 @@ const { permissions } = info
 const resolversComposition = { 'Query.users': hasRole('MANAGE_USER') }
 const resolvers = {
   Query: {
-    login: async (parent, { username, password }, { db, req }) => {
+    login: async (_, { username, password }, { db, req, session }) => {
       const user = await db.models.user.findByPk(username)
       if (!user) throw new UserInputError()
 
       const valid = await bcrypt.compare(password, user.password)
       if (!valid) throw new UserInputError()
 
-      req.session.username = user.username
-      req.session.permissions = (await user.getRoles()).map(r => r.permissions).flat()
-      await req.session.save()
+      session.username = user.username
+      session.permissions = (await user.getRoles()).map(r => r.permissions).flat()
+      await session.save()
 
       return 200
     },
-    logout: (parent, args, { req, res }) => {
-      req.session.destroy()
+    logout: (_, __, { res, session }) => {
+      session.destroy()
       res.setHeader('cache-control', 'no-store, max-age=0')
 
       return 200
