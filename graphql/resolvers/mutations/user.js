@@ -13,11 +13,10 @@ import { hasRole, isAuthed } from '../../../utils/resolvers'
 import { processImage } from '../../../utils'
 
 const resolversComposition = {
-  'Mutation.*': hasRole('MANAGE_USER'),
-  'Mutation.updatePass': [],
-  'Mutation.createForgorLink': [],
+  'Mutation.updatePass': [...hasRole('MANAGE_USER')],
+  'Mutation.createForgorLink': [...hasRole('MANAGE_USER')],
   'Mutation.updateUser': [isAuthed],
-  'Mutation.registerUser': []
+  'Mutation.registerUser': [...hasRole('MANAGE_USER')]
 }
 
 const streamToString = (stream) => {
@@ -58,6 +57,22 @@ async function cropPFP (streamItem, username, imgId) {
 
 const resolvers = {
   Mutation: {
+    login: async (_, { username, password }, { db, session }) => {
+      const user = await db.models.user.findByPk(username)
+      if (!user) throw new UserInputError()
+
+      const valid = await bcrypt.compare(password, user.password)
+      if (!valid) throw new UserInputError()
+
+      session.username = user.username
+      await session.save()
+
+      return 200
+    },
+    logout: (_, __, { res, session }) => {
+      session.destroy()
+      return 200
+    },
     registerUser: async (_, { username, email, pfp }, { db }) => {
       await Promise.all([
         db.models.user.findByPk(username).then(result => {
