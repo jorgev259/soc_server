@@ -1,5 +1,3 @@
-import { UserInputError } from 'apollo-server-errors'
-import bcrypt from 'bcrypt'
 import { Op } from 'sequelize'
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 
