@@ -65,6 +65,8 @@ const resolvers = {
       if (!valid) throw new UserInputError()
 
       session.username = user.username
+      // Remove this when new site version is fully implemented
+      session.permissions = (await user.getRoles()).map(r => r.permissions).flat()
       await session.save()
 
       return 200
