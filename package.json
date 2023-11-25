@@ -34,6 +34,7 @@
     "luxon": "^2.4.0",
     "mysql2": "^2.3.3",
     "nodemailer": "^6.7.5",
+    "re2": "^1.20.9",
     "sequelize": "^6.19.0",
     "sequelize-cli": "^6.4.1",
     "sharp": "^0.30.4",
