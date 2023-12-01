@@ -14,9 +14,7 @@ import { processImage } from '../../../utils'
 
 const resolversComposition = {
   'Mutation.updatePass': [...hasRole('MANAGE_USER')],
-  'Mutation.createForgorLink': [...hasRole('MANAGE_USER')],
-  'Mutation.updateUser': [isAuthed],
-  'Mutation.registerUser': [...hasRole('MANAGE_USER')]
+  'Mutation.updateUser': [isAuthed]
 }
 
 const streamToString = (stream) => {
