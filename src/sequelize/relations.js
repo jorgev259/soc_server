@@ -53,7 +53,7 @@ export default function relations (sequelize) {
 
   animation.belongsToMany(album, { through: 'Album_Animation' })
 
-  album.hasMany(comment)
+  album.hasMany(comment, { onDelete: 'CASCADE' })
   comment.belongsTo(album)
   user.hasMany(comment, { foreignKey: 'username' })
   comment.belongsTo(user, { foreignKey: 'username' })
