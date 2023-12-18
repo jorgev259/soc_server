@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import pages from '../../../config/pages.json'
 
 const userResolvable = {
@@ -12,7 +13,7 @@ const userResolvable = {
 
     return pages.filter(({ perms }) => perms.length === 0 || perms.some(r => permissions.includes(r)))
   },
-  comments: (user, _, { db }) => user.getComments(),
+  comments: (user, _, { db }) => user.getComments({ where: { albumId: { [Op.not]: null } } }),
   favorites: user => user.getAlbums(),
   imgUrl: async user => `https://cdn.sittingonclouds.net/user/${
     user.imgId ? `${user.username}_${user.imgId}` : 'default'
