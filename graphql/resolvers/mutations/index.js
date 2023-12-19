@@ -1,4 +1,4 @@
-import merge from 'lodash.merge'
+import merge from 'lodash/merge'
 
 import comments from './comments'
 import create from './create'
