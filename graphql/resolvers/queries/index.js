@@ -1,4 +1,4 @@
-import merge from 'lodash.merge'
+import merge from 'lodash/merge'
 
 import album from './album'
 import requests from './requests'
