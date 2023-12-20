@@ -2,7 +2,7 @@ import { AuthenticationError, ForbiddenError } from 'apollo-server-errors'
 import path from 'path'
 
 import { getPerms } from '../utils/user'
-import db from '../sequelize/startDB'
+import db from '@/sequelize/startDB'
 import { getImgColor, processImage } from '../utils'
 
 export const isAuthed = next => (root, args, context, info) => {

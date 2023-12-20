@@ -4,29 +4,14 @@ import { Op } from 'sequelize'
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 
 import info from '@/utils/config/info.json'
-import { hasRole } from '../../../utils/resolvers'
-import { getServerActionSession, getSession } from '@/components/session'
+import { hasRole } from '@/server/utils/resolvers'
 
 const { permissions } = info
-
-async function getUser (db) {
-  const session = await getServerActionSession()
-  const { username } = session
-
-  const user = username && await db.models.user.findByPk(username)
-  return user
-}
 
 const resolversComposition = { 'Query.users': hasRole('MANAGE_USER') }
 const resolvers = {
   Query: {
-    me: async (parent, args, { db, req, res }) => {
-      const session = await getServerActionSession()
-      const reqSession = await getSession(req, res)
-      const user = await getUser(db)
-
-      return user
-    },
+    me: (parent, args, { user }) => user,
     permissions: () => permissions,
     roles: (parent, args, { db }) => db.models.role.findAll(),
     users: (parent, args, { db }) => {
