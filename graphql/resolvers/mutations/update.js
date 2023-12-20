@@ -1,5 +1,5 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
-import { completeRequest } from '@lotus-tree/requestcat/lib/util'
+// import { completeRequest } from '@lotus-tree/requestcat/lib/util'
 
 import { img, createLog, createUpdateLog, getImgColor, slugify } from '../../../utils'
 import { postWebhook, discordClient } from '../../../utils/plugins'
@@ -270,7 +270,7 @@ const resolvers = {
                 .then(async request => {
                   if (request.state === 'complete') return
 
-                  await completeRequest(discordClient, db, process.env.GUILD, request)
+                  // await completeRequest(discordClient, db, process.env.GUILD, request)
                   const guild = await discordClient.guilds.fetch(process.env.GUILD)
                   await guild.channels.fetch()
 

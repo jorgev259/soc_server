@@ -4,7 +4,7 @@ import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import { img, createLog, createUpdateLog, getImgColor, slugify } from '../../../utils'
 import { discordClient, postWebhook } from '../../../utils/plugins'
 import { hasRole } from '../../../utils/resolvers'
-import { completeRequest } from '@lotus-tree/requestcat/lib/util'
+// import { completeRequest } from '@lotus-tree/requestcat/lib/util'
 
 const resolversComposition = { 'Mutation.*': hasRole('CREATE') }
 const resolvers = {
@@ -44,7 +44,7 @@ const resolvers = {
               .then(async request => {
                 if (request.state === 'complete') return
 
-                await completeRequest(discordClient, db, process.env.GUILD, request)
+                // await completeRequest(discordClient, db, process.env.GUILD, request)
                 const guild = await discordClient.guilds.fetch(process.env.GUILD)
                 await guild.channels.fetch()
 

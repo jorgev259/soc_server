@@ -1,4 +1,4 @@
-import GraphQLUpload from 'graphql-upload/public/GraphQLUpload.js'
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs'
 
 import { headerColor, placeholder, solveRating } from '../../../utils/resolvers'
 

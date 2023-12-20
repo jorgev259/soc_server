@@ -1,4 +1,4 @@
-import { Client, Intents } from 'discord.js'
+/* import { Client, Intents } from 'discord.js'
 import { post } from 'axios'
 
 const discordToken = process.env.DISCORD
@@ -13,4 +13,4 @@ export async function postWebhook (album, userText = '') {
 
   post(process.env.WEBHOOK_URL, payload)
     .catch(err => console.log(err))
-}
+} */

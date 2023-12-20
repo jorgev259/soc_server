@@ -1,4 +1,6 @@
-import { categories, classifications } from '../../../config/info.json'
+import config from '@/utils/config/info.json'
+
+const { categories, classifications } = config
 
 const resolvers = {
   VgmResult: {
