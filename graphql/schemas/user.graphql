@@ -37,7 +37,6 @@
         user(username: String!): User
 
         login(username: String!, password: String!): Int!
-        logout: Int!
     }
 
     type Mutation {
