@@ -1,4 +1,4 @@
-import { get } from 'axios'
+import axios from 'axios'
 import cheerio from 'cheerio'
 
 const isValidUrl = s => {
@@ -12,7 +12,7 @@ const isValidUrl = s => {
 
 async function makeRequest (url) {
   try {
-    const { data } = await get(
+    const { data } = await axios.get(
       `https://api.nemoralni.site/albums/${url}`,
       { headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'x-api-key': 'i-m-a-pig-i-don-t-fight-for-honor-i-fight-for-a-paycheck' } })
 
@@ -30,7 +30,7 @@ export default async function getVGMDB (search) {
 
   const { vgmdb_url: vgmdbUrl } = data
   data.tracklist = []
-  const { data: htmlBody } = await get(vgmdbUrl, { headers: { 'Content-Type': 'text/html' } })
+  const { data: htmlBody } = await axios.get(vgmdbUrl, { headers: { 'Content-Type': 'text/html' } })
 
   const $ = cheerio.load(htmlBody)
 
