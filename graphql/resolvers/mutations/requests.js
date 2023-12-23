@@ -1,10 +1,10 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import { UserInputError } from 'apollo-server-errors'
-// import { holdRequest, completeRequest, rejectRequest } from '@lotus-tree/requestcat/lib/util'
+import { holdRequest, completeRequest, rejectRequest } from '@lotus-tree/requestcat/lib/util'
+import { mergeResolvers } from '@graphql-tools/merge'
 
 import { hasRole, isAuthed } from '../../../utils/resolvers'
-// import { discordClient } from '../../../utils/plugins'
-import { mergeResolvers } from '@graphql-tools/merge'
+import { discordClient } from '@/next/lib/discord'
 
 const resolvers = {
   Mutation: {
@@ -18,11 +18,11 @@ const resolvers = {
         if (request.changed('state')) {
           switch (request.state) {
           case 'complete':
-            // await completeRequest(discordClient, db, process.env.GUILD, request)
+            await completeRequest(discordClient, db, process.env.GUILD, request)
             break
 
           case 'hold':
-            // await holdRequest(discordClient, db, process.env.GUILD, request, data.reason)
+            await holdRequest(discordClient, db, process.env.GUILD, request, data.reason)
             break
           }
         }
@@ -37,7 +37,7 @@ const resolvers = {
       const request = await db.models.request.findByPk(data.id)
       if (!request) throw new UserInputError('Request not found')
 
-      // await rejectRequest(discordClient, db, process.env.GUILD, request, data.reason)
+      await rejectRequest(discordClient, db, process.env.GUILD, request, data.reason)
       return true
     }
   }
