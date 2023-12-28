@@ -1,4 +1,5 @@
 type Comment {
+  id: ID!
   text: String!
   anon: Boolean!
   album: Album!
