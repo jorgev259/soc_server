@@ -1,17 +1,22 @@
 import { AuthenticationError, ForbiddenError } from 'apollo-server-errors'
 import path from 'path'
 
-import { getPerms } from '../utils/user'
 import db from '../sequelize/startDB'
-import { getImgColor, processImage } from '../utils'
+import { getImgColor, processImage } from './image'
+import { getSession, getUser } from '@/next/lib/getSession'
 
-export const isAuthed = next => (root, args, context, info) => {
-  if (!context.user) throw new AuthenticationError()
+export const isAuthed = next => async (root, args, context, info) => {
+  const session = await getSession()
+  const { username = null } = session
+
+  if (!username) throw new AuthenticationError()
   return next(root, args, context, info)
 }
 
 const hasPerm = perm => next => async (root, args, context, info) => {
-  const roles = await context.user.getRoles()
+  const { db } = context
+  const user = await getUser(db)
+  const roles = await user.getRoles()
   const permissions = roles.map(r => r.permissions).flat()
   if (!permissions.includes(perm)) throw new ForbiddenError()
 
@@ -19,15 +24,15 @@ const hasPerm = perm => next => async (root, args, context, info) => {
 }
 
 export const hasRole = role => [isAuthed, hasPerm(role)]
-export const hasRolePage = allowedRoles => async (context) => {
-  const { session } = context
-  const { username } = session
-  const user = username ? await db.models.user.findByPk(username) : null
-  const perms = await getPerms(user)
+export const hasRolePage = allowedRoles =>
+  async (context, props = {}) => {
+    const { req, res } = context
+    const session = await getSession(req, res)
+    const { permissions = [] } = session
 
-  if (!perms.some(p => allowedRoles.includes(p))) return { redirect: { destination: '/404', permanent: false } }
-  return { props: {} }
-}
+    if (!permissions.some(p => allowedRoles.includes(p))) return { redirect: { destination: '/404', permanent: false } }
+    return { props }
+  }
 
 export const placeholder = (parent, folder) => {
   if (!parent.placeholder) solvePlaceholder(parent, folder)

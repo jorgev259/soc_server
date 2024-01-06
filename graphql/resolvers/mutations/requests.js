@@ -5,10 +5,11 @@ import { mergeResolvers } from '@graphql-tools/merge'
 
 import { hasRole, isAuthed } from '../../../utils/resolvers'
 import { discordClient } from '@/next/lib/discord'
+import { getUser } from '@/next/lib/getSession'
 
 const resolvers = {
   Mutation: {
-    editRequest: async (parent, data, { db, user }, info) => {
+    editRequest: async (parent, data, { db }, info) => {
       const request = await db.models.request.findByPk(data.id)
       if (!request) throw new UserInputError('Request not found')
 
@@ -33,7 +34,7 @@ const resolvers = {
       return request
     },
 
-    rejectRequest: async (parent, data, { db, user }, info) => {
+    rejectRequest: async (parent, data, { db }, info) => {
       const request = await db.models.request.findByPk(data.id)
       if (!request) throw new UserInputError('Request not found')
 
@@ -45,7 +46,7 @@ const resolvers = {
 
 const submitActions = {
   Mutation: {
-    submitAlbum: async (parent, data, { db, user }, info) => {
+    submitAlbum: async (parent, data, { db }, info) => {
       const { request: requestId, title, vgmdb, links } = data
       let request
 
@@ -61,7 +62,7 @@ const submitActions = {
         vgmdb,
         links,
         requestId,
-        userUsername: user.username
+        userUsername: await getUser().username
       })
     }
   }

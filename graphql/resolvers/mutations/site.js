@@ -3,7 +3,7 @@ import { UserInputError } from 'apollo-server-errors'
 import fs from 'fs-extra'
 import path from 'path'
 
-import { img } from '../../../utils'
+import { img } from '@/next/server/utils/image'
 import { hasRole } from '../../../utils/resolvers'
 
 const resolversComposition = { 'Mutation.*': hasRole('UPDATE') }

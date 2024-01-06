@@ -2,6 +2,7 @@ import { composeResolvers } from '@graphql-tools/resolvers-composition'
 // import axios from 'axios'
 
 import { isAuthed } from '../../../utils/resolvers'
+import { getSession, getUser } from '@/next/lib/getSession'
 
 // const token = process.env.IRONCLAD
 
@@ -11,44 +12,38 @@ const resolversComposition = {
 
 const resolvers = {
   Mutation: {
-    updateComment: async (_, { text, anon, albumId }, { db, user, res }) => (
-      db.transaction(async transaction => {
-        const { username } = user
-        const row = await db.models.comment.findOne({ where: { albumId, username } })
+    updateComment: async (_, { text, anon, albumId }, { db }) => {
+      const { username } = await getSession()
+      const row = await db.models.comment.findOne({ where: { albumId, username } })
 
-        if (row) {
-          await row.update({ text, anon }, { transaction })
-          await row.save({ transaction })
-        } else await db.models.comment.create({ albumId, username, text, anon }, { transaction })
+      if (row) {
+        await row.update({ text, anon })
+        await row.save()
+      } else await db.models.comment.create({ albumId, username, text, anon })
 
-        return true
-      })
-    ),
-    addFavorite: async (_, { albumId }, { db, user, res }) => (
-      db.transaction(async transaction => {
-        await user.addAlbum(albumId, { transaction })
-        return true
-      })
-    ),
-    removeFavorite: async (_, { albumId }, { db, user, res }) => (
-      db.transaction(async transaction => {
-        await user.removeAlbum(albumId, { transaction })
-        return true
-      })
-    ),
-    rateAlbum: async (_, { albumId, score }, { db, user, res }) => (
-      db.transaction(async transaction => {
-        const { username } = user
-        const row = await db.models.rating.findOne({ where: { albumId, username } })
+      return true
+    },
+    addFavorite: async (_, { albumId }, { db }) => {
+      const user = await getUser(db)
+      await user.addAlbum(albumId)
+      return true
+    },
+    removeFavorite: async (_, { albumId }, { db }) => {
+      const user = await getUser(db)
+      await user.removeAlbum(albumId)
+      return true
+    },
+    rateAlbum: async (_, { albumId, score }, { db }) => {
+      const { username } = await getSession()
+      const row = await db.models.rating.findOne({ where: { albumId, username } })
 
-        if (row) {
-          await row.update({ score }, { transaction })
-          await row.save({ transaction })
-        } else await db.models.rating.create({ albumId, username, score }, { transaction })
+      if (row) {
+        await row.update({ score })
+        await row.save()
+      } else await db.models.rating.create({ albumId, username, score })
 
-        return true
-      })
-    )
+      return true
+    }
   }
 }
 

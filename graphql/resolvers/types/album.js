@@ -1,6 +1,7 @@
 import { GraphQLUpload } from 'graphql-upload-minimal'
 
 import { headerColor, placeholder, solveRating } from '../../../utils/resolvers'
+import { getUser } from '@/next/lib/getSession'
 
 const resolvers = {
   Upload: GraphQLUpload,
@@ -16,9 +17,18 @@ const resolvers = {
     animations: (parent) => parent.getAnimations(),
     downloads: parent => parent.getDownloads(),
     comments: parent => parent.getComments(),
-    isFavorite: async (album, _, { db, user }) => user ? album.hasUser(user.username) : false,
-    selfComment: (album, _, { db, user }) => user ? db.models.comment.findOne({ where: { albumId: album.id, username: user.username } }) : null,
-    selfScore: async (album, _, { db, user }) => user ? (await db.models.rating.findOne({ where: { albumId: album.id, username: user.username } }))?.score : null,
+    isFavorite: async (album, _, { db }) => {
+      const user = await getUser(db)
+      return user ? album.hasUser(user.username) : false
+    },
+    selfComment: async (album, _, { db }) => {
+      const user = await getUser(db)
+      return user ? db.models.comment.findOne({ where: { albumId: album.id, username: user.username } }) : null
+    },
+    selfScore: async (album, _, { db }) => {
+      const user = await getUser(db)
+      return user ? (await db.models.rating.findOne({ where: { albumId: album.id, username: user.username } }))?.score : null
+    },
     favorites: (album, _, { db }) => album.countUsers(),
     placeholder: (album, _, { db }) => placeholder(album, 'album'),
     headerColor: (album, _, { db }) => headerColor(album, 'album'),
@@ -53,14 +63,14 @@ const resolvers = {
       return links.every(link => link.url.includes('adshrink.it')) ? link.directUrl : link.url
     },
 
-    directUrl: async (link, args, context) => {
+    directUrl: async (link, args, { db }) => {
       const download = await link.getDownload()
       const links = await download.getLinks()
 
       const fallback = links.every(link => link.url.includes('adshrink.it'))
       if (fallback) return
 
-      const { user } = context
+      const user = await getUser(db)
       if (!user) return null
 
       const roles = await user.getRoles()

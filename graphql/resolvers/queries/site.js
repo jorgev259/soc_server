@@ -6,7 +6,7 @@ import { hasRole } from '../../../utils/resolvers'
 const resolversComposition = { 'Query.banners': hasRole('UPDATE') }
 const resolvers = {
   Query: {
-    config: (parent, { name }, { db, req }, info) => {
+    config: (parent, { name }, { db }, info) => {
       return db.models.config.findOrCreate({ where: { name } })
         .then(() => db.models.config.findByPk(name))
     },

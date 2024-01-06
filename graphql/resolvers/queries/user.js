@@ -3,13 +3,14 @@ import { composeResolvers } from '@graphql-tools/resolvers-composition'
 
 import info from '@/next/constants/info.json'
 import { hasRole } from '@/next/server/utils/resolvers'
+import { getUser } from '@/next/lib/getSession'
 
 const { permissions } = info
 
 const resolversComposition = { 'Query.users': hasRole('MANAGE_USER') }
 const resolvers = {
   Query: {
-    me: (parent, args, { user }) => user,
+    me: (parent, args, { db }) => getUser(db),
     permissions: () => permissions,
     roles: (parent, args, { db }) => db.models.role.findAll(),
     users: (parent, args, { db }) => {
@@ -25,7 +26,7 @@ const resolvers = {
         }
       })
     },
-    user: (parent, { username }, { db }) => db.models.user.findByPk(username)
+    user: async (_, { user }, { db }) => user
   }
 }
 

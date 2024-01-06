@@ -57,15 +57,17 @@ const resolvers = {
       return db.models.submission.findAll({
         where: {
           [Op.and]: [
-            {state: {[Op.in]: state}},
-            {[Op.or]: [
-              { id: filter },
-              { vgmdb: filter },
-              { userUsername: filter },
-              where(fn('LOWER', col('title')), { [Op.like]: `%${filter.toLowerCase()}%` })
-            ]}
+            { state: { [Op.in]: state } },
+            {
+              [Op.or]: [
+                { id: filter },
+                { vgmdb: filter },
+                { userUsername: filter },
+                where(fn('LOWER', col('title')), { [Op.like]: `%${filter.toLowerCase()}%` })
+              ]
+            }
           ]
-      }
+        }
       })
     }
   }

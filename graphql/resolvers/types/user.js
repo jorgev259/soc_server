@@ -1,5 +1,7 @@
 import { Op } from 'sequelize'
+
 import pages from '@/next/constants/pages.json'
+import { getUser } from '@/next/lib/getSession'
 
 const userResolvable = {
   roles: parent => parent.getRoles(),
@@ -26,8 +28,8 @@ const funcs = {
   Role: { permissions: parent => typeof parent.permissions === 'string' || parent.permissions instanceof String ? JSON.parse(parent.permissions) : parent.permissions },
   Submission: {
     submitter: submission => submission.getUser(),
-    links: async (submission, _, context) => {
-      const { user } = context
+    links: async (submission, _, { db }) => {
+      const user = await getUser(db)
       if (!user) return null
 
       const roles = await user.getRoles()

@@ -10,7 +10,8 @@ import sharp from 'sharp'
 
 import { createForgor } from '../../../utils/forgor'
 import { isAuthed } from '../../../utils/resolvers'
-import { processImage } from '../../../utils'
+import { processImage } from '@/next/server/utils/image'
+import { getSession, getUser } from '@/next/lib/getSession'
 
 const resolversComposition = {
   'Mutation.updateUser': [isAuthed]
@@ -54,13 +55,14 @@ async function cropPFP (streamItem, username, imgId) {
 
 const resolvers = {
   Mutation: {
-    login: async (_, { username, password }, { db, session }) => {
+    login: async (_, { username, password }, { db }) => {
       const user = await db.models.user.findByPk(username)
       if (!user) throw new UserInputError()
 
       const valid = await bcrypt.compare(password, user.password)
       if (!valid) throw new UserInputError()
 
+      const session = await getSession()
       session.username = user.username
       // Remove this when new site version is fully implemented
       session.permissions = (await user.getRoles()).map(r => r.permissions).flat()
@@ -68,8 +70,10 @@ const resolvers = {
 
       return 200
     },
-    logout: (_, __, { res, session }) => {
-      session.destroy()
+    logout: async () => {
+      const session = await getSession()
+      await session.destroy()
+
       return 200
     },
     registerUser: async (_, { username, email, pfp }, { db }) => {
@@ -138,7 +142,8 @@ const resolvers = {
         return true
       })
     },
-    updateUser: async (_, { username, email, password, pfp }, { db, user }) => {
+    updateUser: async (_, { username, email, password, pfp }, { db }) => {
+      const user = await getUser(db)
       if (username) user.username = username
       if (email) user.email = email
       if (password) user.password = await bcrypt.hash(password, 10)
@@ -155,7 +160,7 @@ const resolvers = {
       return true
     },
 
-    createRole: async (parent, args, { db, user, payload }) => db.models.role.create(args),
+    createRole: async (parent, args, { db, payload }) => db.models.role.create(args),
     updateRole: async (parent, { key, name, permissions }, { db, payload }) => {
       const role = await db.models.role.findByPk(key)
       if (!role) throw new UserInputError('Not Found')
@@ -168,7 +173,7 @@ const resolvers = {
       await role.save()
       return role
     },
-    deleteRole: async (parent, { name }, { db, user, payload }) => {
+    deleteRole: async (parent, { name }, { db, payload }) => {
       const role = await db.models.role.findByPk(name)
       if (!role) throw new UserInputError('Not Found')
       await role.destroy()
