@@ -25,8 +25,7 @@ async function makeRequest (url) {
 export default async function getVGMDB (search) {
   const url = isValidUrl(search) ? (new URL(search)).pathname.split('/').slice(-1) : search
 
-  const data = await makeRequest(url)
-  if (!data) return {}
+  const data = await makeRequest(url) || {}
 
   const { vgmdb_url: vgmdbUrl } = data
   data.tracklist = []
