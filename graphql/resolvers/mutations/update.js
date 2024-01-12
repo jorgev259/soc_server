@@ -1,11 +1,11 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
-import { completeRequest } from '@lotus-tree/requestcat/lib/util'
 
 import { createLog, createUpdateLog, slugify } from '../../../utils'
 import { img, getImgColor } from '@/next/server/utils/image'
-import { postWebhook, discordClient } from '@/next/lib/discord'
+import { postWebhook } from '@/next/lib/discord'
 
 import { hasRole } from '../../../utils/resolvers'
+import requestPOST from '@/next/server/utils/requests'
 
 const resolversComposition = { 'Mutation.*': hasRole('UPDATE') }
 const resolvers = {
@@ -276,9 +276,7 @@ const resolvers = {
                 .then(async request => {
                   if (request.state === 'complete') return
 
-                  await completeRequest(discordClient, db, process.env.GUILD, request)
-                  const guild = await discordClient.guilds.fetch(process.env.GUILD)
-                  await guild.channels.fetch()
+                  await requestPOST('complete', { requestId: request.id })
 
                   const userText = request.userID || request.user
                     ? ` ${request.userID ? `<@${request.userID}>` : `@${request.user}`} :arrow_down:`

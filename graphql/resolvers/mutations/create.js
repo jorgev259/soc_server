@@ -1,11 +1,11 @@
 import { UserInputError } from 'apollo-server-errors'
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
-import { completeRequest } from '@lotus-tree/requestcat/lib/util'
 
 import { createLog, createUpdateLog, slugify } from '../../../utils'
 import { getImgColor, img } from '@/next/server/utils/image'
 import { discordClient, postWebhook } from '@/next/lib/discord'
 import { hasRole } from '../../../utils/resolvers'
+import requestPOST from '@/next/server/utils/requests'
 
 const resolversComposition = { 'Mutation.*': hasRole('CREATE') }
 const resolvers = {
@@ -45,7 +45,7 @@ const resolvers = {
               .then(async request => {
                 if (request.state === 'complete') return
 
-                await completeRequest(discordClient, db, process.env.GUILD, request)
+                await requestPOST('complete', { requestId: request.id })
                 const guild = await discordClient.guilds.fetch(process.env.GUILD)
                 await guild.channels.fetch()
 
