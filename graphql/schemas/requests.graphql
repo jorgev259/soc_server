@@ -51,7 +51,7 @@ type Query {
     page: Int
     filter: String
   ): RequestResult!
-  vgmdb(search: String!): VgmResult!
+  vgmdb(search: String!): VgmResult
 
   submissions(filter: String, state: [String]): [Submission]!
 }
