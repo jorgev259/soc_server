@@ -4,7 +4,7 @@ import { mergeResolvers } from '@graphql-tools/merge'
 
 import { hasRole, isAuthed } from '../../../utils/resolvers'
 import { getUser } from '@/next/lib/getSession'
-import requestPOST from '@/next/server/utils/requests'
+import { requestPOST } from '@/next/server/utils/requests'
 
 const resolvers = {
   Mutation: {

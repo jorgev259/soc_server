@@ -2,10 +2,8 @@ import { composeResolvers } from '@graphql-tools/resolvers-composition'
 
 import { createLog, createUpdateLog, slugify } from '../../../utils'
 import { img, getImgColor } from '@/next/server/utils/image'
-import { postWebhook } from '@/next/lib/discord'
-
 import { hasRole } from '../../../utils/resolvers'
-import requestPOST from '@/next/server/utils/requests'
+import { handleComplete } from '@/next/server/utils/requests'
 
 const resolversComposition = { 'Mutation.*': hasRole('UPDATE') }
 const resolvers = {
@@ -269,26 +267,9 @@ const resolvers = {
             album.headerColor = await getImgColor(`album/${album.id}`)
             await album.save({ transaction })
           }
-
-          if (triggerPost) {
-            if (data.request) {
-              db.models.request.findByPk(data.request)
-                .then(async request => {
-                  if (request.state === 'complete') return
-
-                  await requestPOST('complete', { requestId: request.id })
-
-                  const userText = request.userID || request.user
-                    ? ` ${request.userID ? `<@${request.userID}>` : `@${request.user}`} :arrow_down:`
-                    : ''
-
-                  postWebhook(album, userText)
-                })
-            } else {
-              postWebhook(album)
-            }
-          }
         })
+
+        if (triggerPost) handleComplete(data, album)
 
         return album
       } catch (err) {

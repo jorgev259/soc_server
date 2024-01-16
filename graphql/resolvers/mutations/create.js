@@ -3,9 +3,8 @@ import { composeResolvers } from '@graphql-tools/resolvers-composition'
 
 import { createLog, createUpdateLog, slugify } from '../../../utils'
 import { getImgColor, img } from '@/next/server/utils/image'
-import { discordClient, postWebhook } from '@/next/lib/discord'
 import { hasRole } from '../../../utils/resolvers'
-import requestPOST from '@/next/server/utils/requests'
+import { handleComplete } from '@/next/server/utils/requests'
 
 const resolversComposition = { 'Mutation.*': hasRole('CREATE') }
 const resolvers = {
@@ -39,26 +38,7 @@ const resolvers = {
 
         await album.save({ transaction })
 
-        if (album.status === 'show') {
-          if (data.request) {
-            db.models.request.findByPk(data.request)
-              .then(async request => {
-                if (request.state === 'complete') return
-
-                await requestPOST('complete', { requestId: request.id })
-                const guild = await discordClient.guilds.fetch(process.env.GUILD)
-                await guild.channels.fetch()
-
-                const userText = request.userID || request.user
-                  ? ` ${request.userID ? `<@${request.userID}>` : `@${request.user}`} :arrow_down:`
-                  : ''
-
-                postWebhook(album, userText)
-              })
-          } else {
-            postWebhook(album)
-          }
-        }
+        if (album.status === 'show') handleComplete(data, album)
 
         return album
       })
