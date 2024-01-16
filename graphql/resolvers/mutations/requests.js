@@ -56,12 +56,14 @@ const submitActions = {
         if (request.state === 'complete') throw new UserInputError('Request already complete')
       }
 
+      const user = await getUser(db)
+
       return db.models.submission.create({
         title,
         vgmdb,
         links,
         requestId,
-        userUsername: await getUser().username
+        userUsername: user.username
       })
     }
   }

@@ -6,7 +6,8 @@ import { getImgColor, processImage } from './image'
 import { getSession, getUser } from '@/next/lib/getSession'
 
 export const isAuthed = next => async (root, args, context, info) => {
-  const session = await getSession()
+  const { db } = context
+  const session = await getSession(db)
   const { username = null } = session
 
   if (!username) throw new AuthenticationError()
