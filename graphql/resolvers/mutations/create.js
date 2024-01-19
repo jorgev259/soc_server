@@ -38,7 +38,7 @@ const resolvers = {
 
         await album.save({ transaction })
 
-        if (album.status === 'show') handleComplete(data, album)
+        if (album.status === 'show') handleComplete(db, data, album)
 
         return album
       })

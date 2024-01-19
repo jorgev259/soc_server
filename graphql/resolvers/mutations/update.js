@@ -269,7 +269,7 @@ const resolvers = {
           }
         })
 
-        if (triggerPost) handleComplete(data, album)
+        if (triggerPost) handleComplete(db, data, album)
 
         return album
       } catch (err) {
