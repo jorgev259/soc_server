@@ -10,7 +10,7 @@ import sharp from 'sharp'
 
 import { createForgor } from '../../../utils/forgor'
 import { isAuthed } from '../../../utils/resolvers'
-import { processImage } from '@/next/server/utils/image'
+import { processImage } from '@/server/utils/image'
 import { getSession, getUser } from '@/next/lib/getSession'
 
 const resolversComposition = {

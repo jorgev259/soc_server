@@ -1,9 +1,9 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 
 import { createLog, createUpdateLog, slugify } from '../../../utils'
-import { img, getImgColor } from '@/next/server/utils/image'
+import { img, getImgColor } from '@/server/utils/image'
 import { hasRole } from '../../../utils/resolvers'
-import { handleComplete } from '@/next/server/utils/requests'
+import { handleComplete } from '@/server/utils/requests'
 
 const resolversComposition = { 'Mutation.*': hasRole('UPDATE') }
 const resolvers = {

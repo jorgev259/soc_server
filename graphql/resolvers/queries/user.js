@@ -2,7 +2,7 @@ import { Op } from 'sequelize'
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 
 import info from '@/next/constants/info.json'
-import { hasRole } from '@/next/server/utils/resolvers'
+import { hasRole } from '@/server/utils/resolvers'
 import { getUser } from '@/next/lib/getSession'
 
 const { permissions } = info
