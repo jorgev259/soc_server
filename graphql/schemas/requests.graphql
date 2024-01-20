@@ -22,17 +22,6 @@ type Submission {
   submitter: User!
 }
 
-type VgmResult {
-  vgmdbUrl: String
-  name: String
-  subTitle: String
-  releaseDate: String
-  artists: [String]!
-  categories: [String]
-  classifications: [String]
-  tracklist: [Disc]!
-}
-
 type RequestResult {
   count: Int!
   rows: [Request]!
@@ -51,8 +40,6 @@ type Query {
     page: Int
     filter: String
   ): RequestResult!
-  vgmdb(search: String!): VgmResult
-
   submissions(filter: String, state: [String]): [Submission]!
 }
 

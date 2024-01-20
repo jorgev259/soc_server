@@ -1,5 +1,4 @@
 import { Op, literal } from 'sequelize'
-import getVGMDB from '../../../utils/vgmdb'
 
 const resolvers = {
   Query: {
@@ -69,8 +68,7 @@ const resolvers = {
     }),
     searchPlatformsByCategories: (parent, { categories }, { db }) => categories.length === 0
       ? []
-      : db.models.platform.findAll({ where: { type: { [Op.or]: categories } } }),
-    vgmdb: (_, { search }) => getVGMDB(search)
+      : db.models.platform.findAll({ where: { type: { [Op.or]: categories } } })
   }
 }
 
