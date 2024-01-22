@@ -19,7 +19,7 @@ const resolvers = {
     comments: parent => parent.getComments(),
     isFavorite: async (album, _, { db }) => {
       const user = await getUser(db)
-      return user ? album.hasUser(user.username) : false
+      return user ? album.hasUser(user.username) : null
     },
     selfComment: async (album, _, { db }) => {
       const user = await getUser(db)

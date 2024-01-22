@@ -9,7 +9,7 @@ type Comment {
 type Album {
   comments: [Comment]!
   selfComment: Comment
-  isFavorite: Boolean!
+  isFavorite: Boolean
   favorites: Int!
   avgRating: AvgRating!
   selfScore: Int
