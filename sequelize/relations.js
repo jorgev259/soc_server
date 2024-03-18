@@ -31,16 +31,16 @@ export default function relations (sequelize) {
   game.belongsToMany(platform, { through: 'Game_Platform' })
   platform.belongsToMany(game, { through: 'Game_Platform' })
 
-  album.belongsToMany(artist, { onDelete: 'CASCADE', through: 'Album_Artist' })
-  album.belongsToMany(classification, { onDelete: 'CASCADE', through: 'Album_Classification' })
-  album.belongsToMany(category, { onDelete: 'CASCADE', through: 'Album_Category' })
-  album.belongsToMany(platform, { onDelete: 'CASCADE', through: 'Album_Platform' })
-  album.belongsToMany(game, { onDelete: 'CASCADE', through: 'Album_Game' })
+  album.belongsToMany(artist, { onDelete: 'SET NULL', through: 'Album_Artist' })
+  album.belongsToMany(classification, { onDelete: 'SET NULL', through: 'Album_Classification' })
+  album.belongsToMany(category, { onDelete: 'SET NULL', through: 'Album_Category' })
+  album.belongsToMany(platform, { onDelete: 'SET NULL', through: 'Album_Platform' })
+  album.belongsToMany(game, { onDelete: 'SET NULL', through: 'Album_Game' })
   album.belongsToMany(animation, { through: 'Album_Animation' })
-  album.hasMany(disc, { onDelete: 'CASCADE' })
-  album.hasMany(download, { onDelete: 'CASCADE' })
-  album.hasMany(store, { onDelete: 'CASCADE' })
-  album.belongsToMany(album, { onDelete: 'CASCADE', through: 'related_album', as: 'related' })
+  album.hasMany(disc, { onDelete: 'SET NULL' })
+  album.hasMany(download, { onDelete: 'SET NULL' })
+  album.hasMany(store, { onDelete: 'SET NULL' })
+  album.belongsToMany(album, { onDelete: 'SET NULL', through: 'related_album', as: 'related' })
 
   platform.belongsToMany(album, { through: 'Album_Platform' })
 
@@ -53,7 +53,7 @@ export default function relations (sequelize) {
 
   animation.belongsToMany(album, { through: 'Album_Animation' })
 
-  album.hasMany(comment, { onDelete: 'CASCADE' })
+  album.hasMany(comment, { onDelete: 'SET NULL' })
   comment.belongsTo(album)
   user.hasMany(comment, { foreignKey: 'username' })
   comment.belongsTo(user, { foreignKey: 'username' })
