@@ -119,7 +119,8 @@ const resolvers = {
   },
 
   Disc: {
-    album: (parent) => parent.getAlbum()
+    album: (parent) => parent.getAlbum(),
+    tracks: (parent) => parent.body.split(',')
   }
 }
 
