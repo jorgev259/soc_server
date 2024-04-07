@@ -1,8 +1,8 @@
-import getVGMDB from '@sittingonclouds/vgmdb-parser'
+import getPuppeteer from 'vgmdb-parser/lib/puppeteer'
 
 const resolvers = {
   Query: {
-    vgmdb: (_, { url }) => getVGMDB(url)
+    vgmdb: (_, { url }) => getPuppeteer(url)
   }
 }
 

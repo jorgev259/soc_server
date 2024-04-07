@@ -6,7 +6,12 @@ type VgmResult {
   artists: [String]!
   categories: [String]!
   classifications: [String]!
-  tracklist: [Disc]!
+  trackList: [VGMDBDisc]!
+}
+
+type VGMDBDisc {
+  number: Int
+  tracks: [String!]
 }
 
 type Query {
