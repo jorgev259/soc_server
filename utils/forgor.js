@@ -2,17 +2,36 @@ import nodemailer from 'nodemailer'
 import generator from 'generate-password'
 import { literal } from 'sequelize'
 
-export const mailConfig = JSON.parse(process.env.MAILSERVER)
+export const mailConfig = JSON.parse(process.env.MAILSERVER || '{}')
 export const transporter = nodemailer.createTransport(mailConfig)
 
-export async function createForgor (user, db, transaction) {
-  await db.models.forgor.destroy({ where: { username: user.username }, transaction })
-  const key = generator.generate({ length: 15, numbers: true, upercase: false, strict: true })
-  const row = await db.models.forgor.create({ key, expires: literal('DATE_ADD(NOW(), INTERVAL 24 HOUR)') }, { transaction })
+export async function createForgor(user, db, transaction) {
+  await db.models.forgor.destroy({
+    where: { username: user.username },
+    transaction
+  })
+  const key = generator.generate({
+    length: 15,
+    numbers: true,
+    uppercase: false,
+    strict: true
+  })
+  const row = await db.models.forgor.create(
+    { key, expires: literal('DATE_ADD(NOW(), INTERVAL 24 HOUR)') },
+    { transaction }
+  )
   row.setUser(user, { transaction })
 
-  const html = template.replaceAll('{{forgor_link}}', `https://sittingonclouds.net/forgor?key=${key}`)
-  const message = { from: mailConfig.auth.user, to: user.email, subject: 'Password Reset', html }
+  const html = template.replaceAll(
+    '{{forgor_link}}',
+    `https://sittingonclouds.net/forgor?key=${key}`
+  )
+  const message = {
+    from: mailConfig.auth.user,
+    to: user.email,
+    subject: 'Password Reset',
+    html
+  }
   await transporter.sendMail(message)
 
   return row

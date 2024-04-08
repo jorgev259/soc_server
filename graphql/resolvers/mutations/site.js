@@ -4,13 +4,14 @@ import fs from 'fs-extra'
 import path from 'path'
 
 import { img } from '@/server/utils/image'
-import { hasRole } from '../../../utils/resolvers'
+import { hasRole } from '@/server/utils/resolvers'
 
 const resolversComposition = { 'Mutation.*': hasRole('UPDATE') }
 const resolvers = {
   Mutation: {
     config: async (parent, data, { db, payload }, info) =>
-      db.models.config.upsert(data)
+      db.models.config
+        .upsert(data)
         .then(() => db.models.config.findByPk(data.name)),
 
     uploadBanner: async (parent, { banner }, { db, payload }) => {
@@ -23,7 +24,8 @@ const resolvers = {
 
     selectBanner: async (parent, { name }, { db }) => {
       const filePath = path.join('/var/www/soc_img/img/live', `${name}.png`)
-      if (!await fs.pathExists(filePath)) throw new UserInputError(`Banner '${name}' doesnt exist`)
+      if (!(await fs.pathExists(filePath)))
+        throw new UserInputError(`Banner '${name}' doesnt exist`)
 
       await db.models.config.upsert({ name: 'banner', value: name })
 

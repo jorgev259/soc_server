@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 
 import pages from '@/next/constants/pages.json'
-import { getUser } from '@/next/lib/getSession'
+import { getUser } from '@/next/utils/getSession'
 
 const userResolvable = {
   roles: parent => parent.getRoles(),

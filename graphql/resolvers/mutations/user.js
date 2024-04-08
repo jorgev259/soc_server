@@ -8,13 +8,13 @@ import path from 'path'
 import fs from 'fs-extra'
 import sharp from 'sharp'
 
-import { createForgor } from '../../../utils/forgor'
-import { isAuthed } from '../../../utils/resolvers'
+import { createForgor } from '@/server/utils/forgor'
+import { isAuthedApp } from '@/server/utils/resolvers'
 import { processImage } from '@/server/utils/image'
-import { getSession, getUser } from '@/next/lib/getSession'
+import { getSession, getUser } from '@/next/utils/getSession'
 
 const resolversComposition = {
-  'Mutation.updateUser': [isAuthed]
+  'Mutation.updateUser': [isAuthedApp]
 }
 
 const streamToString = (stream) => {
@@ -26,7 +26,7 @@ const streamToString = (stream) => {
   })
 }
 
-async function cropPFP (streamItem, username, imgId) {
+async function cropPFP(streamItem, username, imgId) {
   const { createReadStream } = await streamItem
   const pathString = '/var/www/soc_img/img/user'
   const fullPath = path.join(pathString, `${username}_${imgId}.png`)
@@ -39,16 +39,24 @@ async function cropPFP (streamItem, username, imgId) {
   const { width, height } = metadata
 
   if (width !== height) {
-    sharpImage = sharpImage
-      .extract(width > height
-        ? { left: Math.floor((width - height) / 2), top: 0, width: height, height }
-        : { left: 0, top: Math.floor((height - width) / 2), width, height: width }
-      )
+    sharpImage = sharpImage.extract(
+      width > height
+        ? {
+            left: Math.floor((width - height) / 2),
+            top: 0,
+            width: height,
+            height
+          }
+        : {
+            left: 0,
+            top: Math.floor((height - width) / 2),
+            width,
+            height: width
+          }
+    )
   }
 
-  await sharpImage.resize({ width: 200, height: 200 })
-    .png()
-    .toFile(fullPath)
+  await sharpImage.resize({ width: 200, height: 200 }).png().toFile(fullPath)
 
   return await processImage(fullPath)
 }
@@ -65,7 +73,9 @@ const resolvers = {
       const session = await getSession()
       session.username = user.username
       // Remove this when new site version is fully implemented
-      session.permissions = (await user.getRoles()).map(r => r.permissions).flat()
+      session.permissions = (await user.getRoles())
+        .map((r) => r.permissions)
+        .flat()
       await session.save()
 
       return 200
@@ -78,24 +88,33 @@ const resolvers = {
     },
     registerUser: async (_, { username, email, pfp }, { db }) => {
       await Promise.all([
-        db.models.user.findByPk(username).then(result => {
+        db.models.user.findByPk(username).then((result) => {
           if (result) throw new UserInputError('Username already in use')
         }),
-        db.models.user.findOne({ where: { email } }).then(result => {
+        db.models.user.findOne({ where: { email } }).then((result) => {
           if (result) throw new UserInputError('Email already in use')
         })
       ])
 
-      const password = generator.generate({ length: 30, numbers: true, upercase: true, strict: true })
+      const password = generator.generate({
+        length: 30,
+        numbers: true,
+        upercase: true,
+        strict: true
+      })
 
-      return db.transaction(async transaction => {
-        const user = await db.models.user.create({ username, email, password: await bcrypt.hash(password, 10) }, { transaction })
+      return db.transaction(async (transaction) => {
+        const user = await db.models.user.create(
+          { username, email, password: await bcrypt.hash(password, 10) },
+          { transaction }
+        )
         if (pfp) {
           const imgId = Date.now()
           user.placeholder = await cropPFP(pfp, username, imgId)
           user.imgId = imgId
         } else {
-          user.placeholder = 'data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACwAQCdASoEAAQAAUAmJZgCdAEO9p5AAPa//NFYLcn+a7b+3z7ynq/qXv+iG0yH/y1D9eBf9pqWugq9G0RnxmxwsjaA2bW8AAA='
+          user.placeholder =
+            'data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACwAQCdASoEAAQAAUAmJZgCdAEO9p5AAPa//NFYLcn+a7b+3z7ynq/qXv+iG0yH/y1D9eBf9pqWugq9G0RnxmxwsjaA2bW8AAA='
         }
 
         await user.save({ transaction })
@@ -104,7 +123,12 @@ const resolvers = {
         return true
       })
     },
-    updateUserRoles: async (parent, { username, roles }, { db, payload }, info) => {
+    updateUserRoles: async (
+      parent,
+      { username, roles },
+      { db, payload },
+      info
+    ) => {
       const user = await db.models.user.findByPk(username)
       user.setRoles(roles)
       await user.save()
@@ -118,7 +142,9 @@ const resolvers = {
     },
 
     createForgorLink: async (_, { key }, { db }) => {
-      const user = await db.models.user.findOne({ where: { [Op.or]: [{ username: key }, { email: key }] } })
+      const user = await db.models.user.findOne({
+        where: { [Op.or]: [{ username: key }, { email: key }] }
+      })
       if (!user) throw new UserInputError('Not Found')
 
       await createForgor(user, db)
@@ -136,7 +162,7 @@ const resolvers = {
       const user = await db.models.user.findByPk(row.username)
       user.password = await bcrypt.hash(pass, 10)
 
-      return db.transaction(async transaction => {
+      return db.transaction(async (transaction) => {
         await user.save({ transaction })
         await row.destroy({ transaction })
         return true
@@ -149,7 +175,9 @@ const resolvers = {
       if (password) user.password = await bcrypt.hash(password, 10)
       if (pfp) {
         const pathString = '/var/www/soc_img/img/user'
-        await fs.remove(path.join(pathString, `${user.username}_${user.imgId}.png`))
+        await fs.remove(
+          path.join(pathString, `${user.username}_${user.imgId}.png`)
+        )
 
         const imgId = Date.now()
         user.placeholder = await cropPFP(pfp, username, imgId)
@@ -160,13 +188,16 @@ const resolvers = {
       return true
     },
 
-    createRole: async (parent, args, { db, payload }) => db.models.role.create(args),
+    createRole: async (parent, args, { db, payload }) =>
+      db.models.role.create(args),
     updateRole: async (parent, { key, name, permissions }, { db, payload }) => {
       const role = await db.models.role.findByPk(key)
       if (!role) throw new UserInputError('Not Found')
 
       if (role.name !== name) {
-        await db.query(`UPDATE roles SET name = "${name}" WHERE name = "${key}"`)
+        await db.query(
+          `UPDATE roles SET name = "${name}" WHERE name = "${key}"`
+        )
       }
       role.permissions = permissions
 

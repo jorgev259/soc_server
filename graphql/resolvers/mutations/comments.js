@@ -1,20 +1,22 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 // import axios from 'axios'
 
-import { isAuthed } from '../../../utils/resolvers'
-import { getSession, getUser } from '@/next/lib/getSession'
+import { isAuthedApp } from '@/server/utils/resolvers'
+import { getSession, getUser } from '@/next/utils/getSession'
 
 // const token = process.env.IRONCLAD
 
 const resolversComposition = {
-  'Mutation.*': [isAuthed]
+  'Mutation.*': [isAuthedApp]
 }
 
 const resolvers = {
   Mutation: {
     updateComment: async (_, { text, anon, albumId }, { db }) => {
       const { username } = await getSession()
-      const row = await db.models.comment.findOne({ where: { albumId, username } })
+      const row = await db.models.comment.findOne({
+        where: { albumId, username }
+      })
 
       if (row) {
         await row.update({ text, anon })
@@ -35,7 +37,9 @@ const resolvers = {
     },
     rateAlbum: async (_, { albumId, score }, { db }) => {
       const { username } = await getSession()
-      const row = await db.models.rating.findOne({ where: { albumId, username } })
+      const row = await db.models.rating.findOne({
+        where: { albumId, username }
+      })
 
       if (row) {
         await row.update({ score })

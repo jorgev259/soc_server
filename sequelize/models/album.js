@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
-import { PLACEHOLDER } from '../../utils'
+import { PLACEHOLDER } from '../../constants'
 
-const model = sequelize =>
+const model = (sequelize) =>
   sequelize.define('album', {
     id: {
       type: DataTypes.INTEGER,
