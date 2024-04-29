@@ -1,8 +1,12 @@
 export const getFullPageList = (count, limit) =>
   [...Array(Math.ceil(count / limit))].map((v, i) => i + 1)
 
-export const getPageList = (fullPageList, pageLimit, page) => {
-  const pageList = [[]]
+export function getPageList(
+  fullPageList: number[],
+  pageLimit: number,
+  page: number
+) {
+  const pageList: number[][] = [[]]
 
   fullPageList.forEach((n) => {
     pageList[pageList.length - 1].push(n)
