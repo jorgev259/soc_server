@@ -1,4 +1,3 @@
-import { UserInputError } from 'apollo-server-errors'
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 
 import { createLog, createUpdateLog } from '@/server/utils/log'
@@ -6,6 +5,7 @@ import { getImgColor, img } from '@/server/utils/image'
 import { hasRole } from '@/server/utils/resolvers'
 import { handleComplete } from '@/server/utils/requests'
 import { slugify } from '@/server/utils/slugify'
+import { UserInputError } from '@/next/server/utils/graphQLErrors'
 
 const resolversComposition = { 'Mutation.*': hasRole('CREATE') }
 const resolvers = {
@@ -67,7 +67,7 @@ const resolvers = {
 
     deleteAlbum: async (parent, { id }, { db }, info) => {
       const album = await db.models.album.findByPk(id)
-      if (!album) throw new UserInputError('Not Found')
+      if (!album) throw UserInputError('Not Found')
 
       return db.transaction(async (transaction) => {
         await createUpdateLog(db, 'deleteAlbum', album, transaction)

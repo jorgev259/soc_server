@@ -1,16 +1,16 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
-import { UserInputError } from 'apollo-server-errors'
 import { mergeResolvers } from '@graphql-tools/merge'
 
 import { hasRole, isAuthedApp } from '@/server/utils/resolvers'
 import { getUser } from '@/next/utils/getSession'
 import { requestPOST } from '@/server/utils/requests'
+import { UserInputError } from '@/next/server/utils/graphQLErrors'
 
 const resolvers = {
   Mutation: {
     editRequest: async (parent, data, { db }, info) => {
       const request = await db.models.request.findByPk(data.id)
-      if (!request) throw new UserInputError('Request not found')
+      if (!request) throw UserInputError('Request not found')
 
       await db.transaction(async (transaction) => {
         await request.set(data, { transaction })
@@ -38,7 +38,7 @@ const resolvers = {
 
     rejectRequest: async (parent, data, { db }, info) => {
       const request = await db.models.request.findByPk(data.id)
-      if (!request) throw new UserInputError('Request not found')
+      if (!request) throw UserInputError('Request not found')
 
       await requestPOST('reject', {
         requestId: request.id,
@@ -58,9 +58,9 @@ const submitActions = {
       if (requestId) {
         request = await db.models.request.findByPk(requestId)
 
-        if (!request) throw new UserInputError('Request not found')
+        if (!request) throw UserInputError('Request not found')
         if (request.state === 'complete')
-          throw new UserInputError('Request already complete')
+          throw UserInputError('Request already complete')
       }
 
       const user = await getUser(db)

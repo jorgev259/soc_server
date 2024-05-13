@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt'
-import { UserInputError, ForbiddenError } from 'apollo-server-errors'
 import generator from 'generate-password'
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import { DateTime } from 'luxon'
@@ -12,6 +11,10 @@ import { createForgor } from '@/server/utils/forgor'
 import { isAuthedApp } from '@/server/utils/resolvers'
 import { processImage } from '@/server/utils/image'
 import { getSession, getUser } from '@/next/utils/getSession'
+import {
+  ForbiddenError,
+  UserInputError
+} from '@/next/server/utils/graphQLErrors'
 
 const resolversComposition = {
   'Mutation.updateUser': [isAuthedApp]
@@ -65,10 +68,10 @@ const resolvers = {
   Mutation: {
     login: async (_, { username, password }, { db }) => {
       const user = await db.models.user.findByPk(username)
-      if (!user) throw new UserInputError()
+      if (!user) throw UserInputError()
 
       const valid = await bcrypt.compare(password, user.password)
-      if (!valid) throw new UserInputError()
+      if (!valid) throw UserInputError()
 
       const session = await getSession()
       session.username = user.username
@@ -89,10 +92,10 @@ const resolvers = {
     registerUser: async (_, { username, email, pfp }, { db }) => {
       await Promise.all([
         db.models.user.findByPk(username).then((result) => {
-          if (result) throw new UserInputError('Username already in use')
+          if (result) throw UserInputError('Username already in use')
         }),
         db.models.user.findOne({ where: { email } }).then((result) => {
-          if (result) throw new UserInputError('Email already in use')
+          if (result) throw UserInputError('Email already in use')
         })
       ])
 
@@ -136,7 +139,7 @@ const resolvers = {
     },
     deleteUser: async (parent, { username }, { db, payload }, info) => {
       const user = await db.models.user.findByPk(username)
-      if (!user) throw new UserInputError('Not Found')
+      if (!user) throw UserInputError('Not Found')
       user.destroy()
       return 1
     },
@@ -145,19 +148,19 @@ const resolvers = {
       const user = await db.models.user.findOne({
         where: { [Op.or]: [{ username: key }, { email: key }] }
       })
-      if (!user) throw new UserInputError('Not Found')
+      if (!user) throw UserInputError('Not Found')
 
       await createForgor(user, db)
       return true
     },
     updatePass: async (_, { key, pass }, { db }) => {
       const row = await db.models.forgor.findByPk(key)
-      if (!row) throw new ForbiddenError()
+      if (!row) throw ForbiddenError()
 
       const now = DateTime.now()
       const expires = DateTime.fromJSDate(row.expires)
 
-      if (now > expires) throw new ForbiddenError()
+      if (now > expires) throw ForbiddenError()
 
       const user = await db.models.user.findByPk(row.username)
       user.password = await bcrypt.hash(pass, 10)
@@ -192,7 +195,7 @@ const resolvers = {
       db.models.role.create(args),
     updateRole: async (parent, { key, name, permissions }, { db, payload }) => {
       const role = await db.models.role.findByPk(key)
-      if (!role) throw new UserInputError('Not Found')
+      if (!role) throw UserInputError('Not Found')
 
       if (role.name !== name) {
         await db.query(
@@ -206,7 +209,7 @@ const resolvers = {
     },
     deleteRole: async (parent, { name }, { db, payload }) => {
       const role = await db.models.role.findByPk(name)
-      if (!role) throw new UserInputError('Not Found')
+      if (!role) throw UserInputError('Not Found')
       await role.destroy()
 
       return name
