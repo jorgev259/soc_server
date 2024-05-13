@@ -1,16 +1,18 @@
-import { AuthenticationError, ForbiddenError } from 'apollo-server-errors'
 import path from 'path'
 
 import db from '../sequelize/startDB'
 import { getImgColor, processImage } from './image'
 import { getSession, getUser } from '@/next/utils/getSession'
+import {
+  AuthenticationError,
+  ForbiddenError
+} from '@/server/utils/graphQLErrors'
 
 export const isAuthedApp = (next) => async (root, args, context, info) => {
-  const { db } = context
-  const session = await getSession(db)
+  const session = await getSession()
   const { username = null } = session
 
-  if (!username) throw new AuthenticationError()
+  if (!username) throw AuthenticationError()
   return next(root, args, context, info)
 }
 
@@ -19,7 +21,7 @@ const hasPermApp = (perm) => (next) => async (root, args, context, info) => {
   const user = await getUser(db)
   const roles = await user.getRoles()
   const permissions = roles.map((r) => r.permissions).flat()
-  if (!permissions.includes(perm)) throw new ForbiddenError()
+  if (!permissions.includes(perm)) throw ForbiddenError()
 
   return next(root, args, context, info)
 }
@@ -28,9 +30,8 @@ export const hasRole = (role) => [isAuthedApp, hasPermApp(role)]
 export const hasRolePage =
   (allowedRoles) =>
   async (context, props = {}) => {
-    const { req, res } = context
-    const session = await getSession(req, res)
-    const { permissions = [] } = session
+    const session = await getSession()
+    const permissions = session.permissions ?? []
 
     if (!permissions.some((p) => allowedRoles.includes(p)))
       return { redirect: { destination: '/404', permanent: false } }
@@ -75,3 +76,4 @@ export async function solveRating(album) {
 
   return rating
 }
+
