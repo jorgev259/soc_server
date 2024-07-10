@@ -26,7 +26,7 @@ const resolvers = {
         }
       })
     },
-    user: async (_, { user }, { db }) => user
+    user: (_, { username }, { db }) => db.models.user.findByPk(username)
   }
 }
 
